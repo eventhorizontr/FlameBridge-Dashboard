@@ -37,33 +37,49 @@ function RuntimeEffects() {
     void preferencesStore.persist.rehydrate();
   }, [query]);
 
-  // Store → URL.
-  useEffect(
-    () =>
-      dashboardStore.subscribe((s, prev) => {
-        if (
-          s.mode !== prev.mode ||
-          s.filters !== prev.filters ||
-          s.selection !== prev.selection ||
-          s.compareIds !== prev.compareIds
-        ) {
-          void setQuery(toUrlState(s));
-        }
-      }),
-    [setQuery],
-  );
+  // Store → URL and action-driven navigation, coalesced per dispatch batch.
+  // One flush per microtask: a batch like [setFilters, compare] either pushes the new route
+  // *with* the full query, or (no route change) replaces the query in place. Writing the query
+  // separately while a push is in flight raced the navigation and left the user on the old
+  // page (found in the AI E2E test: "compare B3 and O13a" from /lab stayed on /lab).
+  useEffect(() => {
+    let scheduled = false;
+    let urlDirty = false;
+    let lastNavSeq = dashboardStore.getState().navigationRequest?.seq ?? 0;
 
-  // Action-driven navigation, carrying the shareable query along.
-  useEffect(
-    () =>
-      dashboardStore.subscribe((s, prev) => {
-        const req = s.navigationRequest;
-        if (req && req !== prev.navigationRequest && req.route !== window.location.pathname) {
+    const flush = () => {
+      scheduled = false;
+      const s = dashboardStore.getState();
+      const req = s.navigationRequest;
+      if (req && req.seq !== lastNavSeq) {
+        lastNavSeq = req.seq;
+        if (req.route !== window.location.pathname) {
+          urlDirty = false;
           router.push(serializeUrl(req.route, toUrlState(s)));
+          return;
         }
-      }),
-    [router],
-  );
+      }
+      if (urlDirty) {
+        urlDirty = false;
+        void setQuery(toUrlState(s));
+      }
+    };
+
+    return dashboardStore.subscribe((s, prev) => {
+      if (
+        s.mode !== prev.mode ||
+        s.filters !== prev.filters ||
+        s.selection !== prev.selection ||
+        s.compareIds !== prev.compareIds
+      ) {
+        urlDirty = true;
+      }
+      if ((urlDirty || s.navigationRequest !== prev.navigationRequest) && !scheduled) {
+        scheduled = true;
+        queueMicrotask(flush);
+      }
+    });
+  }, [router, setQuery]);
 
   // Router → store (links, back/forward).
   useEffect(() => {

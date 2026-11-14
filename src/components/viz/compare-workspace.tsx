@@ -543,6 +543,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
                 size="sm"
                 variant="secondary"
                 title={preset.subtitle}
+                className="max-w-full h-auto py-1 whitespace-normal text-left"
                 onClick={() => dispatch({ type: "compare", ids: preset.ids })}
               >
                 <GitCompareArrows className="size-3.5" aria-hidden="true" />
@@ -630,7 +631,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
             <PanelBody className="space-y-4">
               {/* Master Sync Scrubber */}
               <div className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-2)] px-3 py-2">
-                <span className="text-[0.75rem] text-[var(--text-2)] shrink-0">Sync Seek</span>
+                <span className="hidden sm:inline text-[0.75rem] text-[var(--text-2)] shrink-0">Sync Seek</span>
                 <input
                   type="range"
                   aria-label="Master synchronized timeline scrubber"
@@ -639,7 +640,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
                   step={1 / 30}
                   value={Math.min(masterTime, maxDuration > 0 ? maxDuration : 60)}
                   onChange={(e) => seekAll(Number(e.target.value))}
-                  className="flex-1 accent-[var(--accent)] cursor-pointer"
+                  className="flex-1 min-w-0 accent-[var(--accent)] cursor-pointer"
                 />
                 <span className="num text-[0.75rem] text-[var(--text-1)] shrink-0">
                   {formatClock(masterTime)} / {maxDuration > 0 ? formatClock(maxDuration) : "—"}
