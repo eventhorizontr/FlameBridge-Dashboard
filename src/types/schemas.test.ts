@@ -144,7 +144,7 @@ describe("validateMediaLinks", () => {
     expect(check([fileId(2)])).toEqual([]);
     expect(check([]).some((e) => e.includes(fileId(2)))).toBe(true);
     expect(check([fileId(1), fileId(2)]).some((e) => e.includes("also attached"))).toBe(true);
-    expect(validateMediaLinks(fixture.dataset, fixture.manifest)).toEqual([]);
+    expect(validateMediaLinks(fixture.dataset, { ...fixture.manifest, miscVideos: undefined })).toEqual([]);
   });
 
   it("validateManifest rejects unknown, duplicate or non-video miscVideos ids", () => {
