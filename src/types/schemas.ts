@@ -30,6 +30,7 @@ import type {
   FuelGeometry,
   FuelMaterial,
   InvestigationManifest,
+  ManifestFileRef,
   PsiFileRef,
   QualityReport,
   VideoKind,
@@ -65,7 +66,40 @@ const psiFileRefShape = {
 };
 
 export const PsiFileRefSchema = z.strictObject(psiFileRefShape);
-export const ExperimentVideoSchema = z.strictObject({ ...psiFileRefShape, kind: VideoKindSchema });
+
+/** Same-origin clip under `public/media/`; path segments cannot start with "." (no traversal). */
+export const FallbackHrefSchema = z
+  .string()
+  .regex(
+    /^\/media\/[A-Za-z0-9][\w.-]*(\/[A-Za-z0-9][\w.-]*)*\.(mp4|webm)$/,
+    "expected /media/<file>.mp4|webm",
+  );
+
+export const VIDEO_METADATA_KEYS = ["durationS", "fps", "width", "height", "fallbackHref"] as const;
+
+const videoMetadataShape = {
+  durationS: z.number().finite().positive().optional(),
+  fps: z.number().finite().positive().optional(),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+  fallbackHref: FallbackHrefSchema.optional(),
+};
+
+const dimensionsPaired = (v: { width?: number; height?: number }) =>
+  (v.width === undefined) === (v.height === undefined);
+const DIMENSIONS_PAIRED = { message: "width and height must be given together", path: ["height"] };
+
+export const ExperimentVideoSchema = z
+  .strictObject({ ...psiFileRefShape, ...videoMetadataShape, kind: VideoKindSchema })
+  .refine(dimensionsPaired, DIMENSIONS_PAIRED);
+
+export const ManifestFileRefSchema = z
+  .strictObject({ ...psiFileRefShape, ...videoMetadataShape })
+  .refine(dimensionsPaired, DIMENSIONS_PAIRED)
+  .refine((r) => r.ext === ".mp4" || VIDEO_METADATA_KEYS.every((k) => r[k] === undefined), {
+    message: "video metadata is only allowed on .mp4 files",
+    path: ["ext"],
+  });
 
 const finiteOrNull = z.number().finite().nullable();
 
@@ -82,19 +116,25 @@ export const FuelSchema = z.strictObject({
   inferred: z.array(z.string()),
 });
 
-export const ConditionsSchema = z.strictObject({
-  o2InitialPct: finiteOrNull,
-  o2FinalPct: finiteOrNull,
-  co2InitialPct: finiteOrNull,
-  co2FinalPct: finiteOrNull,
-  coInitialPpm: finiteOrNull,
-  coFinalPpm: finiteOrNull,
-  flowRestrictor: finiteOrNull,
-  airflowSetpointsCmS: z.array(z.number().finite().nonnegative()),
-  airflowRaw: z.string(),
-  fanDisplayRaw: z.string(),
-  radiometerGainRaw: z.string(),
-});
+export const ConditionsSchema = z
+  .strictObject({
+    o2InitialPct: finiteOrNull,
+    o2FinalPct: finiteOrNull,
+    co2InitialPct: finiteOrNull,
+    co2FinalPct: finiteOrNull,
+    coInitialPpm: finiteOrNull,
+    coFinalPpm: finiteOrNull,
+    coFinalLowerBoundPpm: z.number().finite().nonnegative().optional(),
+    flowRestrictor: finiteOrNull,
+    airflowSetpointsCmS: z.array(z.number().finite().nonnegative()),
+    airflowRaw: z.string(),
+    fanDisplayRaw: z.string(),
+    radiometerGainRaw: z.string(),
+  })
+  .refine((c) => c.coFinalLowerBoundPpm === undefined || c.coFinalPpm === null, {
+    message: "a lower bound replaces the value: coFinalPpm must be null",
+    path: ["coFinalLowerBoundPpm"],
+  });
 
 export const QualityReportSchema = z.strictObject({
   flags: z.array(z.string()),
@@ -147,7 +187,8 @@ export const InvestigationManifestSchema = z.strictObject({
     files: z.number().int().nonnegative(),
     bytes: z.number().nonnegative(),
   }),
-  groups: z.record(z.string(), z.array(PsiFileRefSchema)),
+  groups: z.record(z.string(), z.array(ManifestFileRefSchema)),
+  miscVideos: z.array(PsiFileIdSchema).optional(),
 });
 
 /* ------------------------------------------------------------------- dashboard.ts */
@@ -253,6 +294,7 @@ type _Contract = [
   Assert<Exact<z.infer<typeof VideoKindSchema>, VideoKind>>,
   Assert<Exact<z.infer<typeof PsiFileRefSchema>, PsiFileRef>>,
   Assert<Exact<z.infer<typeof ExperimentVideoSchema>, ExperimentVideo>>,
+  Assert<Exact<z.infer<typeof ManifestFileRefSchema>, ManifestFileRef>>,
   Assert<Exact<z.infer<typeof FuelSchema>, Fuel>>,
   Assert<Exact<z.infer<typeof ConditionsSchema>, Conditions>>,
   Assert<Exact<z.infer<typeof QualityReportSchema>, QualityReport>>,

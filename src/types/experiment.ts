@@ -36,9 +36,30 @@ export interface PsiFileRef {
   href: string;
 }
 
-export interface ExperimentVideo extends PsiFileRef {
+/**
+ * Optional, flat metadata on a video file ref (ADR-014). Every field is absent until it has
+ * been measured — never estimated. `durationS`/`fps`/`width`/`height` describe the PSI source
+ * file (probed container/stream headers), not the fallback clip.
+ */
+export interface VideoMetadata {
+  durationS?: number;
+  fps?: number;
+  /** Source frame size in px; `width` and `height` are present together or not at all. */
+  width?: number;
+  height?: number;
+  /**
+   * Same-origin transcoded clip in `public/media/` (served as `/media/…`) for when PSI/S3 is
+   * unreachable. Shares the source time origin: clip t = source t (it may end early).
+   */
+  fallbackHref?: string;
+}
+
+export interface ExperimentVideo extends PsiFileRef, VideoMetadata {
   kind: VideoKind;
 }
+
+/** Manifest entry: any PSI file; `VideoMetadata` is allowed only on `.mp4` files. */
+export interface ManifestFileRef extends PsiFileRef, VideoMetadata {}
 
 export interface Fuel {
   /** Verbatim "Fuel Sample Material" cell. */
@@ -62,6 +83,11 @@ export interface Conditions {
   co2FinalPct: number | null;
   coInitialPpm: number | null;
   coFinalPpm: number | null;
+  /**
+   * Exclusive lower bound when the cell literally states one (M5 `>500` → 500: true value
+   * > 500 ppm). Present only with `coFinalPpm: null`. `OR` cells carry no bound (ADR-014).
+   */
+  coFinalLowerBoundPpm?: number;
   /** 0 = highest flow / lowest restriction … 2 = lowest flow / highest restriction. */
   flowRestrictor: number | null;
   /** Duct flow speed set-points in run order (cm/s). Sensor lag ≈ 1 min. */
@@ -123,5 +149,12 @@ export interface InvestigationManifest {
   studyVersion: number;
   downloadEndpoint: string;
   totals: { files: number; bytes: number };
-  groups: Record<string, PsiFileRef[]>;
+  groups: Record<string, ManifestFileRef[]>;
+  /**
+   * PSI file ids of every video not attached to any experiment (crew ops, backups, and
+   * footage whose test id has no table row). When present it is exhaustive: each `.mp4` in
+   * `groups` is in some experiment's `videos` or here, never both. Metadata lives on the
+   * group entry.
+   */
+  miscVideos?: string[];
 }

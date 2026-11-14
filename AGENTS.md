@@ -77,7 +77,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agent/`, `docs/**`, `.github/**` | **Claude** | propose via issue |
 | `src/types/**` (contracts), `src/config/**`, `src/lib/store/**`, `src/lib/ai/**`, `src/app/api/ai/**` | **Claude** | — |
 | `src/app/layout.tsx`, `src/app/globals.css` (tokens) | **Claude** | Antigravity may PR token *additions* |
-| `pipeline/**`, `data/**`, `public/data/**` | **Codex** | — |
+| `pipeline/**`, `data/**`, `public/data/**`, `public/media/**` (fallback clips, ADR-014) | **Codex** | — |
 | `src/lib/data/**`, `src/lib/science/**`, `src/lib/psi/**`, `src/app/api/psi/**` | **Codex** | — |
 | `pipeline/tests/**`, tests for data/science | **Codex** | everyone runs |
 | `<module>.test.ts` next to a module | that module's owner | Codex may add cases |
