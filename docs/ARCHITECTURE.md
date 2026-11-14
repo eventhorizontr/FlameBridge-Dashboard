@@ -57,10 +57,14 @@
 - Viz: D3 for scales/shapes, React renders SVG (≤ 2k marks) or Canvas (more). Flame/3D: R3F.
 
 ## 3. AI agent
-- Endpoint `POST /api/ai` (Node runtime, streaming SSE). Provider: `@anthropic-ai/sdk`,
-  model `claude-opus-5-5`, `thinking: {type: "adaptive"}`, explicit `output_config.effort`,
-  server-side refusal fallback enabled. Optional Gemini adapter behind
-  `src/lib/ai/providers/` (same tool contract).
+- Endpoint `POST /api/ai` (Node runtime, streaming SSE). **Two providers behind one
+  `AiProvider` interface (`src/lib/ai/providers/`), switchable per request (ADR-012):**
+  - `claude` (default) — `@anthropic-ai/sdk`, model `claude-opus-5-5`,
+    `thinking: {type: "adaptive"}`, streaming, server-side refusal fallback.
+  - `gemini` — `@google/genai`, model from `GEMINI_MODEL`, function calling.
+  Both consume the same Zod tool definitions, system prompt and action validation; the agent
+  loop is provider-agnostic. `GET /api/ai/providers` reports which providers have keys so the
+  UI only offers working ones.
 - **Server tools** (execute on server, read-only over our data):
   `search_experiments(filters)`, `get_experiment(id)`, `compare_experiments(ids)`,
   `find_closest_experiments(params, k)`, `compute(metric, args)` (only functions in
@@ -70,7 +74,7 @@
   shows it in the assistant timeline, and returns success/failure as the tool result.
 - Grounding: the system prompt carries the dataset summary + integrity rules; answers must cite
   evidence ids returned by tools. No tool ⇒ no number.
-- Keys: `ANTHROPIC_API_KEY` (and optional `GEMINI_API_KEY`) in Vercel env only. Rate limiting
+- Keys: `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` in Vercel env only. Rate limiting
   per IP on `/api/ai` since there is no login.
 
 ## 4. What-if Lab matching

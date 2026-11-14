@@ -42,3 +42,21 @@ categorical series. *Why:* "NASA-grade, not generic" + colour-blind safety.
 **ADR-010 · 2026-11-14 · accepted** — Team topology: Claude = lead/contracts/AI/integration;
 Codex = data/science/tests; Antigravity = UI/viz with browser QA. Path ownership in AGENTS.md §5.
 GitHub Issues = source of truth; squash merges by Claude.
+
+**ADR-011 · 2026-11-14 · accepted** — Delivery is a **24-hour continuous build**. T0 =
+2026-11-14 21:00 (+03:00), submission T+24 = 2026-11-15 21:00 (+03:00). Three phases replace
+the week-long sprints: **P1 Foundation T+0→T+7**, **P2 Core T+7→T+17**, **P3 Polish & demo
+T+17→T+24**, with **code freeze at T+22** (19:00) — after that only fixes for the demo path.
+*Why:* owner confirmed the event format. *Consequence:* PRs stay small (≤ ~2 h of work),
+reviews are turned around within 30 min, agents work on fixtures instead of waiting on
+dependencies, and anything not on the demo path is cut before quality is.
+
+**ADR-012 · 2026-11-14 · accepted** (amends ADR-008) — The assistant ships **two providers
+with a user-visible switch: Claude (default, `claude-opus-5-5`) and Gemini** (`@google/genai`,
+model from `GEMINI_MODEL`). Both sit behind one `AiProvider` interface in
+`src/lib/ai/providers/` and share the *same* Zod tool definitions, system prompt, evidence
+rules and `DashboardAction` validation; the provider is chosen per request
+(`provider: "claude" | "gemini"`), persisted in the store, and the UI shows only providers whose
+key is configured (`GET /api/ai/providers`). *Why:* owner requirement; it also gives a live
+fallback if one API degrades during the demo. *Consequence:* no provider-specific features in
+the product surface; provider-specific tuning stays inside its adapter.
