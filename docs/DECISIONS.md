@@ -68,3 +68,19 @@ streams the actions; the client applies them atomically as one undo group. *Why:
 turn a single streamed request (simpler, faster, works on serverless) while the action bus
 stays the only mutator. *Consequence:* client store and server share `checkReferences` and the
 dataset version; a client-side failure is shown on the step.
+
+**ADR-014 · 2026-11-14 · accepted** (contract; unblocks #3, #13) — Three **optional,
+backward-compatible** additions, each absent until measured (never `null`/`0` placeholders):
+(1) `Conditions.coFinalLowerBoundPpm` — an *exclusive* lower bound set only from a cell that
+literally states one (M5 `>500` → 500) and only with `coFinalPpm: null`; `OR` cells keep no
+bound. (2) Flat video metadata `durationS`, `fps`, `width`+`height` (paired), `fallbackHref` on
+`ExperimentVideo` and on the matching manifest entry (`ManifestFileRef`, `.mp4` only), equal
+key-for-key; values describe the PSI source, the fallback shares its time origin.
+(3) `InvestigationManifest.miscVideos` — ids of every video not attached to an experiment,
+exhaustive and disjoint when present. **`public/media/**` is owned by Codex** for the #13
+fallback clips (ADR-004 budget: 2–3 clips, < 5 MB each, transcoded from CC0 PSI-25 sources
+with the command recorded in `pipeline/`). *Why:* the brief forbids presenting a bound as a
+value or dropping footage silently, and the demo needs offline video without re-hosting PSI.
+*Consequence:* strict schemas still reject unknown keys; `validateMediaLinks` enforces the
+cross-file rules; `schemaVersion` stays `0.1.0` until the pipeline emits the fields, then
+bumps to `0.2.0`.
