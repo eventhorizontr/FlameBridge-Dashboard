@@ -2,7 +2,7 @@
 <!-- One paragraph. Link the issue. -->
 Closes #
 
-**Agent:** claude / codex / antigravity
+**Agent:** claude / codex
 
 ## Changes
 -

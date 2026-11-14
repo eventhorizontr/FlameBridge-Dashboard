@@ -93,3 +93,11 @@ carried by `previous_response_id` and Zod validation of every tool call (`strict
 several inputs are optional). *Why:* owner decision; in live tests it used the action
 vocabulary correctly on the first try and kept integrity caveats. *Consequence:*
 `AiProviderId = "openai" | "claude"`, `OPENAI_API_KEY`/`OPENAI_MODEL` env; `@google/genai` removed.
+
+**ADR-016 · 2026-11-15 · accepted** (amends ADR-010) — **Antigravity leaves the team**; owner
+decision. Its UI stack (#33, #35–#41) was reviewed and merged in #44. The UI lane is split:
+**Claude** owns the shell, primitives, assistant panel, overview page and tokens
+(`src/components/{layout,ui,ai}`, `src/app/page.tsx`, `layout.tsx`, `globals.css`); **Codex**
+owns data-heavy views and science copy (`src/components/{viz,lab}`, `src/app/(dashboard)`,
+`src/app/(learn)`). Visual QA moves to headless-browser screenshots at 390/768/1440 px attached
+to every UI PR. `GEMINI.md`, `.agent/` and the Antigravity kickoff are removed.

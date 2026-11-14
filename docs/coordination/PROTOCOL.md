@@ -10,8 +10,9 @@ reliable: one source of truth, no overlapping edits, explicit handoffs, a single
 |---|---|---|---|
 | **Human owner** | Product owner, final say, relays between tools, demo | judgement, accounts/keys | — |
 | **Claude Code** | Tech lead · architect · integrator · AI-agent system | long-context reasoning, review, planning | local (VS Code) |
-| **Codex** | Data & science engineer · tests | disciplined backend/Python, parallel cloud tasks | Codex cloud or CLI |
-| **Antigravity** | UI/UX & visualization engineer | design-heavy frontend + **browser visual QA** | Antigravity IDE |
+| **Codex** | Data, science & data-view engineer · tests | disciplined backend/Python, data-heavy React views, science copy | Codex cloud or CLI |
+
+Antigravity left the team on 2026-11-15 (ADR-016); its merged UI is now owned by Claude (shell, primitives, assistant) and Codex (viz, lab, routes, Learn). UI PRs attach headless screenshots at 390/768/1440 px.
 
 Ownership by path: [AGENTS.md §5](../../AGENTS.md#5-ownership-map-who-may-edit-what).
 
@@ -81,12 +82,11 @@ Issue/PR: #<n>
 
 ## 7. The human's relay loop (how to run the other agents)
 
-Claude cannot start Codex or Antigravity itself. The owner runs them with the kickoff prompts in
+Claude cannot start Codex itself. The owner runs them with the kickoff prompts in
 [`prompts/`](prompts/). Typical cycle (~1–2 h):
 
 1. Ask Claude: *"plan next sprint"* → Claude creates/updates issues and BOARD.md.
-2. Paste `prompts/codex-kickoff.md` into Codex, `prompts/antigravity-kickoff.md` into Antigravity.
-   They each claim their next issue and open PRs.
+2. Paste `prompts/codex-kickoff.md` into Codex. It claims its next issue and opens PRs.
 3. Ask Claude: *"review open PRs"* → Claude reviews, requests fixes or merges.
 4. Repeat. Agents re-read status/handoffs each time, so no context is lost between tools.
 

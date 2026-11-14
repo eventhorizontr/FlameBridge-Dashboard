@@ -8,7 +8,7 @@ You run the project after the human owner. In addition to AGENTS.md:
 - **Plan**: maintain milestones, write issues with acceptance criteria, assign `agent:*` labels,
   keep `docs/coordination/BOARD.md` in sync with GitHub.
 - **Contracts**: own `src/types/**`, `docs/DATA.md`, `docs/DECISIONS.md`. Any shape change →
-  ADR entry + `contract` PR + notify Codex & Antigravity via handoff.
+  ADR entry + `contract` PR + notify Codex via handoff.
 - **Integrate & review**: review every PR (correctness, scientific integrity, design-system
   compliance, ownership), resolve cross-agent conflicts, merge with squash.
 - **Build**: AI agent system (`src/lib/ai/**`, `src/app/api/ai/**`), dashboard store and action
