@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import type { Experiment, ExperimentDataset, InvestigationManifest } from "@/types/experiment";
@@ -15,6 +18,7 @@ import {
   representativeAirflow,
   sortExperiments,
 } from "./dataset-queries";
+import { LEARN_CHAPTERS } from "./learn-chapters";
 
 function makeExperiment(overrides: Partial<Experiment> & { id: string; testId: string }): Experiment {
   return {
@@ -318,5 +322,31 @@ describe("dataset-queries helpers", () => {
     expect(asc).toEqual(["O1", "F2", "B3", "M5"]);
     const desc = sortExperiments(SAMPLE_EXPERIMENTS, "o2InitialPct", "desc").map((e) => e.testId);
     expect(desc).toEqual(["B3", "F2", "O1", "M5"]);
+  });
+
+  it("grounds all 5 Explore & Learn chapters in verified PSI-25 runs and valid quizzes", () => {
+    const raw = readFileSync(
+      join(process.cwd(), "public", "data", "psi-25", "experiments.json"),
+      "utf8",
+    );
+    const dataset = JSON.parse(raw) as ExperimentDataset;
+    const validIds = new Set(dataset.experiments.map((e) => e.id));
+
+    expect(LEARN_CHAPTERS).toHaveLength(5);
+    expect(new Set(LEARN_CHAPTERS.map((c) => c.id)).size).toBe(5);
+    expect(new Set(LEARN_CHAPTERS.map((c) => c.interactiveKind)).size).toBe(5);
+    expect(LEARN_CHAPTERS.map((c) => c.number)).toEqual([1, 2, 3, 4, 5]);
+
+    for (const chapter of LEARN_CHAPTERS) {
+      expect(validIds.has(chapter.featuredRunId)).toBe(true);
+      expect(chapter.relatedRunIds.length).toBeGreaterThan(0);
+      for (const runId of chapter.relatedRunIds) {
+        expect(validIds.has(runId)).toBe(true);
+      }
+      expect(chapter.quiz.options.length).toBeGreaterThanOrEqual(3);
+      expect(chapter.quiz.correctIndex).toBeGreaterThanOrEqual(0);
+      expect(chapter.quiz.correctIndex).toBeLessThan(chapter.quiz.options.length);
+      expect(chapter.quiz.explanation.trim().length).toBeGreaterThan(20);
+    }
   });
 });
