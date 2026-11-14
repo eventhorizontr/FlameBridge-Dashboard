@@ -17,19 +17,20 @@ Usage:  python -I pipeline/build_psi25.py [repo_root]
 from __future__ import annotations
 
 import csv
-import io
 import json
 import os
 import re
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
+from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import psi_client as psi  # noqa: E402
+from bass_matrix import CSV_COLUMNS, discrepancies, notes, parse_airflow, read_matrix  # noqa: E402
 
 ACCESSION = "PSI-25"
-SCHEMA_VERSION = "0.1.0"
+SCHEMA_VERSION = "0.2.0"
 SMALL_DOCS = (".csv", ".xlsx", ".docx")
 
 INCH_MM = 25.4
@@ -43,10 +44,6 @@ def num(s: str) -> float | None:
         return float(s)
     except ValueError:
         return None
-
-
-def numeric_tokens(s: str) -> list[float]:
-    return [float(t) for t in re.findall(r"(?<![\w.])\d+(?:\.\d+)?(?![\w.])", s or "")]
 
 
 def parse_material(raw: str) -> dict:
@@ -106,7 +103,7 @@ def parse_o2(raw: str, flags: list[str], label: str) -> float | None:
             flags.append(f"{label}: non-numeric '{raw.strip()}'")
         return None
     if not (10.0 <= v <= 25.0):
-        flags.append(f"{label}: {v} outside plausible 10–25 % range — likely transcription error, excluded")
+        flags.append(f"{label}: {v} outside the 10–25 % campaign QA range; excluded")
         return None
     return v
 
@@ -119,7 +116,7 @@ FLOW_CONFIG = {
 
 
 def parse_plain(raw: str, flags: list[str], label: str) -> float | None:
-    if raw.strip().upper() in ("OR", "OVER", ">500"):
+    if label.startswith("co") and not label.startswith("co2") and raw.strip().upper() == "OR":
         flags.append(f"{label}: sensor over range ('{raw.strip()}', CO OR = >1000 ppm per ReadMe)")
         return None
     v = num(raw)
@@ -137,7 +134,7 @@ def test_id_for(f: psi.PsiFile) -> str | None:
     if len(sub) >= 3:
         return sub[-1]
     m = TEST_RE.search(f.file_name)
-    return m.group(1).upper() if m else None
+    return m.group(1)[0].upper() + m.group(1)[1:].lower() if m else None
 
 
 def video_kind(name: str) -> str:
@@ -147,6 +144,106 @@ def video_kind(name: str) -> str:
     if "2ND_VIEW" in n:
         return "second-view"
     return "primary"
+
+
+def build_experiments(
+    csv_path: Path, matrix_path: Path, by_test: dict[str, list[dict]],
+) -> tuple[list[dict], list[str]]:
+    with open(csv_path, encoding="utf-8-sig") as fh:
+        rows = list(csv.reader(fh))
+    header, rows = rows[0], rows[1:]
+
+    matrix = read_matrix(Path(matrix_path))
+    experiments = []
+    seen = set()
+    for r in rows:
+        r = (r + [""] * len(header))[: len(header)]
+        raw = dict(zip(header, r))
+        flags: list[str] = []
+        test_id = r[1].strip()
+        if test_id in seen:
+            raise ValueError(f"Duplicate CSV test ID: {test_id}")
+        seen.add(test_id)
+        pi, cells = matrix[test_id]
+        differences = discrepancies(header, r, pi, cells)
+        flags.extend(differences.values())
+        source = dict(zip(CSV_COLUMNS, cells))
+        # The matrix defines units and column semantics. Values that disagree
+        # remain unreported until the two sources can be reconciled.
+        def agreed(index: int) -> str:
+            return "" if index in differences else source[index]
+
+        csv_material = parse_material(r[5])
+        matrix_material = parse_material(source[5])
+        # Report both cells even when word order differs and the parsed descriptions agree.
+        same_material = {k: v for k, v in csv_material.items() if k != "raw"} == {
+            k: v for k, v in matrix_material.items() if k != "raw"
+        }
+        mat = matrix_material if 5 not in differences or same_material else parse_material("")
+        mat["raw"] = r[5].strip()
+        try:
+            date = datetime.strptime(agreed(2).strip(), "%m/%d/%Y").date().isoformat()
+        except ValueError:
+            date = None
+            flags.append(f"date: unparseable '{r[2]}'")
+        if date and not date.startswith("2014") and date.startswith(("2016", "2018")) and r[0] == "T'ien":
+            flags.append(f"date: {date} conflicts with the 2014 campaign and reported GMT day (CSV and Test Matrix agree on the literal date)")
+
+        o2_i = parse_o2(agreed(11), flags, "o2Initial")
+        o2_f = parse_o2(agreed(12), flags, "o2Final")
+        # Split runs (O13a/O13b) share the parent test's footage.
+        base_id = re.sub(r"[ab]$", "", test_id)
+        videos = by_test.get(test_id) or by_test.get(base_id, [])
+        for v in videos:
+            name_test = TEST_RE.search(v["fileName"])
+            if name_test and re.sub(r"[ab]$", "", name_test.group(1), flags=re.I).casefold() != base_id.casefold():
+                flags.append(f"video-filename-test-id-mismatch:{v['id']}")
+        air = parse_airflow(test_id, agreed(8), flags)
+        if not air and test_id in {"O6", "O7", "O8a", "O8b", "O9"}:
+            flags.append("airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous")
+        co_final = agreed(16)
+        lower_bound = re.fullmatch(r">\s*(\d+(?:\.\d+)?)", co_final.strip())
+        if lower_bound:
+            co_fields = {"coFinalPpm": None, "coFinalLowerBoundPpm": float(lower_bound[1])}
+            flags.append(f"coFinal: source reports an exclusive lower bound ({co_final.strip()})")
+        else:
+            co_fields = {"coFinalPpm": parse_plain(co_final, flags, "coFinal")}
+        experiments.append(
+            {
+                "id": f"{ACCESSION}:{test_id}",
+                "testId": test_id,
+                "investigation": ACCESSION,
+                "principalInvestigator": r[0].strip(),
+                "date": date,
+                "gmtDay": num(agreed(3)),
+                "sampleId": r[4].strip(),
+                "fuel": mat,
+                "conditions": {
+                    "o2InitialPct": o2_i,
+                    "o2FinalPct": o2_f,
+                    "co2InitialPct": parse_plain(agreed(13), flags, "co2Initial"),
+                    "co2FinalPct": parse_plain(agreed(14), flags, "co2Final"),
+                    "coInitialPpm": parse_plain(agreed(15), flags, "coInitial"),
+                    **co_fields,
+                    "flowRestrictor": num(agreed(6)),
+                    "airflowSetpointsCmS": air,
+                    "airflowRaw": r[8].strip(),
+                    "fanDisplayRaw": r[7].strip(),
+                    "radiometerGainRaw": r[9].strip(),
+                },
+                "flowConfiguration": FLOW_CONFIG.get(r[0].strip()),
+                "outcomeHints": notes(agreed(7), agreed(8)),
+                "totalFramesShot": num(agreed(10)),
+                "videos": videos,
+                "qa": {"flags": flags, "parse": "matrix-v1"},
+                "raw": raw,
+            }
+        )
+
+    covered = {e["testId"] for e in experiments} | {re.sub(r"[ab]$", "", e["testId"]) for e in experiments}
+    if matrix_only := set(matrix) - seen:
+        raise ValueError(f"Test Matrix rows missing from CSV: {sorted(matrix_only)}")
+    return experiments, sorted(set(by_test) - covered)
 
 
 # ---------------------------------------------------------------- main
@@ -179,6 +276,12 @@ def main(root: str) -> None:
         }
         groups[f.category].append(rec)
         if f.ext == ".mp4" and (tid := test_id_for(f)):
+            # Matrix: B1 is sample 147, B3 is sample 148 (both GMT50).
+            # The B3 primary appears under B1 in the file tree.
+            if tid == "B1" and "GMT50_SAMPLE_148_TEST_B3" in f.file_name:
+                tid = "B3"
+            # B17 is sample 175m, GMT183; the filenames say B15 but the
+            # folder, GMT and sample support B17. Keep footage and flag it.
             by_test[tid].append({**rec, "kind": video_kind(f.file_name)})
 
     manifest = {
@@ -199,69 +302,9 @@ def main(root: str) -> None:
         json.dump(manifest, fh, ensure_ascii=False, indent=1)
 
     # 3) experiments
-    csv_path = os.path.join(raw_dir, next(f.file_name for f in files if f.ext == ".csv" and "Experimental table" in f.key))
-    with open(csv_path, encoding="utf-8-sig") as fh:
-        rows = list(csv.reader(fh))
-    header, rows = rows[0], rows[1:]
-
-    experiments = []
-    for r in rows:
-        r = (r + [""] * len(header))[: len(header)]
-        raw = dict(zip(header, r))
-        flags: list[str] = []
-        test_id = r[1].strip()
-        mat = parse_material(r[5])
-        try:
-            date = datetime.strptime(r[2].strip(), "%m/%d/%Y").date().isoformat()
-        except ValueError:
-            date = None
-            flags.append(f"date: unparseable '{r[2]}'")
-        if date and not date.startswith("2014") and date.startswith(("2016", "2018")) and r[0] == "T'ien":
-            flags.append(f"date: {date} is outside the 2014 T'ien campaign — verify against ops logs")
-
-        o2_i = parse_o2(r[11], flags, "o2Initial")
-        o2_f = parse_o2(r[12], flags, "o2Final")
-        # Split runs (O13a/O13b) share the parent test's footage.
-        base_id = re.sub(r"[ab]$", "", test_id)
-        videos = by_test.get(test_id) or by_test.get(base_id, [])
-        experiments.append(
-            {
-                "id": f"{ACCESSION}:{test_id}",
-                "testId": test_id,
-                "investigation": ACCESSION,
-                "principalInvestigator": r[0].strip(),
-                "date": date,
-                "gmtDay": num(r[3]),
-                "sampleId": r[4].strip(),
-                "fuel": mat,
-                "conditions": {
-                    "o2InitialPct": o2_i,
-                    "o2FinalPct": o2_f,
-                    "co2InitialPct": parse_plain(r[13], flags, "co2Initial"),
-                    "co2FinalPct": parse_plain(r[14], flags, "co2Final"),
-                    "coInitialPpm": parse_plain(r[15], flags, "coInitial"),
-                    "coFinalPpm": parse_plain(r[16], flags, "coFinal"),
-                    "flowRestrictor": num(r[6]),
-                    # "Air display": duct flow speed in cm/s (ReadMe). ~1 min sensor lag, so only
-                    # long holds are steady. Tokens are in run order; ext/blowoff markers dropped.
-                    "airflowSetpointsCmS": numeric_tokens(r[8]),
-                    "airflowRaw": r[8].strip(),
-                    "fanDisplayRaw": r[7].strip(),
-                    "radiometerGainRaw": r[9].strip(),
-                },
-                "flowConfiguration": FLOW_CONFIG.get(r[0].strip()),
-                "outcomeHints": sorted(
-                    {k for k in ("ext", "blowoff", "no ign") if k in (r[7] + " " + r[8]).lower()}
-                ),
-                "totalFramesShot": num(r[10]),
-                "videos": videos,
-                "qa": {"flags": flags, "parse": "heuristic-v0"},
-                "raw": raw,
-            }
-        )
-
-    covered = {e["testId"] for e in experiments} | {re.sub(r"[ab]$", "", e["testId"]) for e in experiments}
-    unmatched = sorted(set(by_test) - covered)
+    csv_path = next(Path(raw_dir).glob("*Experimental table*.csv"))
+    matrix_path = next(Path(raw_dir).glob("*Test.Matrices.xlsx"))
+    experiments, unmatched = build_experiments(csv_path, matrix_path, by_test)
     out = {
         "schemaVersion": SCHEMA_VERSION,
         "accession": ACCESSION,
