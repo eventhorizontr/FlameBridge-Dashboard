@@ -10,7 +10,7 @@ import { checkReferences } from "@/lib/store/references";
 import type { Evidence } from "@/types/ai";
 import type { DashboardAction } from "@/types/dashboard";
 import type { Experiment } from "@/types/experiment";
-import { DashboardActionListSchema, ExperimentFiltersSchema } from "@/types/schemas";
+import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema } from "@/types/schemas";
 
 import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
 
@@ -240,7 +240,11 @@ export function executeTool(name: string, rawInput: unknown): ToolOutcome {
   const parsed = tool.input.safeParse(rawInput ?? {});
   if (!parsed.success) {
     const error = parsed.error.issues.slice(0, 5).map((i) => `${i.path.map(String).join(".") || "input"}: ${i.message}`).join("; ");
-    return { ok: false, content: { error: `Invalid input — ${error}` }, summary: `Invalid input for ${name}`, evidence: [] };
+    const hint =
+      name === "dashboard_actions"
+        ? ` Valid action types: ${DashboardActionSchema.options.map((o) => o.shape.type.value).join(", ")}. Check the tool schema for each shape.`
+        : "";
+    return { ok: false, content: { error: `Invalid input — ${error}.${hint}` }, summary: `Invalid input for ${name}`, evidence: [] };
   }
   try {
     const outcome = tool.execute(parsed.data);

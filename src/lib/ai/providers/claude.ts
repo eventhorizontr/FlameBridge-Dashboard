@@ -56,7 +56,7 @@ export function createClaudeProvider(env: AiEnv = process.env): AiProvider {
           jsonRetries = 0;
         } catch (err) {
           if (opts.signal.aborted) return "aborted";
-          if (err instanceof Anthropic.RateLimitError) throw new ProviderError("Claude is rate-limited right now — try again shortly or switch to Gemini.", "rate_limited");
+          if (err instanceof Anthropic.RateLimitError) throw new ProviderError("Claude is rate-limited right now — try again in a minute.", "rate_limited");
           if (err instanceof Anthropic.AuthenticationError) throw new ProviderError("Claude rejected the server's API key.", "provider_unavailable");
           if (err instanceof Anthropic.APIError) throw new ProviderError(`Claude API error (${err.status ?? "network"}).`, "upstream_error");
           // Tool input JSON that could not be parsed at all (eager input streaming): re-issue the turn.
