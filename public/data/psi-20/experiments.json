@@ -1,0 +1,877 @@
+{
+ "schemaVersion": "0.1.0",
+ "accession": "PSI-20",
+ "doi": "10.60555/vb93-3y72",
+ "license": "Creative Commons Zero v1.0 Universal",
+ "generatedAt": "2026-11-14T19:01:18+00:00",
+ "count": 18,
+ "videoTestIdsWithoutTableRow": [],
+ "experiments": [
+  {
+   "id": "PSI-20:2019-02-08",
+   "testId": "2019-02-08",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-02-08",
+   "gmtDay": 39,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "Feb",
+    "Date": "8",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "21; 26.5; 40",
+    "Flames Ignited": "10",
+    "Notes": "Oxygen Conc. (as diluted with nitrogen on a volume basis) was varied between tests where approximate concentrations for tests that ignited are listed. The chamber pressures were also varied but are not identified in this summary table."
+   }
+  },
+  {
+   "id": "PSI-20:2019-02-20",
+   "testId": "2019-02-20",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-02-20",
+   "gmtDay": 51,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "Feb",
+    "Date": "20",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "26.5; 34",
+    "Flames Ignited": "8",
+    "Notes": "Flames Ignited is the number ignited on that day (neglecting the day change on ISS)."
+   }
+  },
+  {
+   "id": "PSI-20:2019-02-25",
+   "testId": "2019-02-25",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-02-25",
+   "gmtDay": 56,
+   "sampleId": "",
+   "fuel": {
+    "raw": "50% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "Feb",
+    "Date": "25",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "50% C2H4",
+    "Oxygen Conc (percent)": "21; 26.5; 34; 40",
+    "Flames Ignited": "8",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-03-04",
+   "testId": "2019-03-04",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-03-04",
+   "gmtDay": 63,
+   "sampleId": "",
+   "fuel": {
+    "raw": "50% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "March",
+    "Date": "4",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "50% C2H4",
+    "Oxygen Conc (percent)": "26.5; 40",
+    "Flames Ignited": "6",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-03-07",
+   "testId": "2019-03-07",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-03-07",
+   "gmtDay": 66,
+   "sampleId": "",
+   "fuel": {
+    "raw": "50% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes",
+     "oxygen: malformed or out-of-range source value '3400%', kept verbatim"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "March",
+    "Date": "7",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "50% C2H4",
+    "Oxygen Conc (percent)": "3400%",
+    "Flames Ignited": "6",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-03-11",
+   "testId": "2019-03-11",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-03-11",
+   "gmtDay": 70,
+   "sampleId": "",
+   "fuel": {
+    "raw": "50% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "March",
+    "Date": "11",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "50% C2H4",
+    "Oxygen Conc (percent)": "26.5; 34",
+    "Flames Ignited": "7",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-03-28",
+   "testId": "2019-03-28",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-03-28",
+   "gmtDay": 87,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100%C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "March",
+    "Date": "28",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100%C2H4",
+    "Oxygen Conc (percent)": "26.5; 34",
+    "Flames Ignited": "8",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-04-01",
+   "testId": "2019-04-01",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-04-01",
+   "gmtDay": 91,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100%C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes",
+     "oxygen: malformed or out-of-range source value '2100%', kept verbatim"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "April",
+    "Date": "1",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100%C2H4",
+    "Oxygen Conc (percent)": "2100%",
+    "Flames Ignited": "0",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2019-04-04",
+   "testId": "2019-04-04",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2019-04-04",
+   "gmtDay": 94,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100%C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2019",
+    "Month": "April",
+    "Date": "4",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100%C2H4",
+    "Oxygen Conc (percent)": "21; 26.5; 34",
+    "Flames Ignited": "9",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-09-03",
+   "testId": "2020-09-03",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-09-03",
+   "gmtDay": 247,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Sept",
+    "Date": "3",
+    "Burner Size (mm)": "50",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "25; 34; 40",
+    "Flames Ignited": "13",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-10-17",
+   "testId": "2020-10-17",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-10-17",
+   "gmtDay": 291,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Oct",
+    "Date": "17",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "26.5; 34",
+    "Flames Ignited": "13",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-12-05",
+   "testId": "2020-12-05",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-12-05",
+   "gmtDay": 340,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% CH4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Dec",
+    "Date": "5",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% CH4",
+    "Oxygen Conc (percent)": "25; 34; 40",
+    "Flames Ignited": "21",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-12-04",
+   "testId": "2020-12-04",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-12-04",
+   "gmtDay": 339,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% CH4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Dec",
+    "Date": "4",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% CH4",
+    "Oxygen Conc (percent)": "25; 40",
+    "Flames Ignited": "18",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-12-11",
+   "testId": "2020-12-11",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-12-11",
+   "gmtDay": 346,
+   "sampleId": "",
+   "fuel": {
+    "raw": "50% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Dec",
+    "Date": "11",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "50% C2H4",
+    "Oxygen Conc (percent)": "25; 40",
+    "Flames Ignited": "12",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-12-17",
+   "testId": "2020-12-17",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-12-17",
+   "gmtDay": 352,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Dec",
+    "Date": "17",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "34; 40",
+    "Flames Ignited": "10",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2020-12-23",
+   "testId": "2020-12-23",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2020-12-23",
+   "gmtDay": 358,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2020",
+    "Month": "Dec",
+    "Date": "23",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "25; 34; 40",
+    "Flames Ignited": "17",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2021-01-20",
+   "testId": "2021-01-20",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2021-01-20",
+   "gmtDay": 20,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2021",
+    "Month": "Jan",
+    "Date": "20",
+    "Burner Size (mm)": "25",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "21; 26.5; 34",
+    "Flames Ignited": "15",
+    "Notes": ""
+   }
+  },
+  {
+   "id": "PSI-20:2021-01-28",
+   "testId": "2021-01-28",
+   "investigation": "PSI-20",
+   "principalInvestigator": "James Quintiere",
+   "date": "2021-01-28",
+   "gmtDay": 28,
+   "sampleId": "",
+   "fuel": {
+    "raw": "100% C2H4",
+    "material": null,
+    "geometry": null,
+    "inferred": []
+   },
+   "conditions": {
+    "o2InitialPct": null,
+    "o2FinalPct": null,
+    "co2InitialPct": null,
+    "co2FinalPct": null,
+    "coInitialPpm": null,
+    "coFinalPpm": null,
+    "flowRestrictor": null,
+    "airflowSetpointsCmS": [],
+    "airflowRaw": "",
+    "fanDisplayRaw": "",
+    "radiometerGainRaw": ""
+   },
+   "flowConfiguration": null,
+   "outcomeHints": [],
+   "totalFramesShot": null,
+   "videos": [],
+   "qa": {
+    "flags": [
+     "granularity: daily summary; raw oxygen entries and ignition count are not individual-run outcomes"
+    ],
+    "parse": "bre-daily-summary-v1"
+   },
+   "raw": {
+    "Year": "2021",
+    "Month": "Jan",
+    "Date": "28",
+    "Burner Size (mm)": "50",
+    "Fuel Bottle": "100% C2H4",
+    "Oxygen Conc (percent)": "25; 34; 40",
+    "Flames Ignited": "13",
+    "Notes": ""
+   }
+  }
+ ]
+}
