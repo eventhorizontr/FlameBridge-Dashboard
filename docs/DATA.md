@@ -51,3 +51,10 @@ ReadMe — keep it `null` in data until confirmed.)
 ## Secondary (scalability proof): PSI-20 — ACME BRE
 DOI 10.60555/vb93-3y72 · currently one experimental-table CSV. Registered in
 `src/lib/psi/config.ts`; builder not yet written.
+
+## Runtime validation
+`src/types/schemas.ts` mirrors every contract type in Zod (strict objects; compile-time drift
+checks against the interfaces). `validateDataset()` / `validateManifest()` in
+`src/types/validate.ts` add cross-record invariants (count, unique ids, `id = accession:testId`,
+percent ranges, `href` ↔ file id). Loaders must validate before use; `pnpm test` validates the
+published `public/data/psi-25/*.json`.
