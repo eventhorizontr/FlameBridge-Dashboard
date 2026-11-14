@@ -1,39 +1,25 @@
 # Mission Board — 24-hour build
 
-_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-14 21:10 (+03:00)_
+_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-15 01:00 (+03:00) · T+4_
 
-**T0 = 2026-11-14 21:00 (+03:00) · Code freeze T+22 = 11-15 19:00 · Submission T+24 = 11-15 21:00**
-(ADR-011). Milestones are phases, not weeks. Review SLA: Claude reviews a PR within 30 min.
+**Team (ADR-016):** Claude (lead · shell/ui/assistant · AI · contracts) + Codex (data · science ·
+data views · Learn). Antigravity left; its UI is merged (#44).
+**Code freeze 2026-11-15 19:00 · Submission 21:00 (+03:00).**
 
-## Phase 1 — Foundation · T+0 → T+7 (until 04:00)
+## Phase 2 — Core experience · now → 14:00
 
 | Lane | Now | Then |
 |---|---|---|
-| **Claude** | ✅ #1 · ✅ #2 · ✅ #9 (Claude + Gemini) | review PRs (30 min SLA) · swap AI tools to `src/lib/data` after #4 · `find_closest` tool after #8 · #11 Vercel after #10 |
-| **Codex** | #3 Test Matrix reconciliation · #4 Data loaders + fixtures | #8 What-if matching |
-| **Antigravity** | #5 UI primitives + shell + routes | #6 Overview (on fixtures) · #7 Explorer |
-| **Human** | #10 API keys (Anthropic + Gemini), Vercel import, Actions billing | — |
+| **Claude** | #49 shell responsiveness + assistant live E2E (OpenAI) | #11 Vercel (needs #10) · #19 release + demo script |
+| **Codex** | #46 Learn science accuracy · #45 independent UI audit | #47 responsive data views · #48 polish |
+| **Human** | #10 Vercel import + `OPENAI_API_KEY` in Vercel env, Actions billing | demo rehearsal |
 
-Exit criteria: app shell deployed, explorer renders real runs, store dispatches actions,
-`/api/ai` answers with tools on at least one provider.
-
-## Phase 2 — Core experience · T+7 → T+17 (until 14:00)
-#12 Flame viewer (AG) · #13 Video metadata + fallback clips (Codex) · #14 What-if Lab UI (AG) ·
-#15 Compare (AG) · #16 Assistant panel + provider switch (AG) · #17 Colab + PSI-20 (Codex, cut first if late)
-
-Exit criteria: AI visibly drives the UI end-to-end on the deployed site with both providers.
-
-## Phase 3 — Polish & demo · T+17 → T+24
-#18 Learn track (AG) · #19 Release hardening + demo script (Claude) · credits (Event Horizon)
-**T+22 freeze** → only demo-path fixes; T+23 final deploy + video/demo capture.
-
-Critical paths: **#1 → #2 → #9 → #16** (AI drives UI) · **#4 → #8 → #14** (What-if Lab).
-Cut order if late: #17 → #18 chapters 4–6 → #15 overlays → never cut integrity or design quality.
+## Phase 3 — Polish & demo · 14:00 → 21:00
+#19 performance/a11y audit, demo script and video · freeze 19:00 → demo-path fixes only.
 
 ## Merged
-- `3e84218` #9 AI agent: /api/ai, Claude + Gemini providers, tools, useAssistant (PR #23)
-- `4f922b9` #2 store, action registry, undo, URL sync (PR #22)
-- `421c7b4` #1 Zod runtime schemas + dataset validator (PR #21)
-- `deeb99e` 24 h plan, ADR-011/012, team credits (PR #20)
-- `4f50e8e` bootstrap: scaffold, contracts, PSI pipeline (129 runs / 123 with video), docs, CI, coordination system
-- `7858d9d` contract: dashboard filters, lab params, action vocabulary
+- `e204215` UI stack: shell, overview, explorer, flame viewer, compare, Lab, assistant panel, Learn (PR #44, from Antigravity #33/#35–#41)
+- `b7e5ff6` OpenAI provider replaces Gemini, `gpt-6.1-sol` (PR #43, ADR-015)
+- `a18e440` Codex data stack: video metadata, PSI-20 + Colab, data API, What-if matching, AI tools (PR #42)
+- `8d6b101` PSI-25 reconciled with the BASS-II Test Matrix (PR #30) · `a7129dd` CO bounds + video metadata contract (PR #29)
+- `2b0a5c6` … `deeb99e` plan, schemas (#21), store (#22), AI agent (#23), hardening (#26)

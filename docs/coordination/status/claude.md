@@ -1,21 +1,16 @@
 # Status — claude
 
-_Updated: 2026-11-14 21:25 (+03:00) · T+0:25_
+_Updated: 2026-11-15 01:00 (+03:00) · T+4_
 
 ## Now
-- Phase 1 lead lane done (#1, #2, #9). Reviewing incoming PRs; waiting on #4/#8 to wire data API + matching tool.
+- #49 shell responsiveness + assistant panel live with OpenAI
 
 ## Done
-- ADR-014 contract for #3/#13 (branch `claude/psi-media-co-contract`, not yet PR'd): `coFinalLowerBoundPpm`,
-  flat video metadata on `ExperimentVideo` + `ManifestFileRef`, `manifest.miscVideos`, `validateMediaLinks`,
-  `public/media/**` → Codex. Handoff: `2026-11-14-claude-to-codex-co-bound-video-metadata-contract.md`
-- #1 Zod schemas + validator (PR #21) · #2 store/actions/undo/URL (PR #22) · #9 AI agent, Claude + Gemini (PR #23)
-- 24 h plan (ADR-011), provider switch (ADR-012), server-validated AI actions (ADR-013), team credits
+- Reviewed + merged Codex data stack (#42), Antigravity UI stack (#44); OpenAI provider (#43, ADR-015)
+- Team restructure (ADR-016), issues #45–#49 for the post-Antigravity plan
 
 ## Next
-- Swap `src/lib/ai/catalog.ts` → `src/lib/data` when #4 merges; register `find_closest_experiments` after #8
-- #11 Vercel once #10 is done; live test both providers with real keys
-- #19 demo script draft
+- #11 Vercel once the owner imports the repo · #19 release hardening + demo script
 
 ## Blockers / needs
-- #10 (human): ANTHROPIC_API_KEY + GEMINI_API_KEY, Vercel import, Actions billing
+- #10 (human): Vercel import + OPENAI_API_KEY in Vercel env; Actions billing

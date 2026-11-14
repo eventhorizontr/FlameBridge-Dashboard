@@ -1,9 +1,9 @@
 # AGENTS.md — Fire in Freefall · Shared Agent Constitution
 
-> Read this file completely before every task. It is the contract between the three AI
-> engineers on this repo — **Claude Code (lead)**, **OpenAI Codex**, **Google Antigravity** —
-> and the human owner. Tool-specific files (`CLAUDE.md`, `GEMINI.md`, `.agent/rules/`) only
-> add a role on top of this; they never override it.
+> Read this file completely before every task. It is the contract between the two AI
+> engineers on this repo — **Claude Code (lead)** and **OpenAI Codex** — and the human owner
+> (ADR-016: Antigravity left the team on 2026-11-15; its UI work is merged and now owned below).
+> `CLAUDE.md` only adds a role on top of this; it never overrides it.
 
 ## 1. Mission
 
@@ -49,7 +49,7 @@ FINISH update docs/coordination/status/<agent>.md → push → open PR with temp
 ```
 
 GitHub Issues are the **single source of truth** for work. Labels: `agent:claude`,
-`agent:codex`, `agent:antigravity`, `needs:<agent>`, `blocked`, `contract`, `deps`,
+`agent:codex`, `needs:<agent>`, `blocked`, `contract`, `deps`,
 `area:*`, `priority:p0..p2`. Milestones = sprints.
 
 ## 4. Stack (decided — see [docs/DECISIONS.md](docs/DECISIONS.md))
@@ -74,14 +74,15 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 
 | Path | Owner | Others |
 |---|---|---|
-| `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agent/`, `docs/**`, `.github/**` | **Claude** | propose via issue |
+| `AGENTS.md`, `CLAUDE.md`, `docs/**`, `.github/**` | **Claude** | propose via issue |
 | `src/types/**` (contracts), `src/config/**`, `src/lib/store/**`, `src/lib/ai/**`, `src/app/api/ai/**` | **Claude** | — |
-| `src/app/layout.tsx`, `src/app/globals.css` (tokens) | **Claude** | Antigravity may PR token *additions* |
+| `src/app/layout.tsx`, `src/app/globals.css` (tokens), `src/app/page.tsx` | **Claude** | Codex may PR token *additions* |
+| `src/components/layout/**`, `src/components/ui/**`, `src/components/ai/**` | **Claude** | — |
 | `pipeline/**`, `data/**`, `public/data/**`, `public/media/**` (fallback clips, ADR-014) | **Codex** | — |
 | `src/lib/data/**`, `src/lib/science/**`, `src/lib/psi/**`, `src/app/api/psi/**` | **Codex** | — |
 | `pipeline/tests/**`, tests for data/science | **Codex** | everyone runs |
 | `<module>.test.ts` next to a module | that module's owner | Codex may add cases |
-| `src/components/**`, `src/app/(dashboard)/**`, `src/app/(learn)/**`, `src/app/page.tsx`, `public/brand/**` | **Antigravity** | — |
+| `src/components/viz/**`, `src/components/lab/**`, `src/app/(dashboard)/**`, `src/app/(learn)/**`, `public/brand/**` | **Codex** | — |
 | `docs/coordination/status/<agent>.md` | that agent | — |
 | `docs/coordination/handoffs/**` | anyone (append-only) | — |
 
@@ -120,7 +121,7 @@ python -I pipeline/build_psi25.py .     # rebuild PSI-25 data (network)
 ## 9. Conventions
 
 - Conventional Commits: `feat(viz): …`, `fix(pipeline): …`, `docs: …`, `chore(deps): …`.
-  Add a trailer `Agent: claude|codex|antigravity` to every commit.
+  Add a trailer `Agent: claude|codex` to every commit.
 - Files `kebab-case.tsx`; components `PascalCase`; hooks `useThing`; no default exports except
   Next.js route files.
 - Units in identifiers: `o2Pct`, `flowCmS`, `thicknessMm`, `spreadRateMmS`.
