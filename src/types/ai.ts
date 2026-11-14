@@ -1,7 +1,8 @@
 /**
- * AI CONTRACT — provider identity and the `/api/ai/providers` response (ADR-012).
- * Owner: Claude. The streaming event protocol of `/api/ai` is added with #9.
+ * AI CONTRACT — providers (ADR-012), the `/api/ai` request and its streamed event protocol.
+ * Owner: Claude. UI (#16) consumes this through `useAssistant()`; never parse the stream yourself.
  */
+import type { DashboardAction, ExperimentFilters, LabParams, UserMode } from "./dashboard";
 
 export type AiProviderId = "claude" | "gemini";
 
@@ -21,3 +22,68 @@ export interface AiProvidersResponse {
   providers: AiProviderInfo[];
   default: AiProviderId | null;
 }
+
+/** Prior conversation, text only (tool traces are not replayed). */
+export interface AiChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+/** What the user is looking at when they ask — lets the agent act relative to the view. */
+export interface AiClientContext {
+  mode: UserMode;
+  route: string;
+  filters: ExperimentFilters;
+  selection: string[];
+  openExperimentId: string | null;
+  compareIds: string[];
+  labParams: LabParams;
+}
+
+/** POST /api/ai body. Last message must be from the user. */
+export interface AiRequest {
+  provider?: AiProviderId;
+  messages: AiChatMessage[];
+  context: AiClientContext;
+}
+
+/** A source the answer relied on — rendered as an evidence chip. */
+export interface Evidence {
+  /** Stable key: experiment id ("PSI-25:B1"), "doi:…", or "psi-file:<id>". */
+  id: string;
+  label: string;
+  kind: "experiment" | "dataset" | "file" | "publication";
+  /** App-relative or external link. */
+  href?: string;
+}
+
+/**
+ * `/api/ai` response: `application/x-ndjson`, one event per line, in order.
+ * `actions` events carry server-validated dashboard actions — the client applies them via
+ * `dispatchMany(actions, { source: "ai", groupId: turnId })` so the whole turn undoes at once.
+ */
+export type AiStreamEvent =
+  | { type: "start"; turnId: string; provider: AiProviderId; model: string }
+  | { type: "text"; delta: string }
+  | { type: "tool_call"; callId: string; name: string; input: unknown }
+  | {
+      type: "tool_result";
+      callId: string;
+      name: string;
+      ok: boolean;
+      summary: string;
+      evidence: Evidence[];
+    }
+  | { type: "actions"; callId: string; actions: DashboardAction[] }
+  | { type: "done"; stopReason: "end" | "max_steps" | "refusal" | "max_tokens" | "aborted" }
+  | { type: "error"; code: AiErrorCode; message: string };
+
+export type AiErrorCode =
+  | "bad_request"
+  | "provider_unavailable"
+  | "rate_limited"
+  | "upstream_error"
+  | "internal";
+
+/** Re-exported for tool-input typing on both sides. */
+export type { DashboardAction, ExperimentFilters, LabParams };

@@ -60,7 +60,8 @@
 - Endpoint `POST /api/ai` (Node runtime, streaming SSE). **Two providers behind one
   `AiProvider` interface (`src/lib/ai/providers/`), switchable per request (ADR-012):**
   - `claude` (default) — `@anthropic-ai/sdk`, model `claude-opus-5-5`,
-    `thinking: {type: "adaptive"}`, streaming, server-side refusal fallback.
+    `thinking: {type: "adaptive"}`, `effort: "medium"`, streaming manual tool loop, cached
+    system prompt; a `refusal` stop is surfaced as a polite decline.
   - `gemini` — `@google/genai`, model from `GEMINI_MODEL`, function calling.
   Both consume the same Zod tool definitions, system prompt and action validation; the agent
   loop is provider-agnostic. `GET /api/ai/providers` reports which providers have keys so the
@@ -69,9 +70,13 @@
   `search_experiments(filters)`, `get_experiment(id)`, `compare_experiments(ids)`,
   `find_closest_experiments(params, k)`, `compute(metric, args)` (only functions in
   `src/lib/science`), `list_sources(id)`, `get_publication(doi)`.
-- **Client (UI) tools**: one tool `dashboard_actions(actions: DashboardAction[])`. Server
-  returns the validated action list in the stream; the client applies it through the store,
-  shows it in the assistant timeline, and returns success/failure as the tool result.
+- **UI tool**: `dashboard_actions(actions: DashboardAction[])` is validated **on the server**
+  (Zod + known run/video ids via the shared `checkReferences`) and streamed as an `actions`
+  event; `useAssistant()` applies it with `dispatchMany(..., {source: "ai", groupId: turnId})`.
+  No client-to-server round trip mid-turn (ADR-013).
+- Wire format: NDJSON `AiStreamEvent` (`src/types/ai.ts`): start, text, tool_call,
+  tool_result (summary + evidence), actions, done, error. Max 8 tool steps per turn.
+- `find_closest_experiments` and `compute` are registered when #8 / `src/lib/science` land.
 - Grounding: the system prompt carries the dataset summary + integrity rules; answers must cite
   evidence ids returned by tools. No tool ⇒ no number.
 - Keys: `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` in Vercel env only. Rate limiting
