@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 
+import * as data from "@/lib/data";
+import { findClosestExperiments } from "@/lib/science/matching";
 import type { AiRequest, AiStreamEvent } from "@/types/ai";
-import { EMPTY_FILTERS } from "@/types/dashboard";
+import { EMPTY_FILTERS, type LabMatch, type LabParams } from "@/types/dashboard";
 
 import { AiRequestSchema, runAgentTurn } from "./agent";
-import { filterExperiments, loadExperiments } from "./catalog";
+import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
 import { describeProviders, resolveProvider, type AiProvider } from "./providers";
 import { rateLimit } from "./rate-limit";
+import { systemPrompt } from "./system-prompt";
 import { executeTool, TOOLS, toolJsonSchema } from "./tools";
 import { DEFAULT_LAB_PARAMS } from "@/lib/store/state";
 
@@ -26,6 +29,48 @@ describe("tool definitions", () => {
     expect(schema.type).toBe("object");
     expect(schema).not.toHaveProperty("$schema");
     expect(tool.description.length).toBeGreaterThan(60);
+  });
+});
+
+describe("catalog over @/lib/data", () => {
+  it("delegates loading, lookup and filtering to the shared data API", () => {
+    expect(loadDataset()).toBe(data.getDataset());
+    expect(loadExperiments()).toBe(data.getDataset().experiments);
+    expect(filterExperiments).toBe(data.filterExperiments);
+    expect(getExperiment("B1")).toBe(data.getExperiment("PSI-25:B1"));
+    expect(getExperiment(" psi-25:b1 ")?.id).toBe("PSI-25:B1");
+    expect(getExperiment("PSI-20:B1")).toBeUndefined();
+    expect(catalogIndex().size).toBe(loadExperiments().length);
+  });
+
+  it("keeps the dataset facts the system prompt states", () => {
+    const facts = datasetFacts();
+    const ex = loadExperiments();
+    const sum = (counts: Record<string, number>) => Object.values(counts).reduce((a, b) => a + b, 0);
+    const o2 = ex.map((e) => e.conditions.o2InitialPct).filter((v): v is number => v !== null);
+    expect(Object.keys(facts)).toEqual([
+      "accession",
+      "doi",
+      "license",
+      "runs",
+      "runsWithVideo",
+      "runsWithQaFlags",
+      "parse",
+      "o2InitialPct",
+      "principalInvestigators",
+      "materials",
+      "geometries",
+      "flowConfigurations",
+    ]);
+    expect(facts.accession).toBe("PSI-25");
+    expect(facts.runs).toBe(ex.length);
+    expect(facts.runsWithVideo).toBe(ex.filter((e) => e.videos.length > 0).length);
+    expect(facts.runsWithQaFlags).toBe(ex.filter((e) => e.qa.flags.length > 0).length);
+    expect(facts.o2InitialPct).toEqual({ min: Math.min(...o2), max: Math.max(...o2) });
+    for (const counts of [facts.principalInvestigators, facts.materials, facts.geometries, facts.flowConfigurations]) {
+      expect(sum(counts)).toBe(ex.length);
+    }
+    expect(systemPrompt()).toContain(`It contains ${facts.runs} test runs, of which ${facts.runsWithVideo} have ISS video.`);
   });
 });
 
@@ -58,6 +103,47 @@ describe("tools over PSI-25", () => {
     expect(ok.actions).toHaveLength(1);
     expect(executeTool("dashboard_actions", { actions: [{ type: "openExperiment", id: "PSI-25:Z99" }] }).ok).toBe(false);
     expect(executeTool("dashboard_actions", { actions: [{ type: "launchRocket" }] }).ok).toBe(false);
+  });
+
+  const exact: LabParams = { o2Pct: 22.2, airflowCmS: 5, material: "PMMA", geometry: "rod", characteristicSizeMm: 6.35, k: 3 };
+  type ToolMatch = LabMatch & { comparedAirflowCmS: number | null; run: { id: string; testId: string } };
+
+  it("find_closest_experiments returns the matching module's measured neighbours with evidence", () => {
+    const out = executeTool("find_closest_experiments", exact);
+    expect(out.ok).toBe(true);
+    const content = out.content as { insideEnvelope: boolean; warning?: string; matches: ToolMatch[] };
+    expect(content.insideEnvelope).toBe(true);
+    expect(content.warning).toBeUndefined();
+    const core = content.matches.map(({ experimentId, distance, deltas, categoricalMismatches }) => ({
+      experimentId,
+      distance,
+      deltas,
+      categoricalMismatches,
+    }));
+    expect(core).toEqual(findClosestExperiments(exact).matches);
+    expect(content.matches[0]).toMatchObject({ experimentId: "PSI-25:O1", distance: 0, comparedAirflowCmS: 5, run: { testId: "O1" } });
+    expect(content.matches.every((m) => m.run.id === m.experimentId)).toBe(true);
+    expect(out.evidence.map((e) => e.id)).toEqual([`doi:${loadDataset().doi}`, ...core.map((m) => m.experimentId)]);
+    expect(out.summary).toBe("Matched 3 measured runs · inside measured envelope");
+  });
+
+  it("find_closest_experiments applies defaults and warns outside the measured envelope", () => {
+    const out = executeTool("find_closest_experiments", { o2Pct: 75, airflowCmS: 200, material: "PMMA", geometry: "rod" });
+    expect(out.ok).toBe(true);
+    const content = out.content as { query: LabParams; insideEnvelope: boolean; warning?: string; matches: ToolMatch[] };
+    expect(content.query).toMatchObject({ characteristicSizeMm: null, k: 5 });
+    expect(content.insideEnvelope).toBe(false);
+    expect(content.warning).toContain("Outside the measured envelope");
+    expect(content.matches).toHaveLength(5);
+    expect(content.matches.every((m) => m.deltas.characteristicSizeMm === null)).toBe(true);
+    expect(out.summary).toBe("Matched 5 measured runs · outside measured envelope");
+  });
+
+  it("find_closest_experiments rejects out-of-bounds and unknown inputs", () => {
+    expect(executeTool("find_closest_experiments", { ...exact, o2Pct: 130 }).ok).toBe(false);
+    expect(executeTool("find_closest_experiments", { ...exact, k: 0 }).ok).toBe(false);
+    expect(executeTool("find_closest_experiments", { ...exact, material: "wood" }).ok).toBe(false);
+    expect(executeTool("find_closest_experiments", { ...exact, temperatureK: 300 }).ok).toBe(false);
   });
 
   it("unknown tools and bad inputs become error outcomes, not exceptions", () => {

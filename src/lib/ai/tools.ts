@@ -6,11 +6,13 @@
  */
 import { z } from "zod";
 
+import { representativeAirflow } from "@/lib/data";
+import { findClosestExperiments } from "@/lib/science/matching";
 import { checkReferences } from "@/lib/store/references";
 import type { Evidence } from "@/types/ai";
 import type { DashboardAction } from "@/types/dashboard";
 import type { Experiment } from "@/types/experiment";
-import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema } from "@/types/schemas";
+import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema, LabParamsSchema } from "@/types/schemas";
 
 import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
 
@@ -38,6 +40,22 @@ const ExperimentRef = z
   .string()
   .min(1)
   .describe('Experiment id like "PSI-25:B1" (a bare test id like "B1" is also accepted)');
+
+const lab = LabParamsSchema.shape;
+/** `LabParams` with model-friendly defaults; the parsed value is a complete `LabParams`. */
+const LabQuery = z.strictObject({
+  o2Pct: lab.o2Pct.describe("Initial O₂, % by volume"),
+  airflowCmS: lab.airflowCmS.describe("Duct air-flow speed, cm/s"),
+  material: lab.material,
+  geometry: lab.geometry,
+  characteristicSizeMm: lab.characteristicSizeMm
+    .default(null)
+    .describe("Thickness (film/slab) or diameter (rod/spherical-section) in mm; null or omitted = size not compared"),
+  k: lab.k.default(5).describe("Number of measured runs to return"),
+});
+
+const OUTSIDE_ENVELOPE =
+  "Outside the measured envelope: no run of the same material and geometry is close on every compared input. These are the nearest real runs, not a prediction — tell the user and do not extrapolate.";
 
 /* ------------------------------------------------------------------ evidence */
 
@@ -165,6 +183,38 @@ export const TOOLS: AgentTool[] = [
         content: { runs: rows, differences },
         summary: `Compared ${rows.map((r) => r.testId).join(", ")}`,
         evidence: (runs as Experiment[]).map(experimentEvidence),
+      };
+    },
+  }),
+
+  defineTool({
+    name: "find_closest_experiments",
+    description:
+      "What-if Lab retrieval: rank the measured runs closest to hypothetical conditions (O₂, air-flow, fuel material and geometry, optional size) and report whether the query lies inside the measured envelope. Returns only real runs with per-input differences — it never predicts an outcome. Call this for every 'what if' / 'what happens at …' question; dashboard_state.labParams holds the Lab's current inputs.",
+    input: LabQuery,
+    execute: (params) => {
+      const experiments = loadExperiments();
+      const byId = new Map(experiments.map((e) => [e.id, e]));
+      const result = findClosestExperiments(params, experiments);
+      const hits = result.matches.flatMap((m) => {
+        const e = byId.get(m.experimentId);
+        return e ? [{ m, e }] : [];
+      });
+      const matches = hits.map(({ m, e }) => ({ ...m, comparedAirflowCmS: representativeAirflow(e), run: summarizeExperiment(e) }));
+      const runs = matches.length === 1 ? "run" : "runs";
+      return {
+        ok: true,
+        content: {
+          query: result.params,
+          insideEnvelope: result.insideEnvelope,
+          ...(result.insideEnvelope ? {} : { warning: OUTSIDE_ENVELOPE }),
+          method: result.method,
+          deltaConvention:
+            "deltas = query − run in source units (O₂ percentage points, cm/s, mm); airflow is compared with the run's median set-point (comparedAirflowCmS); null = not comparable.",
+          matches,
+        },
+        summary: `Matched ${matches.length} measured ${runs} · ${result.insideEnvelope ? "inside" : "outside"} measured envelope`,
+        evidence: [DATASET_EVIDENCE(), ...hits.map(({ e }) => experimentEvidence(e))],
       };
     },
   }),
