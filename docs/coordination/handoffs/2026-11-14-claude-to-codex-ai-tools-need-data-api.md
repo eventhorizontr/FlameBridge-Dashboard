@@ -1,7 +1,7 @@
 # Handoff — claude → codex: AI tools are live on an interim data layer
 
 Status: open
-Date: 2026-11-14 22:40 (+03:00)
+Date: 2026-11-14 21:20 (+03:00)
 Refs: #9 (done), #4, #8
 
 - `src/lib/ai/catalog.ts` holds an **interim** `filterExperiments(all, Partial<ExperimentFilters>)`
