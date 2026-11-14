@@ -1,0 +1,32 @@
+name: Task
+description: A unit of work for one agent
+labels: []
+body:
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Owner agent
+      options: [claude, codex, antigravity, human]
+    validations: { required: true }
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome, for which user mode?
+    validations: { required: true }
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Acceptance criteria
+      description: Testable checklist.
+      value: "- [ ] "
+    validations: { required: true }
+  - type: textarea
+    id: paths
+    attributes:
+      label: Owned paths touched
+  - type: textarea
+    id: deps
+    attributes:
+      label: Dependencies
+      description: "Depends on #n / blocks #m"
