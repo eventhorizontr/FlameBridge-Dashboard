@@ -1,25 +1,34 @@
-# Sprint Board
+# Mission Board — 24-hour build
 
-_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-14_
-Milestone dates are placeholders until the owner confirms the deadline (#10).
+_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-14 21:10 (+03:00)_
 
-## Sprint 1 — Foundation
+**T0 = 2026-11-14 21:00 (+03:00) · Code freeze T+22 = 11-15 19:00 · Submission T+24 = 11-15 21:00**
+(ADR-011). Milestones are phases, not weeks. Review SLA: Claude reviews a PR within 30 min.
 
-| Lane | Start now (unblocked) | Next (after deps) |
+## Phase 1 — Foundation · T+0 → T+7 (until 04:00)
+
+| Lane | Now | Then |
 |---|---|---|
-| **Claude** | #1 Zod schemas & validator | #2 Store + action registry (←#1) · #9 AI endpoint v1 (←#2,#4) · #11 Vercel (←#10) |
-| **Codex** | #3 Test Matrix reconciliation · #4 Data loaders + fixtures | #8 What-if matching (←#4) |
-| **Antigravity** | #5 UI primitives + shell + routes | #6 Overview (←#5,#4 — may start on fixtures) · #7 Explorer (←#2,#4,#5) |
-| **Human** | #10 API keys, Vercel, deadline, team info | — |
+| **Claude** | #1 Zod schemas & validator | #2 Store + action registry → #9 AI endpoint (Claude **+ Gemini switch**, ADR-012) |
+| **Codex** | #3 Test Matrix reconciliation · #4 Data loaders + fixtures | #8 What-if matching |
+| **Antigravity** | #5 UI primitives + shell + routes | #6 Overview (on fixtures) · #7 Explorer |
+| **Human** | #10 API keys (Anthropic + Gemini), Vercel import, Actions billing | — |
 
-Critical path: **#1 → #2 → #9 → #16** (AI drives UI) and **#4 → #8 → #14** (What-if Lab).
+Exit criteria: app shell deployed, explorer renders real runs, store dispatches actions,
+`/api/ai` answers with tools on at least one provider.
 
-## Sprint 2 — Core experience
-#12 Flame viewer (AG) · #13 Video metadata & fallback clips (Codex) · #14 What-if Lab UI (AG) ·
-#15 Compare (AG) · #16 Assistant panel UI (AG) · #17 Colab + PSI-20 (Codex)
+## Phase 2 — Core experience · T+7 → T+17 (until 14:00)
+#12 Flame viewer (AG) · #13 Video metadata + fallback clips (Codex) · #14 What-if Lab UI (AG) ·
+#15 Compare (AG) · #16 Assistant panel + provider switch (AG) · #17 Colab + PSI-20 (Codex, cut first if late)
 
-## Sprint 3 — Polish & demo
-#18 Learn track (AG) · #19 Release hardening + demo (Claude)
+Exit criteria: AI visibly drives the UI end-to-end on the deployed site with both providers.
+
+## Phase 3 — Polish & demo · T+17 → T+24
+#18 Learn track (AG) · #19 Release hardening + demo script (Claude) · credits (Event Horizon)
+**T+22 freeze** → only demo-path fixes; T+23 final deploy + video/demo capture.
+
+Critical paths: **#1 → #2 → #9 → #16** (AI drives UI) · **#4 → #8 → #14** (What-if Lab).
+Cut order if late: #17 → #18 chapters 4–6 → #15 overlays → never cut integrity or design quality.
 
 ## Merged
 - `4f50e8e` bootstrap: scaffold, contracts, PSI pipeline (129 runs / 123 with video), docs, CI, coordination system

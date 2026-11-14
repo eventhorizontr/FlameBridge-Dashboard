@@ -1,5 +1,9 @@
 # Product Spec — Fire in Freefall
 
+## Team
+**Event Horizon** — Adil Sevim · Hakan Celep · Ceren Akgün · Muhammed Ensar Aktaş.
+Credits are rendered from `src/config/site.ts` (single source).
+
 ## Problem
 NASA has flown hundreds of solid-fuel burns in microgravity, but the evidence sits in a
 repository of spreadsheets, PDFs and ~300 videos (PSI-25 alone: 695 files, ~275 GB). Engineers
@@ -25,7 +29,7 @@ Mode is a global switch (URL-persisted); both read the same data.
    the **k closest real experiments** (normalized distance), shows coverage of the measured
    envelope, highlights differences and plays matched footage. Outside the envelope ⇒ explicit
    warning, no extrapolated result.
-6. **AI research assistant** — answers with evidence chips, runs validated calculations,
+6. **AI research assistant** — user can switch between **Claude** and **Gemini**; answers with evidence chips, runs validated calculations,
    compares experiments and **drives the dashboard** (filter, open, compare, switch mode,
    configure views) through the same store actions as the UI. Every action visible & undoable.
 7. **Learn track** — 4–6 short guided chapters built on real runs.

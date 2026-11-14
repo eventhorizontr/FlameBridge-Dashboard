@@ -13,6 +13,10 @@ An AI-powered, NASA-grade interactive dashboard for the **2026 NASA Space Apps C
 platform with two modes (**Expert** / **Explore & Learn**), a **Visual What-if Lab**, and an
 **agentic AI assistant** that can drive the UI. Full spec: [docs/PRODUCT.md](docs/PRODUCT.md).
 
+**Timeline: 24-hour continuous build** (ADR-011) — T0 2026-11-14 21:00 (+03:00) → submission
+2026-11-15 21:00 (+03:00), code freeze 19:00. Small PRs, fast reviews, no idle waiting: build on
+fixtures/contracts and integrate later.
+
 ## 2. Non-negotiable rules
 
 1. **Never fabricate science.** No invented data points, curves, rates or citations. Every
@@ -60,7 +64,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | State | Zustand (`src/lib/store/`) — the **only** way UI state changes, so the AI can drive it |
 | URL state | `nuqs` (shareable views) |
 | Validation | Zod (contracts + AI tool schemas) |
-| AI | `@anthropic-ai/sdk`, model `claude-opus-5-5`; optional Gemini adapter behind `src/lib/ai/providers/` |
+| AI | Switchable providers (ADR-012): Claude via `@anthropic-ai/sdk` (`claude-opus-5-5`, default) and Gemini via `@google/genai`, one interface in `src/lib/ai/providers/` |
 | Data pipeline | Python (stdlib-first) in `pipeline/` → runs locally or in Google Colab → JSON in `public/data/` |
 | Video | Streamed from NASA S3 via `/api/psi/file/{accession}/{id}` (302 → presigned URL, CORS `*`) |
 | Tests | Vitest (TS), `python -m unittest` (pipeline) |
@@ -71,7 +75,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | Path | Owner | Others |
 |---|---|---|
 | `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.agent/`, `docs/**`, `.github/**` | **Claude** | propose via issue |
-| `src/types/**` (contracts), `src/lib/store/**`, `src/lib/ai/**`, `src/app/api/ai/**` | **Claude** | — |
+| `src/types/**` (contracts), `src/config/**`, `src/lib/store/**`, `src/lib/ai/**`, `src/app/api/ai/**` | **Claude** | — |
 | `src/app/layout.tsx`, `src/app/globals.css` (tokens) | **Claude** | Antigravity may PR token *additions* |
 | `pipeline/**`, `data/**`, `public/data/**` | **Codex** | — |
 | `src/lib/data/**`, `src/lib/science/**`, `src/lib/psi/**`, `src/app/api/psi/**` | **Codex** | — |

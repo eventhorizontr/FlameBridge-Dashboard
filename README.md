@@ -11,17 +11,20 @@ assistant drive the whole dashboard for you.
 | | |
 |---|---|
 | Data | NASA Physical Sciences Informatics — PSI-25 BASS-II (DOI 10.60555/4qc4-de67, CC0) |
-| Stack | Next.js 16 · React 19 · TypeScript · Tailwind v4 · D3 · Zustand · Claude (`@anthropic-ai/sdk`) · Python pipeline |
+| Stack | Next.js 16 · React 19 · TypeScript · Tailwind v4 · D3 · Zustand · Claude + Gemini (switchable) · Python pipeline |
 | Deploy | Vercel, no login |
 
 ## Quick start
 
 ```bash
 pnpm install
-cp .env.example .env.local      # add ANTHROPIC_API_KEY for the assistant
+cp .env.example .env.local      # add ANTHROPIC_API_KEY and/or GEMINI_API_KEY
 pnpm dev                        # http://localhost:3000
 pnpm data:psi25                 # optional: rebuild data from NASA PSI
 ```
+
+## Team — Event Horizon
+Adil Sevim · Hakan Celep · Ceren Akgün · Muhammed Ensar Aktaş
 
 ## Documentation
 - [Product spec](docs/PRODUCT.md) · [Architecture](docs/ARCHITECTURE.md) ·
