@@ -9,7 +9,8 @@ import { createStore, type StoreApi } from "zustand/vanilla";
 import type { DashboardAction } from "@/types/dashboard";
 import { DashboardActionSchema } from "@/types/schemas";
 
-import { runLabel, specFor } from "./actions";
+import { specFor } from "./actions";
+import { checkReferences, type Catalog } from "./references";
 import { INITIAL_DATA, type DashboardData, type DashboardKey } from "./state";
 
 export type ActionSource = "user" | "ai";
@@ -42,8 +43,7 @@ export interface DispatchOptions {
   groupId?: string;
 }
 
-/** Known experiment ids → their video file ids. Lets dispatch reject hallucinated references. */
-export type Catalog = ReadonlyMap<string, ReadonlySet<string>>;
+export type { Catalog };
 
 export interface DashboardStore extends DashboardData {
   log: LogEntry[];
@@ -75,31 +75,6 @@ function formatZodError(issues: readonly { path: PropertyKey[]; message: string 
     .slice(0, 5)
     .map((i) => `${i.path.length ? i.path.map(String).join(".") : "action"}: ${i.message}`)
     .join("; ");
-}
-
-function checkReferences(action: DashboardAction, catalog: Catalog | null): string | null {
-  if (!catalog || catalog.size === 0) return null;
-  const unknown = (id: string) => (catalog.has(id) ? null : `Unknown experiment ${id}`);
-  switch (action.type) {
-    case "selectExperiments":
-    case "compare":
-      return action.ids.map(unknown).find(Boolean) ?? null;
-    case "openExperiment":
-      return unknown(action.id);
-    case "seekVideo": {
-      const videos = catalog.get(action.experimentId);
-      if (!videos) return `Unknown experiment ${action.experimentId}`;
-      return videos.has(action.videoId)
-        ? null
-        : `Video ${action.videoId} does not belong to run ${runLabel(action.experimentId)}`;
-    }
-    case "navigate":
-      return action.route.startsWith("/experiments/")
-        ? unknown(decodeURIComponent(action.route.slice("/experiments/".length)))
-        : null;
-    default:
-      return null;
-  }
 }
 
 function pick(state: DashboardData, keys: readonly DashboardKey[]): Partial<DashboardData> {

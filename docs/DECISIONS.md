@@ -60,3 +60,11 @@ rules and `DashboardAction` validation; the provider is chosen per request
 key is configured (`GET /api/ai/providers`). *Why:* owner requirement; it also gives a live
 fallback if one API degrades during the demo. *Consequence:* no provider-specific features in
 the product surface; provider-specific tuning stays inside its adapter.
+
+**ADR-013 · 2026-11-14 · accepted** — AI dashboard actions are validated server-side and
+applied client-side without a mid-turn round trip. The `dashboard_actions` tool checks schema
+and references against the same catalog the client uses, returns "applied" to the model, and
+streams the actions; the client applies them atomically as one undo group. *Why:* keeps the
+turn a single streamed request (simpler, faster, works on serverless) while the action bus
+stays the only mutator. *Consequence:* client store and server share `checkReferences` and the
+dataset version; a client-side failure is shown on the step.
