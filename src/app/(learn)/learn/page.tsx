@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 
 import { Skeleton } from "@/components/ui";
-import { loadPsi25Dataset } from "@/components/viz/dataset-bridge";
+import { getDataset } from "@/lib/data";
 import { LearnTrack } from "@/components/viz/learn-track";
 
 export default function LearnPage() {
-  const dataset = loadPsi25Dataset();
+  const dataset = getDataset("PSI-25");
   return (
     <Suspense
       fallback={

@@ -2,7 +2,7 @@
 
 import { ArrowRight, BookOpen, Compass, Film, FlaskConical, GitCompareArrows, Pause, Play, Sparkles } from "lucide-react";
 import { useReducedMotion } from "motion/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { shellUiStore } from "@/components/layout/shell-state";
 import {
@@ -45,7 +45,7 @@ export function MissionOverview({
   const reducedMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoFailed, setVideoFailed] = useState(false);
-  const [playing, setPlaying] = useState(!reducedMotion);
+  const [playing, setPlaying] = useState(false);
 
   const stats = computeOverviewStats(dataset, manifest);
   const o2Span =
@@ -53,16 +53,18 @@ export function MissionOverview({
   const airSpan =
     stats.airflowRange ? `${stats.airflowRange.min}–${stats.airflowRange.max}` : null;
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (reducedMotion) video.pause();
+    else void video.play().catch(() => { /* Autoplay can be blocked by the browser. */ });
+  }, [reducedMotion]);
+
   const toggleHeroPlayback = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) {
-      void v.play();
-      setPlaying(true);
-    } else {
-      v.pause();
-      setPlaying(false);
-    }
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) void video.play().catch(() => { /* Keep play controls available. */ });
+    else video.pause();
   };
 
   return (
@@ -91,8 +93,8 @@ export function MissionOverview({
 
               <p className="text-[1rem] text-[var(--text-2)] leading-relaxed max-w-2xl">
                 {mode === "learn"
-                  ? "See what fire looks like when gravity lets go. Explore real International Space Station footage from NASA’s BASS-II glovebox wind tunnel to discover why space flames turn round and blue—and when airflow feeds or extinguishes them."
-                  : "Interactive orbital research instrument over NASA PSI-25 (BASS-II) solid-fuel microgravity combustion telemetry. Filter all 129 runs across 6 Principal Investigators, inspect QA flags verbatim, frame-step NASA S3 footage, and match conditions inside the measured envelope."}
+                  ? "Watch International Space Station footage from NASA’s BASS-II glovebox and compare the recorded airflow, oxygen, and fuel conditions."
+                  : `Explore NASA PSI-25 (BASS-II) solid-fuel combustion data. Filter ${stats.totalRuns} runs across ${stats.piCount} principal investigators, inspect QA flags, frame-step ISS footage, and find runs with similar conditions.`}
               </p>
             </div>
 
@@ -148,7 +150,6 @@ export function MissionOverview({
                   ref={videoRef}
                   src={stats.heroVideo.href}
                   crossOrigin="anonymous"
-                  autoPlay={!reducedMotion}
                   muted
                   loop
                   playsInline
@@ -162,7 +163,7 @@ export function MissionOverview({
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/brand/orbital-flame-mark.svg"
-                    alt="Microgravity blue flame schematic"
+                    alt="Illustrative flame schematic"
                     className="size-16 mx-auto"
                   />
                   <p className="text-[0.8125rem] text-[var(--text-2)]">
@@ -345,7 +346,7 @@ export function MissionOverview({
             route: "/explore" as const,
             title: "Experiment Explorer",
             Icon: Compass,
-            expert: "Sortable 129-run telemetry matrix linked to an O₂ × airflow D3 scatter with 2D brushing.",
+            expert: "Sortable experiment table linked to an oxygen and airflow scatterplot.",
             learn: "Browse every ISS space-fire test on an interactive map and spot patterns across fuels.",
           },
           {
