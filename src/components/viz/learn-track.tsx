@@ -32,6 +32,7 @@ import {
   SegmentedControl,
   Stat,
 } from "@/components/ui";
+import { parameterRanges } from "@/lib/data/queries";
 import { useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentDataset } from "@/types/experiment";
 
@@ -98,9 +99,9 @@ function ChapterGravityWidget({
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
         <div className="md:col-span-5 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 flex flex-col justify-between">
           <div className="flex items-center justify-between text-[0.75rem] text-[var(--text-3)] mb-2">
-            <span>Flame Geometry Schematic</span>
+            <span>Illustrative Gas Transport</span>
             <Badge variant={gravityEnv === "ug" ? "accent" : "warning"}>
-              {gravityEnv === "ug" ? "Diffusion-led" : "Buoyancy-led"}
+              {gravityEnv === "ug" ? "Weak buoyancy" : "Buoyant updraft"}
             </Badge>
           </div>
           <svg
@@ -108,8 +109,8 @@ function ChapterGravityWidget({
             role="img"
             aria-label={
               gravityEnv === "ug"
-                ? "Orbital microgravity flame schematic showing a rounded blue reaction zone with no buoyant plume"
-                : "Earth gravity flame schematic showing an elongated teardrop plume with rising convection arrows"
+                ? "Illustration of gas transport with weak buoyancy"
+                : "Illustration of upward buoyant gas transport"
             }
             className="w-full h-auto max-w-full rounded-[var(--radius-sm)] bg-[var(--bg)] border border-[var(--line)]"
           >
@@ -158,7 +159,7 @@ function ChapterGravityWidget({
                   fill="var(--text-2)"
                   fontSize="10"
                 >
-                  No buoyant updraft · slow O2 diffusion
+                  Weak buoyant updraft
                 </text>
                 <text
                   x="130"
@@ -167,7 +168,7 @@ function ChapterGravityWidget({
                   fill="var(--accent)"
                   fontSize="10"
                 >
-                  Rounder, dimmer blue reaction envelope
+                  Conceptual illustration
                 </text>
               </g>
             ) : (
@@ -205,7 +206,7 @@ function ChapterGravityWidget({
                   fill="var(--warning)"
                   fontSize="10"
                 >
-                  Hot gas rises (~30 cm/s draft), glowing soot plume
+                  Arrows show a buoyant updraft
                 </text>
               </g>
             )}
@@ -224,23 +225,8 @@ function ChapterGravityWidget({
             </p>
             <p className="text-[0.8125rem] text-[var(--text-2)]">
               {gravityEnv === "ug"
-                ? "Hot exhaust lingers near the pyrolysis front because warm and cool gas weigh the same in freefall."
-                : "Warm exhaust accelerates upward, continuously drawing cool room air underneath the flame base."}
-            </p>
-          </div>
-          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 space-y-1.5">
-            <p className="text-[0.6875rem] uppercase tracking-[0.06em] text-[var(--text-3)]">
-              Visible Soot &amp; Color
-            </p>
-            <p className="text-[0.875rem] font-medium text-[var(--text-1)]">
-              {gravityEnv === "ug"
-                ? "Suppressed soot · clean blue leading edge"
-                : "Incandescent yellow-orange soot core"}
-            </p>
-            <p className="text-[0.8125rem] text-[var(--text-2)]">
-              {gravityEnv === "ug"
-                ? `Lower temperatures reduce soot production, exposing faint blue chemiluminescence (observed in ${b3 ? b3.testId : "B3"} at 2 cm/s).`
-                : "Higher peak reaction intensity cracks fuel vapor into soot particles that glow bright yellow."}
+                ? "Freefall weakens the buoyancy-driven flow around the flame."
+                : "Hot, less dense gases rise through cooler surrounding air."}
             </p>
           </div>
           {b3 && (
@@ -295,12 +281,10 @@ function ChapterOxygenWidget({
       });
   }, [experiments, o2Target]);
 
-  const regimeNote =
-    o2Target < 16
-      ? "Near-extinction / radiative quenching regime: thin and thick samples struggle to sustain spread unless airflow feeds fresh O2 efficiently."
-      : o2Target < 19.5
-        ? "Sub-atmospheric exploration regime: dimmer blue flames, tighter blow-off margins, and clear material thickness differences."
-        : "Air-like to slightly enriched orbital regime (19.5–22.2% O2): broader burning envelope across rods, films, and fabrics.";
+  const oxygenRange = parameterRanges(experiments).o2InitialPct;
+  if (!oxygenRange) {
+    return <p className="text-sm text-[var(--text-2)]">— No initial oxygen readings in this dataset.</p>;
+  }
 
   return (
     <div className="space-y-4">
@@ -319,26 +303,23 @@ function ChapterOxygenWidget({
         <input
           id="learn-o2-scrubber"
           type="range"
-          min={13.6}
-          max={22.2}
-          step={0.2}
+          min={oxygenRange.min}
+          max={oxygenRange.max}
+          step={0.1}
           value={o2Target}
           onChange={(e) => onO2Change(Number(e.target.value))}
           className="w-full accent-[var(--accent)] cursor-pointer"
         />
         <div className="flex justify-between text-[0.75rem] text-[var(--text-3)] num">
-          <span>13.6% (low O₂ floor)</span>
-          <span>17.5%</span>
-          <span>22.2% (max measured)</span>
+          <span>{oxygenRange.min.toFixed(1)}% recorded minimum</span>
+          <span>{oxygenRange.max.toFixed(1)}% recorded maximum</span>
         </div>
       </div>
-
-      <p className="text-[0.8125rem] text-[var(--text-2)]">{regimeNote}</p>
 
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-[0.75rem] uppercase tracking-[0.06em] text-[var(--text-3)]">
-            Real PSI-25 Runs within ±1.0% O₂ ({matches.length})
+            Runs within 1 percentage point of the selection ({matches.length})
           </span>
           <Button
             size="sm"
@@ -346,7 +327,7 @@ function ChapterOxygenWidget({
             onClick={() => onOpenLabWithO2(o2Target)}
           >
             <FlaskConical className="size-3.5" aria-hidden="true" />
-            Test {o2Target.toFixed(1)}% in What-if Lab
+            Find matches in What-if Lab
           </Button>
         </div>
 
@@ -436,7 +417,7 @@ function ChapterAirflowWidget({
             <div className="flex items-center gap-3">
               <FlowSparkline
                 setpoints={activeRun.conditions.airflowSetpointsCmS}
-                domainMax={55}
+                domainMax={Math.max(...candidates.flatMap((run) => run.conditions.airflowSetpointsCmS))}
                 width={132}
                 height={32}
               />
@@ -458,32 +439,6 @@ function ChapterAirflowWidget({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 space-y-1">
-          <p className="text-[0.75rem] font-semibold text-[var(--warning)]">
-            0–2 cm/s · Starvation
-          </p>
-          <p className="text-[0.75rem] text-[var(--text-2)]">
-            Near-quiescent cabin conditions allow CO2 and soot products to blanket the flame, shrinking reaction rates toward suffocation.
-          </p>
-        </div>
-        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 space-y-1">
-          <p className="text-[0.75rem] font-semibold text-[var(--good)]">
-            5–20 cm/s · Sustained Vent
-          </p>
-          <p className="text-[0.75rem] text-[var(--text-2)]">
-            Gentle ventilation sweeps exhaust downstream and delivers steady oxidizer, producing brightest steady spread.
-          </p>
-        </div>
-        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3 space-y-1">
-          <p className="text-[0.75rem] font-semibold text-[var(--critical)]">
-            40+ cm/s · Cooling Limit
-          </p>
-          <p className="text-[0.75rem] text-[var(--text-2)]">
-            High forced velocity (as at the start of O13a: 49 cm/s) shortens gas residence time and can drive convective blow-off.
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
@@ -538,14 +493,17 @@ function ChapterGeometryCaveatWidget({
           nullReason="No parsed mm value"
         />
         <Stat
-          label="Final CO (ppm)"
-          value={activeRun.conditions.coFinalPpm}
+          label="Final CO"
+          value={
+            activeRun.conditions.coFinalLowerBoundPpm === undefined
+              ? activeRun.conditions.coFinalPpm
+              : `> ${activeRun.conditions.coFinalLowerBoundPpm}`
+          }
           unit="ppm"
           precision={0}
           nullReason={
-            activeRun.qa.flags.length > 0
-              ? activeRun.qa.flags[0]
-              : "Sensor channel not recorded"
+            activeRun.qa.flags.find((flag) => flag.startsWith("coFinal:")) ??
+            "Final CO reading unavailable"
           }
         />
       </div>
@@ -574,7 +532,7 @@ function ChapterGeometryCaveatWidget({
               aria-hidden="true"
             />
             <div className="text-[0.8125rem] text-[var(--text-1)] space-y-1 min-w-0">
-              <p className="font-medium">Verbatim Source QA Caveat</p>
+              <p className="font-medium">Catalog QA flags</p>
               <ul className="list-disc pl-4 space-y-0.5 text-[var(--text-2)] break-words">
                 {activeRun.qa.flags.map((flag, idx) => (
                   <li key={`${activeRun.id}-flag-${idx}`}>{flag}</li>
@@ -584,7 +542,7 @@ function ChapterGeometryCaveatWidget({
           </div>
         ) : (
           <p className="text-[0.8125rem] text-[var(--text-3)]">
-            No sensor-ceiling or telemetry caveat flags reported in PSI-25 QA metadata for this test run.
+            The catalog has no QA flags for this run.
           </p>
         )}
       </div>
@@ -619,7 +577,9 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
   const [quizSelections, setQuizSelections] = useState<Record<string, number | undefined>>({});
 
   const [gravityEnv, setGravityEnv] = useState<"1g" | "ug">("ug");
-  const [o2Target, setO2Target] = useState<number>(15.9);
+  const [selectedO2, setO2Target] = useState<number>();
+  const o2Target = selectedO2 ?? lookupExperiment("PSI-25:O13a", dataset.experiments)?.conditions.o2InitialPct ??
+    parameterRanges(dataset.experiments).o2InitialPct?.min ?? 0;
   const [selectedFlowRunId, setSelectedFlowRunId] = useState<string>("PSI-25:O13a");
   const [selectedGeoRunId, setSelectedGeoRunId] = useState<string>("PSI-25:M5");
 
@@ -684,7 +644,7 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
             Explore &amp; Learn: Fire in Freefall
           </h1>
           <p className="text-[0.875rem] text-[var(--text-2)] max-w-3xl">
-            Understand how orbital microgravity reshapes flames, oxygen thresholds, and spacecraft ventilation using real ISS footage and measurements from NASA&apos;s {dataset.count}-run PSI-25 archive.
+            Explore gas transport, airflow, and recorded oxygen conditions using ISS footage and measurements from NASA&apos;s {dataset.count}-run PSI-25 archive.
           </p>
         </div>
 
@@ -804,12 +764,12 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
                 {chapter.citations.map((cit, cIdx) => (
                   <EvidenceChip
                     key={`${chapter.id}-cit-${cIdx}`}
-                    id={`${chapter.id}-cit-${cIdx}`}
+                    id={cit.doi ? `doi:${cit.doi}` : cit.runId ?? cit.label}
                     label={cit.label}
-                    kind={cit.kind === "doi" ? "dataset" : "experiment"}
+                    kind={cit.doi === dataset.doi ? "dataset" : cit.kind === "doi" ? "publication" : "experiment"}
                     href={
-                      cit.kind === "doi"
-                        ? "https://doi.org/10.60555/4qc4-de67"
+                      cit.doi
+                        ? `https://doi.org/${cit.doi}`
                         : cit.runId
                           ? `/experiments/${encodeURIComponent(cit.runId)}`
                           : undefined
@@ -961,8 +921,8 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
                 >
                   <p className="font-semibold">
                     {isQuizCorrect
-                      ? "Correct — grounded in PSI-25 evidence:"
-                      : "Not quite — try another choice or review the physics:"}
+                      ? "Correct"
+                      : "Try another choice"}
                   </p>
                   <p className="text-[var(--text-2)]">{chapter.quiz.explanation}</p>
                 </div>
@@ -994,7 +954,7 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
                         href="/explore"
                         className="inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] border border-[var(--line-strong)] bg-[var(--surface-1)] px-3 py-1.5 text-[0.8125rem] text-[var(--text-1)] hover:border-[var(--accent)]/50"
                       >
-                        Explore All 129 Runs
+                        Explore All {dataset.count} Runs
                       </Link>
                     </>
                   ) : (

@@ -115,12 +115,12 @@ export function WindTunnelSchematic() {
                 Restrictor 0–2
               </text>
 
-              {/* Forced airflow vectors (left -> right, 0–40 cm/s) */}
+              {/* Forced airflow vectors (left to right) */}
               <line x1="200" y1="108" x2="310" y2="108" stroke="var(--accent)" strokeWidth="1.75" markerEnd="url(#flow-arrow)" />
               <line x1="200" y1="138" x2="310" y2="138" stroke="var(--accent)" strokeWidth="1.75" markerEnd="url(#flow-arrow)" />
               <line x1="200" y1="168" x2="310" y2="168" stroke="var(--accent)" strokeWidth="1.75" markerEnd="url(#flow-arrow)" />
               <text x="252" y="96" textAnchor="middle" fill="var(--accent)" fontSize="11">
-                N₂ / O₂ flow (0–40 cm/s)
+                Forced airflow
               </text>
 
               {/* Solid Fuel Sample (PMMA / SIBAL / Nomex) */}
@@ -194,7 +194,7 @@ export function WindTunnelSchematic() {
               viewBox="0 0 760 280"
               className="w-full h-auto"
               role="img"
-              aria-label="Comparison between buoyant Earth 1g teardrop flame and microgravity spherical blue diffusion flame"
+              aria-label="Conceptual illustration of strong and weak buoyancy around a flame"
               aria-describedby={descId}
             >
               <defs>
@@ -229,22 +229,22 @@ export function WindTunnelSchematic() {
                 Cool air pulled in ↓
               </text>
               <text x="194" y="248" textAnchor="middle" fill="var(--text-2)" fontSize="11">
-                Teardrop shape · Soot-yellow luminosity
+                Arrows show a buoyant updraft
               </text>
 
               {/* Right panel: Microgravity */}
               <rect x="396" y="20" width="340" height="240" rx="8" fill="var(--surface-1)" stroke="var(--accent)" strokeOpacity="0.45" />
               <text x="566" y="46" textAnchor="middle" fill="var(--flame-core)" fontSize="13" fontWeight="600">
-                Microgravity (μg ≈ 0g) — Diffusion Controlled
+                Microgravity · Weak buoyancy
               </text>
               <circle cx="566" cy="144" r="64" fill="url(#ug-sphere)" />
               <circle cx="566" cy="144" r="34" fill="none" stroke="var(--flame-core)" strokeWidth="2" />
               <circle cx="566" cy="144" r="9" fill="var(--surface-3)" stroke="var(--text-1)" strokeWidth="1.5" />
               <text x="566" y="96" textAnchor="middle" fill="var(--flame-core)" fontSize="11">
-                Isotropic O₂ diffusion
+                Molecular diffusion
               </text>
               <text x="566" y="248" textAnchor="middle" fill="var(--text-2)" fontSize="11">
-                Spherical / quiescent blue flame · No buoyancy
+                Conceptual illustration
               </text>
             </svg>
           )}
@@ -258,27 +258,25 @@ export function WindTunnelSchematic() {
               </p>
               <p>
                 {flowMode === "opposed"
-                  ? "Solid samples ignited downstream burn against the incoming N₂/O₂ stream (Fernandez-Pello P1–P25 black PMMA rods; Bhattacharjee B1–B21 thin films). Opposed flow limits preheating ahead of the flame front."
-                  : "Samples ignited upstream burn in the same direction as the duct flow (Olson O1–O22 clear PMMA rods; T'ien T1–T29 SIBAL fabric). Concurrent airflow carries hot combustion products over fresh unburned fuel."}
+                  ? "In opposed flow, air moves against the direction of flame spread."
+                  : "In concurrent flow, air moves in the direction of flame spread."}
               </p>
               <p className="text-[0.8125rem] text-[var(--text-3)]">
-                Airflow speeds span 0–40 cm/s with a ~1 min duct sensor response lag; O₂ is vitiated
-                with nitrogen below 21 % and calibrated against the station MCA.
+                The duct air-speed display responds slowly to changes in fan settings. The BASS-II ReadMe describes an approximately one-minute response time.
               </p>
             </>
           ) : (
             <>
-              <p className="text-[var(--text-1)] font-medium">Why Microgravity Flames Are Blue &amp; Round</p>
-              <p>
-                On Earth, hot combustion gas is less dense than cool ambient air and rises upward,
-                drawing fresh oxygen into the base and stretching the flame into a yellow soot-rich
-                teardrop.
-              </p>
-              <p>
-                In orbital freefall on the ISS, buoyancy disappears. Oxygen reaches the fuel solely
-                by slow molecular diffusion or controlled tunnel airflow, yielding symmetric,
-                lower-soot blue flames that reveal clean extinction limits.
-              </p>
+              <p className="text-[var(--text-1)] font-medium">How Buoyancy Changes Gas Transport</p>
+              <p>On Earth, surrounding cooler air drives hot combustion gases upward by buoyancy.</p>
+              <p>Buoyancy is weaker in orbital freefall. Molecular diffusion and forced airflow still transport gases.</p>
+              <EvidenceChip
+                id="doi:10.1038/s41598-017-18398-4"
+                label="Link et al. (2018)"
+                kind="publication"
+                href="https://doi.org/10.1038/s41598-017-18398-4"
+                detail="The effect of gravity on flame spread over PMMA cylinders"
+              />
             </>
           )}
           <EvidenceChip
