@@ -1,9 +1,9 @@
 {
- "schemaVersion": "0.1.0",
+ "schemaVersion": "0.2.0",
  "accession": "PSI-25",
  "doi": "10.60555/4qc4-de67",
  "license": "Creative Commons Zero v1.0 Universal",
- "generatedAt": "2026-11-14T16:54:09+00:00",
+ "generatedAt": "2026-11-14T19:03:13+00:00",
  "count": 129,
  "videoTestIdsWithoutTableRow": [],
  "experiments": [
@@ -61,21 +61,11 @@
      "sizeBytes": 2831066,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cd",
      "kind": "still-sequence"
-    },
-    {
-     "id": "6924803a7f6aa6a8302103cf",
-     "fileName": "PSI-25_Raw Data_BASS_GMT50_SAMPLE_148_TEST_B3.mp4",
-     "category": "Raw Data",
-     "subcategory": "Reduced Gravity/ Bhattacharjee/B1",
-     "ext": ".mp4",
-     "sizeBytes": 8005417,
-     "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cf",
-     "kind": "primary"
     }
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -145,9 +135,9 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: 1.6 outside plausible 10–25 % range — likely transcription error, excluded"
+     "o2Final: 1.6 outside the 10–25 % campaign QA range; excluded"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -207,6 +197,16 @@
    "totalFramesShot": 253.0,
    "videos": [
     {
+     "id": "6924803a7f6aa6a8302103cf",
+     "fileName": "PSI-25_Raw Data_BASS_GMT50_SAMPLE_148_TEST_B3.mp4",
+     "category": "Raw Data",
+     "subcategory": "Reduced Gravity/ Bhattacharjee/B1",
+     "ext": ".mp4",
+     "sizeBytes": 8005417,
+     "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cf",
+     "kind": "primary"
+    },
+    {
      "id": "6924803a7f6aa6a8302103d0",
      "fileName": "PSI-25_Raw Data_BASS_GMT50_SAMPLE_148_TEST_B3_Still_Sequence.mp4",
      "category": "Raw Data",
@@ -219,7 +219,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -299,7 +299,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -381,7 +381,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -429,8 +429,7 @@
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
      3.0,
-     5.0,
-     10.0
+     5.0
     ],
     "airflowRaw": "3   5   approaching 10",
     "fanDisplayRaw": "0.9   1.3   2.75",
@@ -472,8 +471,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -555,7 +556,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -645,7 +646,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -692,8 +693,7 @@
     "coFinalPpm": 10.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     2.0,
-     1.0
+     2.0
     ],
     "airflowRaw": "2   <1",
     "fanDisplayRaw": "0.6   0.35",
@@ -725,8 +725,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -820,7 +822,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -869,7 +871,6 @@
     "airflowSetpointsCmS": [
      5.0,
      3.0,
-     1.0,
      1.0
     ],
     "airflowRaw": "5   3   1   <1",
@@ -912,8 +913,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -995,7 +998,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1092,7 +1095,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1178,7 +1181,7 @@
     "flags": [
      "o2Final: non-numeric 'none'"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1268,7 +1271,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1315,9 +1318,7 @@
     "coFinalPpm": 119.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     3.0,
-     0.5,
-     0.4
+     3.0
     ],
     "airflowRaw": "3  0.5 pot   0.4 pot",
     "fanDisplayRaw": "44 (pot 0.68)",
@@ -1349,8 +1350,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1398,8 +1401,7 @@
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
      5.0,
-     3.0,
-     0.4
+     3.0
     ],
     "airflowRaw": "5   3    pot 0.4",
     "fanDisplayRaw": "pot 1.2 (48)    0.9   0.4",
@@ -1431,8 +1433,12 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "video-filename-test-id-mismatch:6924803b7f6aa6a8302103e1",
+     "video-filename-test-id-mismatch:6924803b7f6aa6a8302103e2",
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1524,7 +1530,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1616,7 +1622,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1664,8 +1670,7 @@
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
      5.0,
-     3.0,
-     0.5
+     3.0
     ],
     "airflowRaw": "5   3      pot 0.5",
     "fanDisplayRaw": "48   pot 0.9   0.5",
@@ -1707,8 +1712,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1790,7 +1797,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1872,7 +1879,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Bhattacharjee",
@@ -1950,7 +1957,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Ferkul",
@@ -2007,7 +2014,7 @@
    "videos": [],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Ferkul",
@@ -2087,7 +2094,7 @@
     "flags": [
      "o2Final: non-numeric 'none'"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Ferkul",
@@ -2165,7 +2172,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Ferkul",
@@ -2247,7 +2254,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2341,7 +2348,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2424,7 +2431,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2506,7 +2513,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2552,6 +2559,7 @@
     "co2FinalPct": 3.22,
     "coInitialPpm": 9.0,
     "coFinalPpm": null,
+    "coFinalLowerBoundPpm": 500.0,
     "flowRestrictor": 0.0,
     "airflowSetpointsCmS": [
      20.0,
@@ -2601,9 +2609,9 @@
    ],
    "qa": {
     "flags": [
-     "coFinal: sensor over range ('>500', CO OR = >1000 ppm per ReadMe)"
+     "coFinal: source reports an exclusive lower bound (>500)"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2686,7 +2694,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2771,7 +2779,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2854,7 +2862,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -2935,7 +2943,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3059,7 +3067,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3142,7 +3150,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3188,9 +3196,7 @@
     "coInitialPpm": 15.0,
     "coFinalPpm": 443.0,
     "flowRestrictor": 1.0,
-    "airflowSetpointsCmS": [
-     1.0
-    ],
+    "airflowSetpointsCmS": [],
     "airflowRaw": "<1",
     "fanDisplayRaw": "41   42   41",
     "radiometerGainRaw": "250>50"
@@ -3221,8 +3227,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3304,7 +3312,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3386,7 +3394,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3475,7 +3483,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3560,7 +3568,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3609,16 +3617,15 @@
     "airflowSetpointsCmS": [
      10.0,
      5.0,
-     3.0
+     3.0,
+     0.0
     ],
     "airflowRaw": "10   5   3   0ext",
     "fanDisplayRaw": "Fan pot 3.7   1.7   1.5   1.3   0.8   0.6   0.5   0.3ext",
     "radiometerGainRaw": "250>50>250"
    },
    "flowConfiguration": null,
-   "outcomeHints": [
-    "ext"
-   ],
+   "outcomeHints": [],
    "totalFramesShot": 309.0,
    "videos": [
     {
@@ -3644,7 +3651,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3727,7 +3734,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3812,7 +3819,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3893,7 +3900,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Miller",
@@ -3979,7 +3986,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4061,7 +4068,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4174,7 +4181,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4289,7 +4296,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4375,7 +4382,7 @@
     "flags": [
      "coFinal: sensor over range ('OR', CO OR = >1000 ppm per ReadMe)"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4426,12 +4433,7 @@
      10.0,
      5.0,
      2.0,
-     0.0,
-     49.0,
-     62.0,
-     49.0,
-     44.0,
-     42.0
+     0.0
     ],
     "airflowRaw": "5  10  5   2   0 (49   62   49   44   42)",
     "fanDisplayRaw": "1.3   2.7   1.3   0.7   0.45. 4.0",
@@ -4524,7 +4526,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4571,7 +4573,6 @@
     "coFinalPpm": 590.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     49.0,
      5.0
     ],
     "airflowRaw": "49   5 cm/s",
@@ -4665,7 +4666,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4744,8 +4745,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4836,8 +4839,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -4938,8 +4943,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5040,8 +5047,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5122,8 +5131,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: Test Matrix Air display lacks measured set-points; fan notes are ambiguous"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5207,7 +5218,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5291,7 +5302,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5373,10 +5384,10 @@
    ],
    "qa": {
     "flags": [
-     "coInitial: sensor over range ('OR', CO OR = >1000 ppm per ReadMe)",
-     "coFinal: sensor over range ('OR', CO OR = >1000 ppm per ReadMe)"
+     "coFinal: sensor over range ('OR', CO OR = >1000 ppm per ReadMe)",
+     "coInitial: sensor over range ('OR', CO OR = >1000 ppm per ReadMe)"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5423,12 +5434,6 @@
     "coFinalPpm": 950.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     49.0,
-     44.0,
-     42.0,
-     41.0,
-     41.0,
-     40.5,
      5.0,
      2.0,
      0.0
@@ -5504,7 +5509,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5551,9 +5556,7 @@
     "coFinalPpm": null,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     7.0,
-     4.0,
-     49.0
+     7.0
     ],
     "airflowRaw": "7   4? (49   ?)",
     "fanDisplayRaw": "1.3   0.9",
@@ -5626,9 +5629,10 @@
    ],
    "qa": {
     "flags": [
-     "coFinal: sensor over range ('over', CO OR = >1000 ppm per ReadMe)"
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)",
+     "coFinal: non-numeric 'over'"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5712,7 +5716,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5815,7 +5819,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -5918,7 +5922,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6020,7 +6024,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6104,7 +6108,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6203,7 +6207,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6287,7 +6291,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6350,7 +6354,7 @@
    "videos": [],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6411,7 +6415,7 @@
    "videos": [],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6475,7 +6479,7 @@
    "videos": [],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Olson",
@@ -6570,7 +6574,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -6664,7 +6668,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -6714,8 +6718,7 @@
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
      5.0,
-     2.5,
-     1.15
+     2.5
     ],
     "airflowRaw": "5   2.5 (1.15   .5   .35   .33. .32   .315   .31   .3)",
     "fanDisplayRaw": "",
@@ -6778,7 +6781,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -6827,13 +6830,7 @@
     "coFinalPpm": 79.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     5.0,
-     0.85,
-     0.32,
-     0.31,
-     0.305,
-     0.3,
-     0.295
+     5.0
     ],
     "airflowRaw": "5   very low (0.85   0.32   0.31   0.305   0.30   0.295)",
     "fanDisplayRaw": "",
@@ -6896,7 +6893,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -6945,11 +6942,7 @@
     "coFinalPpm": 493.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     5.0,
-     0.4,
-     0.36,
-     0.32,
-     0.308
+     5.0
     ],
     "airflowRaw": "5   pots 0.4   0.36   0.32   0.308   .3   off",
     "fanDisplayRaw": "48   41",
@@ -6971,8 +6964,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7066,7 +7061,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7115,11 +7110,7 @@
     "coFinalPpm": 64.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     5.0,
-     0.4,
-     0.36,
-     0.32,
-     0.31
+     5.0
     ],
     "airflowRaw": "5   pots 0.4   0.36   0.32   0.31   off",
     "fanDisplayRaw": "48   41",
@@ -7141,8 +7132,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7205,7 +7198,7 @@
    "videos": [],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7289,7 +7282,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7338,12 +7331,7 @@
     "coFinalPpm": 44.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     5.0,
-     0.4,
-     0.36,
-     0.32,
-     0.31,
-     0.3
+     5.0
     ],
     "airflowRaw": "5   pots 0.4   0.36   0.32   0.31   0.30 extinguished",
     "fanDisplayRaw": "48   41",
@@ -7356,8 +7344,10 @@
    "totalFramesShot": 221.0,
    "videos": [],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: pot settings in Air display excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7463,7 +7453,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7557,7 +7547,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7651,7 +7641,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7733,7 +7723,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7782,8 +7772,7 @@
     "coFinalPpm": 108.0,
     "flowRestrictor": 2.0,
     "airflowSetpointsCmS": [
-     5.0,
-     0.36
+     5.0
     ],
     "airflowRaw": "5   (0.36)",
     "fanDisplayRaw": "46   41",
@@ -7826,7 +7815,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7910,7 +7899,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -7996,7 +7985,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8091,7 +8080,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8176,7 +8165,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8281,7 +8270,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8383,7 +8372,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8485,7 +8474,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8589,9 +8578,9 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: 0.6 outside plausible 10–25 % range — likely transcription error, excluded"
+     "o2Final: 0.6 outside the 10–25 % campaign QA range; excluded"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8695,9 +8684,9 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: 39.1 outside plausible 10–25 % range — likely transcription error, excluded"
+     "o2Final: 39.1 outside the 10–25 % campaign QA range; excluded"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8782,7 +8771,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8877,7 +8866,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -8961,7 +8950,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "Fernandez-Pello",
@@ -9040,8 +9029,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T1) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9122,8 +9113,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T2) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9234,7 +9227,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9314,8 +9307,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T4) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9397,7 +9392,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9446,7 +9441,6 @@
     "airflowSetpointsCmS": [
      5.0,
      2.0,
-     1.0,
      1.0
     ],
     "airflowRaw": "5  2  1   <1",
@@ -9469,8 +9463,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9584,7 +9580,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9654,9 +9650,9 @@
    ],
    "qa": {
     "flags": [
-     "date: 2018-06-24 is outside the 2014 T'ien campaign — verify against ops logs"
+     "date: 2018-06-24 conflicts with the 2014 campaign and reported GMT day (CSV and Test Matrix agree on the literal date)"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9736,7 +9732,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9826,7 +9822,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9906,7 +9902,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -9987,7 +9983,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10078,7 +10074,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10158,8 +10154,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T15) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10270,7 +10268,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10317,8 +10315,7 @@
     "coFinalPpm": 190.0,
     "flowRestrictor": 0.0,
     "airflowSetpointsCmS": [
-     6.0,
-     53.0
+     6.0
     ],
     "airflowRaw": "6   53",
     "fanDisplayRaw": "",
@@ -10350,8 +10347,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: ambiguous '53' in Test Matrix Air display, excluded"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10432,9 +10431,9 @@
    ],
    "qa": {
     "flags": [
-     "date: 2018-06-24 is outside the 2014 T'ien campaign — verify against ops logs"
+     "date: 2018-06-24 conflicts with the 2014 campaign and reported GMT day (CSV and Test Matrix agree on the literal date)"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10514,7 +10513,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10595,7 +10594,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10716,7 +10715,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10807,7 +10806,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10897,7 +10896,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -10987,7 +10986,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11077,8 +11076,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T25) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11158,8 +11159,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "Fuel Sample Material: CSV '2 cm SIBAL' differs from Test Matrix (T'ien T26) 'SIBAL 2 cm'"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11240,7 +11243,7 @@
    ],
    "qa": {
     "flags": [],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11340,9 +11343,9 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: 0.9 outside plausible 10–25 % range — likely transcription error, excluded"
+     "o2Final: 0.9 outside the 10–25 % campaign QA range; excluded"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11442,9 +11445,9 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: 40.4 outside plausible 10–25 % range — likely transcription error, excluded"
+     "o2Final: 40.4 outside the 10–25 % campaign QA range; excluded"
     ],
-    "parse": "heuristic-v0"
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",
@@ -11491,8 +11494,7 @@
     "coFinalPpm": 10.0,
     "flowRestrictor": 1.0,
     "airflowSetpointsCmS": [
-     5.0,
-     2.0
+     5.0
     ],
     "airflowRaw": "5   2(?)",
     "fanDisplayRaw": "53   43",
@@ -11524,8 +11526,10 @@
     }
    ],
    "qa": {
-    "flags": [],
-    "parse": "heuristic-v0"
+    "flags": [
+     "airflow: bounded or uncertain Air display value excluded (Test Matrix)"
+    ],
+    "parse": "matrix-v1"
    },
    "raw": {
     "PI": "T'ien",

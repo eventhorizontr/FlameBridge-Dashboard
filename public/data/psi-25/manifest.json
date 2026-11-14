@@ -1,11 +1,11 @@
 {
- "schemaVersion": "0.1.0",
+ "schemaVersion": "0.2.0",
  "accession": "PSI-25",
  "title": "Burning and Suppression of Solids - II",
  "acronym": "BASS-II",
  "doi": "10.60555/4qc4-de67",
  "license": "Creative Commons Zero v1.0 Universal",
- "generatedAt": "2026-11-14T16:54:09+00:00",
+ "generatedAt": "2026-11-14T19:03:13+00:00",
  "source": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-25",
  "studyVersion": 4,
  "downloadEndpoint": "https://psi.nasa.gov/geode-py/ws/studies/PSI-25/download?file={id}&version=4&redirect=false",
