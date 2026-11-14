@@ -35,8 +35,9 @@ function delta(query: number | null, measured: number | null): number | null {
  * Retrieve measured PSI-25 runs (dataset DOI 10.60555/4qc4-de67).
  * d = sqrt(sum(wᵢ × (Δᵢ / spanᵢ)²) + number of categorical mismatches).
  * Δ units are O₂ percentage points, cm/s and mm; d is dimensionless. A zero
- * span gives one normalized unit to any nonzero delta. A missing requested
- * size contributes one normalized unit and keeps the displayed delta null.
+ * span gives one normalized unit to any nonzero delta. The size span is
+ * measured within the requested geometry. A missing or incomparable size
+ * contributes one normalized unit and keeps the displayed delta null.
  * Nearest-neighbor method reference: DOI 10.1109/TIT.1967.1053964.
  */
 export function findClosestExperiments(
@@ -54,7 +55,10 @@ export function findClosestExperiments(
 
   const active = numericFeatures.filter((feature) => params[feature] !== null);
   const spans = Object.fromEntries(active.map((feature) => {
-    const [min, max] = measuredRange(rows, feature);
+    const scaleRows = feature === "characteristicSizeMm"
+      ? rows.filter(({ experiment }) => experiment.fuel.geometry === params.geometry)
+      : rows;
+    const [min, max] = measuredRange(scaleRows, feature);
     return [feature, min === undefined || max === undefined ? 0 : max - min];
   }));
 
@@ -64,7 +68,9 @@ export function findClosestExperiments(
     const deltas = {
       o2Pct: delta(params.o2Pct, values.o2Pct),
       airflowCmS: delta(params.airflowCmS, values.airflowCmS),
-      characteristicSizeMm: delta(params.characteristicSizeMm, values.characteristicSizeMm),
+      characteristicSizeMm: experiment.fuel.geometry === params.geometry
+        ? delta(params.characteristicSizeMm, values.characteristicSizeMm)
+        : null,
     };
     const squared = active.reduce((sum, feature) => {
       const difference = deltas[feature];

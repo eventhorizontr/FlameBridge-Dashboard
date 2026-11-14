@@ -31,6 +31,15 @@ describe("What-if Lab matching", () => {
     expect(findClosestExperiments({ ...exact, material: "SIBAL" }).insideEnvelope).toBe(false);
   });
 
+  it("does not compare the thickness of a film with the diameter of a rod", () => {
+    const rod = getExperiment("O1")!;
+    const film = getExperiment("B3")!;
+    const result = findClosestExperiments(exact, [rod, film]);
+    expect(result.matches[0].distance).toBe(0);
+    expect(result.matches[1].categoricalMismatches).toEqual(["geometry"]);
+    expect(result.matches[1].deltas.characteristicSizeMm).toBeNull();
+  });
+
   it("excludes unavailable O₂ or airflow and leaves unavailable size deltas null", () => {
     const source = getExperiment("O1")!;
     const sizeMissing = { ...source, fuel: { ...source.fuel, diameterMm: undefined } };
