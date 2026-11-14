@@ -1,0 +1,609 @@
+[
+  {
+    "id": "PSI-25:B2",
+    "testId": "B2",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Bhattacharjee",
+    "date": "2014-02-19",
+    "gmtDay": 50,
+    "sampleId": "155",
+    "fuel": {
+      "raw": "200 micron PMMA film   2 cm wide",
+      "material": "PMMA",
+      "thicknessMm": 0.2,
+      "geometry": "film",
+      "widthCm": 2,
+      "inferred": []
+    },
+    "conditions": {
+      "o2InitialPct": 22.2,
+      "o2FinalPct": null,
+      "co2InitialPct": 0.44,
+      "co2FinalPct": null,
+      "coInitialPpm": 6,
+      "coFinalPpm": null,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        5
+      ],
+      "airflowRaw": "5",
+      "fanDisplayRaw": "62",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": null,
+    "outcomeHints": [],
+    "totalFramesShot": null,
+    "videos": [
+      {
+        "id": "6924803a7f6aa6a8302103d1",
+        "fileName": "PSI-25_Raw Data_BASS_GMT50_SAMPLE_155_TEST_B2.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/ Bhattacharjee/B2",
+        "ext": ".mp4",
+        "sizeBytes": 7855717,
+        "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d1",
+        "kind": "primary"
+      }
+    ],
+    "qa": {
+      "flags": [
+        "o2Final: 1.6 outside plausible 10–25 % range — likely transcription error, excluded"
+      ],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Bhattacharjee",
+      "Test #": "B2",
+      "Date": "2/19/2014",
+      "GMT": "50",
+      "Sample #": "155",
+      "Fuel Sample Material": "200 micron PMMA film   2 cm wide",
+      "Flow restrictor": "2",
+      "Fan display": "62",
+      "Air display": "5",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "none",
+      "Calibrated  initial O2 % by vol ": "22.2",
+      "Calibrated final O2 % by vol": "1.6",
+      "Initial CO2 % by vol": "0.44",
+      "Final CO2 % by vol": "",
+      "Initial CO (ppm)": "6",
+      "Final CO (ppm)": ""
+    }
+  },
+  {
+    "id": "PSI-25:B3",
+    "testId": "B3",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Bhattacharjee",
+    "date": "2014-02-19",
+    "gmtDay": 50,
+    "sampleId": "148",
+    "fuel": {
+      "raw": "100 micron film   2 cm wide",
+      "material": "PMMA",
+      "thicknessMm": 0.1,
+      "geometry": "film",
+      "widthCm": 2,
+      "inferred": [
+        "material=PMMA: unnamed film/slab in a PMMA test series"
+      ]
+    },
+    "conditions": {
+      "o2InitialPct": 22.2,
+      "o2FinalPct": 21.8,
+      "co2InitialPct": 0.43,
+      "co2FinalPct": 0.49,
+      "coInitialPpm": 12,
+      "coFinalPpm": 19,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        2
+      ],
+      "airflowRaw": "2",
+      "fanDisplayRaw": "47",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": null,
+    "outcomeHints": [],
+    "totalFramesShot": 253,
+    "videos": [
+      {
+        "id": "6924803a7f6aa6a8302103d0",
+        "fileName": "PSI-25_Raw Data_BASS_GMT50_SAMPLE_148_TEST_B3_Still_Sequence.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/ Bhattacharjee/B3",
+        "ext": ".mp4",
+        "sizeBytes": 2072492,
+        "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d0",
+        "kind": "still-sequence"
+      }
+    ],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Bhattacharjee",
+      "Test #": "B3",
+      "Date": "2/19/2014",
+      "GMT": "50",
+      "Sample #": "148",
+      "Fuel Sample Material": "100 micron film   2 cm wide",
+      "Flow restrictor": "2",
+      "Fan display": "47",
+      "Air display": "2",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "253",
+      "Calibrated  initial O2 % by vol ": "22.2",
+      "Calibrated final O2 % by vol": "21.8",
+      "Initial CO2 % by vol": "0.43",
+      "Final CO2 % by vol": "0.49",
+      "Initial CO (ppm)": "12",
+      "Final CO (ppm)": "19"
+    }
+  },
+  {
+    "id": "PSI-25:F2",
+    "testId": "F2",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Ferkul",
+    "date": "2014-07-28",
+    "gmtDay": 209,
+    "sampleId": "228m",
+    "fuel": {
+      "raw": "Nomex natural (nomex III)",
+      "material": "Nomex",
+      "geometry": "fabric",
+      "inferred": []
+    },
+    "conditions": {
+      "o2InitialPct": 21,
+      "o2FinalPct": 21,
+      "co2InitialPct": 0.37,
+      "co2FinalPct": 0.39,
+      "coInitialPpm": 105,
+      "coFinalPpm": 82,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        15
+      ],
+      "airflowRaw": "15",
+      "fanDisplayRaw": "92",
+      "radiometerGainRaw": "250"
+    },
+    "flowConfiguration": null,
+    "outcomeHints": [],
+    "totalFramesShot": 72,
+    "videos": [],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Ferkul",
+      "Test #": "F2",
+      "Date": "7/28/2014",
+      "GMT": "209",
+      "Sample #": "228m",
+      "Fuel Sample Material": "Nomex natural (nomex III)",
+      "Flow restrictor": "2",
+      "Fan display": "92",
+      "Air display": "15",
+      "Radiometer gain   (1000   250   50   10)": "250",
+      "Total Frames Shot": "72",
+      "Calibrated  initial O2 % by vol ": "21",
+      "Calibrated final O2 % by vol": "21",
+      "Initial CO2 % by vol": "0.37",
+      "Final CO2 % by vol": "0.39",
+      "Initial CO (ppm)": "105",
+      "Final CO (ppm)": "82"
+    }
+  },
+  {
+    "id": "PSI-25:M1",
+    "testId": "M1",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Miller",
+    "date": "2014-02-20",
+    "gmtDay": 51,
+    "sampleId": "222",
+    "fuel": {
+      "raw": "1 mm thick PMMA   1 sided   2 cm",
+      "material": "PMMA",
+      "thicknessMm": 1,
+      "geometry": "slab",
+      "widthCm": 2,
+      "burnSides": 1,
+      "inferred": []
+    },
+    "conditions": {
+      "o2InitialPct": 22.2,
+      "o2FinalPct": 21.9,
+      "co2InitialPct": 0.45,
+      "co2FinalPct": 0.61,
+      "coInitialPpm": 0,
+      "coFinalPpm": 60,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        10,
+        8
+      ],
+      "airflowRaw": "10  8",
+      "fanDisplayRaw": "58   54",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": null,
+    "outcomeHints": [],
+    "totalFramesShot": 304,
+    "videos": [
+      {
+        "id": "692480417f6aa6a830210447",
+        "fileName": "PSI-25_Raw Data_BASS_GMT51_SAMPLE_222_TEST_M1_Still_Sequence.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Miller/M1",
+        "ext": ".mp4",
+        "sizeBytes": 11636925,
+        "href": "/api/psi/file/PSI-25/692480417f6aa6a830210447",
+        "kind": "still-sequence"
+      },
+      {
+        "id": "692480417f6aa6a830210448",
+        "fileName": "PSI-25_Raw Data_BASS_GMT51_SAMPLE_222_TEST_M1.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Miller/M1",
+        "ext": ".mp4",
+        "sizeBytes": 57914129,
+        "href": "/api/psi/file/PSI-25/692480417f6aa6a830210448",
+        "kind": "primary"
+      }
+    ],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Miller",
+      "Test #": "M1",
+      "Date": "2/20/2014",
+      "GMT": "51",
+      "Sample #": "222",
+      "Fuel Sample Material": "1 mm thick PMMA   1 sided   2 cm",
+      "Flow restrictor": "2",
+      "Fan display": "58   54",
+      "Air display": "10  8",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "304",
+      "Calibrated  initial O2 % by vol ": "22.2",
+      "Calibrated final O2 % by vol": "21.9",
+      "Initial CO2 % by vol": "0.45",
+      "Final CO2 % by vol": "0.61",
+      "Initial CO (ppm)": "0",
+      "Final CO (ppm)": "60"
+    }
+  },
+  {
+    "id": "PSI-25:O1",
+    "testId": "O1",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Olson",
+    "date": "2014-02-18",
+    "gmtDay": 49,
+    "sampleId": "207",
+    "fuel": {
+      "raw": "1/4\" clear rod",
+      "material": "PMMA",
+      "geometry": "rod",
+      "color": "clear",
+      "diameterMm": 6.35,
+      "inferred": [
+        "material=PMMA: PSI-25 ReadMe — Olson and Fernandez-Pello burned PMMA rods"
+      ]
+    },
+    "conditions": {
+      "o2InitialPct": 22.2,
+      "o2FinalPct": 21.7,
+      "co2InitialPct": 0.44,
+      "co2FinalPct": 0.85,
+      "coInitialPpm": -1,
+      "coFinalPpm": 51,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        20,
+        10,
+        5,
+        2,
+        1
+      ],
+      "airflowRaw": "20  10  5  2  1",
+      "fanDisplayRaw": "89  62  50  41",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": "concurrent",
+    "outcomeHints": [],
+    "totalFramesShot": 62,
+    "videos": [
+      {
+        "id": "692480467f6aa6a8302104a7",
+        "fileName": "PSI-25_Raw Data_BASS_GMT49_SAMPLE_207_TEST_O1_Still_Sequence.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Olson/O1",
+        "ext": ".mp4",
+        "sizeBytes": 5821593,
+        "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a7",
+        "kind": "still-sequence"
+      },
+      {
+        "id": "692480467f6aa6a8302104a8",
+        "fileName": "PSI-25_Raw Data_BASS_GMT49_SAMPLE_207_TEST_O1.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Olson/O1",
+        "ext": ".mp4",
+        "sizeBytes": 34211955,
+        "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a8",
+        "kind": "primary"
+      }
+    ],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Olson",
+      "Test #": "O1",
+      "Date": "2/18/2014",
+      "GMT": "49",
+      "Sample #": "207",
+      "Fuel Sample Material": "1/4\" clear rod",
+      "Flow restrictor": "2",
+      "Fan display": "89  62  50  41",
+      "Air display": "20  10  5  2  1",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "62",
+      "Calibrated  initial O2 % by vol ": "22.2",
+      "Calibrated final O2 % by vol": "21.7",
+      "Initial CO2 % by vol": "0.44",
+      "Final CO2 % by vol": "0.85",
+      "Initial CO (ppm)": "-1",
+      "Final CO (ppm)": "51"
+    }
+  },
+  {
+    "id": "PSI-25:P1",
+    "testId": "P1",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Fernandez-Pello",
+    "date": "2014-06-16",
+    "gmtDay": 167,
+    "sampleId": "185M",
+    "fuel": {
+      "raw": "1/4\" black rod",
+      "material": "PMMA",
+      "geometry": "rod",
+      "color": "black",
+      "diameterMm": 6.35,
+      "inferred": [
+        "material=PMMA: PSI-25 ReadMe — Olson and Fernandez-Pello burned PMMA rods"
+      ]
+    },
+    "conditions": {
+      "o2InitialPct": 17.7,
+      "o2FinalPct": 17.5,
+      "co2InitialPct": 0.27,
+      "co2FinalPct": 0.44,
+      "coInitialPpm": 1,
+      "coFinalPpm": 14,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        5,
+        2
+      ],
+      "airflowRaw": "5  2   slow decr to ext",
+      "fanDisplayRaw": "",
+      "radiometerGainRaw": "250"
+    },
+    "flowConfiguration": "opposed",
+    "outcomeHints": [
+      "ext"
+    ],
+    "totalFramesShot": 307,
+    "videos": [
+      {
+        "id": "692480527f6aa6a830210588",
+        "fileName": "PSI-25_Raw Data_BASS_GMT167_SAMPLE_185_TEST_P1_Still_Sequence.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Fernandez-Pello/P1",
+        "ext": ".mp4",
+        "sizeBytes": 2882887,
+        "href": "/api/psi/file/PSI-25/692480527f6aa6a830210588",
+        "kind": "still-sequence"
+      },
+      {
+        "id": "692480527f6aa6a830210589",
+        "fileName": "PSI-25_Raw Data_BASS_GMT167_SAMPLE_185_TEST_P1_2ND_VIEW.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Fernandez-Pello/P1",
+        "ext": ".mp4",
+        "sizeBytes": 60357231,
+        "href": "/api/psi/file/PSI-25/692480527f6aa6a830210589",
+        "kind": "second-view"
+      },
+      {
+        "id": "692480527f6aa6a83021058a",
+        "fileName": "PSI-25_Raw Data_BASS_GMT167_SAMPLE_185_TEST_P1.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/Fernandez-Pello/P1",
+        "ext": ".mp4",
+        "sizeBytes": 53049877,
+        "href": "/api/psi/file/PSI-25/692480527f6aa6a83021058a",
+        "kind": "primary"
+      }
+    ],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Fernandez-Pello",
+      "Test #": "P1",
+      "Date": "6/16/2014",
+      "GMT": "167",
+      "Sample #": "185M",
+      "Fuel Sample Material": "1/4\" black rod",
+      "Flow restrictor": "2",
+      "Fan display": "",
+      "Air display": "5  2   slow decr to ext",
+      "Radiometer gain   (1000   250   50   10)": "250",
+      "Total Frames Shot": "307",
+      "Calibrated  initial O2 % by vol ": "17.7",
+      "Calibrated final O2 % by vol": "17.5",
+      "Initial CO2 % by vol": "0.27",
+      "Final CO2 % by vol": "0.44",
+      "Initial CO (ppm)": "1",
+      "Final CO (ppm)": "14"
+    }
+  },
+  {
+    "id": "PSI-25:T1",
+    "testId": "T1",
+    "investigation": "PSI-25",
+    "principalInvestigator": "T'ien",
+    "date": "2014-02-14",
+    "gmtDay": 45,
+    "sampleId": "128",
+    "fuel": {
+      "raw": "2 cm SIBAL",
+      "material": "SIBAL",
+      "geometry": "fabric",
+      "composition": "75/25 cotton/fiberglass (PSI-25 ReadMe)",
+      "widthCm": 2,
+      "inferred": []
+    },
+    "conditions": {
+      "o2InitialPct": 18.5,
+      "o2FinalPct": 18.5,
+      "co2InitialPct": 0.35,
+      "co2FinalPct": 0.41,
+      "coInitialPpm": 0,
+      "coFinalPpm": 40,
+      "flowRestrictor": 2,
+      "airflowSetpointsCmS": [
+        10
+      ],
+      "airflowRaw": "10",
+      "fanDisplayRaw": "80",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": null,
+    "outcomeHints": [],
+    "totalFramesShot": 85,
+    "videos": [
+      {
+        "id": "6924804b7f6aa6a830210501",
+        "fileName": "PSI-25_Raw Data_BASS_GMT45_SAMPLE_128_TEST_T1_Still_Sequence.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/T'ien/T1",
+        "ext": ".mp4",
+        "sizeBytes": 2030280,
+        "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210501",
+        "kind": "still-sequence"
+      },
+      {
+        "id": "6924804b7f6aa6a830210502",
+        "fileName": "PSI-25_Raw Data_BASS_GMT45_SAMPLE_128_TEST_T1.mp4",
+        "category": "Raw Data",
+        "subcategory": "Reduced Gravity/T'ien/T1",
+        "ext": ".mp4",
+        "sizeBytes": 11667714,
+        "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210502",
+        "kind": "primary"
+      }
+    ],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "T'ien",
+      "Test #": "T1",
+      "Date": "2/14/2014",
+      "GMT": "45",
+      "Sample #": "128",
+      "Fuel Sample Material": "2 cm SIBAL",
+      "Flow restrictor": "2",
+      "Fan display": "80",
+      "Air display": "10",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "85",
+      "Calibrated  initial O2 % by vol ": "18.5",
+      "Calibrated final O2 % by vol": "18.5",
+      "Initial CO2 % by vol": "0.35",
+      "Final CO2 % by vol": "0.41",
+      "Initial CO (ppm)": "0",
+      "Final CO (ppm)": "40"
+    }
+  },
+  {
+    "id": "PSI-25:O20",
+    "testId": "O20",
+    "investigation": "PSI-25",
+    "principalInvestigator": "Olson",
+    "date": "2016-02-26",
+    "gmtDay": 57,
+    "sampleId": "204m",
+    "fuel": {
+      "raw": "1/4\" clear rod",
+      "material": "PMMA",
+      "geometry": "rod",
+      "color": "clear",
+      "diameterMm": 6.35,
+      "inferred": [
+        "material=PMMA: PSI-25 ReadMe — Olson and Fernandez-Pello burned PMMA rods"
+      ]
+    },
+    "conditions": {
+      "o2InitialPct": 16.5,
+      "o2FinalPct": 15.9,
+      "co2InitialPct": 0.2,
+      "co2FinalPct": 0.57,
+      "coInitialPpm": -3,
+      "coFinalPpm": 57,
+      "flowRestrictor": 0,
+      "airflowSetpointsCmS": [
+        5,
+        8,
+        38.5
+      ],
+      "airflowRaw": "5   8    incr to max 38.5",
+      "fanDisplayRaw": "49 (1.3 pot)   pots 7   8  9   10",
+      "radiometerGainRaw": "50"
+    },
+    "flowConfiguration": "concurrent",
+    "outcomeHints": [],
+    "totalFramesShot": null,
+    "videos": [],
+    "qa": {
+      "flags": [],
+      "parse": "heuristic-v0"
+    },
+    "raw": {
+      "PI": "Olson",
+      "Test #": "O20",
+      "Date": "2/26/2016",
+      "GMT": "57",
+      "Sample #": "204m",
+      "Fuel Sample Material": "1/4\" clear rod",
+      "Flow restrictor": "0",
+      "Fan display": "49 (1.3 pot)   pots 7   8  9   10",
+      "Air display": "5   8    incr to max 38.5",
+      "Radiometer gain   (1000   250   50   10)": "50",
+      "Total Frames Shot": "video",
+      "Calibrated  initial O2 % by vol ": "16.5",
+      "Calibrated final O2 % by vol": "15.9",
+      "Initial CO2 % by vol": "0.2",
+      "Final CO2 % by vol": "0.57",
+      "Initial CO (ppm)": "-3",
+      "Final CO (ppm)": "57"
+    }
+  }
+]
