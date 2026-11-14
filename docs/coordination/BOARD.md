@@ -9,7 +9,7 @@ _Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-14 
 
 | Lane | Now | Then |
 |---|---|---|
-| **Claude** | #1 Zod schemas & validator | #2 Store + action registry → #9 AI endpoint (Claude **+ Gemini switch**, ADR-012) |
+| **Claude** | ✅ #1 · ✅ #2 · ✅ #9 (Claude + Gemini) | review PRs (30 min SLA) · swap AI tools to `src/lib/data` after #4 · `find_closest` tool after #8 · #11 Vercel after #10 |
 | **Codex** | #3 Test Matrix reconciliation · #4 Data loaders + fixtures | #8 What-if matching |
 | **Antigravity** | #5 UI primitives + shell + routes | #6 Overview (on fixtures) · #7 Explorer |
 | **Human** | #10 API keys (Anthropic + Gemini), Vercel import, Actions billing | — |
@@ -31,5 +31,9 @@ Critical paths: **#1 → #2 → #9 → #16** (AI drives UI) · **#4 → #8 → #
 Cut order if late: #17 → #18 chapters 4–6 → #15 overlays → never cut integrity or design quality.
 
 ## Merged
+- `3e84218` #9 AI agent: /api/ai, Claude + Gemini providers, tools, useAssistant (PR #23)
+- `4f922b9` #2 store, action registry, undo, URL sync (PR #22)
+- `421c7b4` #1 Zod runtime schemas + dataset validator (PR #21)
+- `deeb99e` 24 h plan, ADR-011/012, team credits (PR #20)
 - `4f50e8e` bootstrap: scaffold, contracts, PSI pipeline (129 runs / 123 with video), docs, CI, coordination system
 - `7858d9d` contract: dashboard filters, lab params, action vocabulary
