@@ -11,7 +11,9 @@ import {
   fuelFamily,
   lookupExperiment,
   parameterRanges,
+  partitionPlottedRuns,
   representativeAirflow,
+  sortExperiments,
 } from "./dataset-queries";
 
 function makeExperiment(overrides: Partial<Experiment> & { id: string; testId: string }): Experiment {
@@ -305,5 +307,16 @@ describe("dataset-queries helpers", () => {
     );
     expect(outside.insideEnvelope).toBe(false);
     expect(outside.matches).toHaveLength(3);
+  });
+
+  it("excludes missing O2 or airflow runs from plotted coordinates and sorts missing values last", () => {
+    const { plotted, unplotted } = partitionPlottedRuns(SAMPLE_EXPERIMENTS);
+    expect(plotted.map((p) => p.experiment.testId)).toEqual(["B3", "O1", "F2"]);
+    expect(unplotted.map((e) => e.testId)).toEqual(["M5"]);
+
+    const asc = sortExperiments(SAMPLE_EXPERIMENTS, "o2InitialPct", "asc").map((e) => e.testId);
+    expect(asc).toEqual(["O1", "F2", "B3", "M5"]);
+    const desc = sortExperiments(SAMPLE_EXPERIMENTS, "o2InitialPct", "desc").map((e) => e.testId);
+    expect(desc).toEqual(["B3", "F2", "O1", "M5"]);
   });
 });

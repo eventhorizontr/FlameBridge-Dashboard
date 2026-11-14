@@ -257,3 +257,100 @@ export function findClosestExperimentsClient(
     method: MATCH_METHOD,
   };
 }
+
+export interface PlottedExperimentPoint {
+  experiment: Experiment;
+  o2InitialPct: number;
+  airflowCmS: number;
+  family: FuelFamily;
+  sizeMm: number | null;
+}
+
+export function partitionPlottedRuns(experiments: readonly Experiment[]): {
+  plotted: PlottedExperimentPoint[];
+  unplotted: Experiment[];
+} {
+  const plotted: PlottedExperimentPoint[] = [];
+  const unplotted: Experiment[] = [];
+  for (const experiment of experiments) {
+    const o2 = experiment.conditions.o2InitialPct;
+    const air = representativeAirflow(experiment);
+    if (o2 !== null && Number.isFinite(o2) && air !== null && Number.isFinite(air)) {
+      plotted.push({
+        experiment,
+        o2InitialPct: o2,
+        airflowCmS: air,
+        family: fuelFamily(experiment.fuel),
+        sizeMm: characteristicSizeMm(experiment.fuel),
+      });
+    } else {
+      unplotted.push(experiment);
+    }
+  }
+  return { plotted, unplotted };
+}
+
+export type ExperimentSortKey =
+  | "testId"
+  | "pi"
+  | "material"
+  | "geometry"
+  | "size"
+  | "o2InitialPct"
+  | "airflow"
+  | "videos"
+  | "qa";
+
+export function sortExperiments(
+  experiments: readonly Experiment[],
+  key: ExperimentSortKey,
+  direction: "asc" | "desc",
+): Experiment[] {
+  const dir = direction === "asc" ? 1 : -1;
+  return [...experiments].sort((a, b) => {
+    const cmpNullNum = (x: number | null, y: number | null) => {
+      if (x === null && y === null) return 0;
+      if (x === null) return 1; // keep missing values at bottom regardless of sort direction
+      if (y === null) return -1;
+      return (x - y) * dir;
+    };
+    const cmpNullStr = (x: string | null, y: string | null) => {
+      if (x === null && y === null) return 0;
+      if (x === null) return 1;
+      if (y === null) return -1;
+      return x.localeCompare(y, "en", { numeric: true }) * dir;
+    };
+
+    let delta = 0;
+    switch (key) {
+      case "testId":
+        delta = a.testId.localeCompare(b.testId, "en", { numeric: true }) * dir;
+        break;
+      case "pi":
+        delta = a.principalInvestigator.localeCompare(b.principalInvestigator, "en") * dir;
+        break;
+      case "material":
+        delta = cmpNullStr(a.fuel.material, b.fuel.material);
+        break;
+      case "geometry":
+        delta = cmpNullStr(a.fuel.geometry, b.fuel.geometry);
+        break;
+      case "size":
+        delta = cmpNullNum(characteristicSizeMm(a.fuel), characteristicSizeMm(b.fuel));
+        break;
+      case "o2InitialPct":
+        delta = cmpNullNum(a.conditions.o2InitialPct, b.conditions.o2InitialPct);
+        break;
+      case "airflow":
+        delta = cmpNullNum(representativeAirflow(a), representativeAirflow(b));
+        break;
+      case "videos":
+        delta = (a.videos.length - b.videos.length) * dir;
+        break;
+      case "qa":
+        delta = (a.qa.flags.length - b.qa.flags.length) * dir;
+        break;
+    }
+    return delta !== 0 ? delta : a.testId.localeCompare(b.testId, "en", { numeric: true });
+  });
+}
