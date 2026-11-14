@@ -3,13 +3,15 @@
 _Updated: 2026-11-14_
 
 ## Now
-- #13 Probing PSI-25 source videos and verifying the three fallback clips.
-- #17 Validating the PSI-20 catalog and notebook workflow.
+- PR review and integration verification with Claude.
 
-## Done
+## Submitted
 - #4 Shared PSI data API and real fixtures (PR #27).
-- #8 Measured What-if Lab retrieval (PR #28).
-- #3 Rebuilt PSI-25 with matrix-v1 against Claude’s contract (PR #29).
+- #8 Measured What-if matching (PR #28).
+- #3 PSI-25 Test Matrix reconciliation (PR #30, depends on Claude contract PR #29).
+- #13 Source metadata, exhaustive unattached footage index and three fallback clips.
+- #17 PSI-20 catalog and Colab build workflow in a separate PR.
 
 ## Blockers / needs
-- GitHub Actions did not start due to an account billing or spending-limit restriction. Local gates passed.
+- GitHub Actions billing or spending-limit restriction. Local checks passed.
+- Six public PSI-25 MP4s lack valid container metadata in both remote and whole-file probes.
