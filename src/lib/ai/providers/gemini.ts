@@ -3,7 +3,7 @@
  * Model parts are replayed verbatim (including `thoughtSignature`), which Gemini requires
  * when sending function-call history back.
  */
-import { GoogleGenAI, type Content, type Part } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, type Content, type Part } from "@google/genai";
 
 import { toolJsonSchema } from "../tools";
 import { ProviderError, type AiEnv, type AiProvider, type ProviderRunOptions, type StopReason } from "./types";
@@ -12,8 +12,25 @@ import { ProviderError, type AiEnv, type AiProvider, type ProviderRunOptions, ty
 const DEFAULT_MODEL = "gemini-4-hydrogen";
 const MAX_OUTPUT_TOKENS = 8_192;
 
+/** Retries for transient upstream limits (429 per-minute quota, 503 high demand). */
+const MAX_RETRIES = 3;
+const MAX_WAIT_MS = 20_000;
+
 const errorStatus = (err: unknown): number | undefined =>
   typeof err === "object" && err !== null && "status" in err && typeof err.status === "number" ? err.status : undefined;
+
+/** Server hint ("retry in 12.3s" / retryDelay "12s") or exponential backoff, capped. */
+function retryDelayMs(err: unknown, attempt: number): number {
+  const m = /retry(?:Delay)?["\s:]*(?:in\s*)?"?(\d+(?:\.\d+)?)s/i.exec(err instanceof Error ? err.message : String(err));
+  const hinted = m ? Math.ceil(Number(m[1]) * 1000) + 250 : 0;
+  return Math.min(MAX_WAIT_MS, Math.max(hinted, 2_000 * 2 ** attempt));
+}
+
+const sleep = (ms: number, signal: AbortSignal) =>
+  new Promise<void>((resolve) => {
+    const t = setTimeout(resolve, ms);
+    signal.addEventListener("abort", () => (clearTimeout(t), resolve()), { once: true });
+  });
 
 export function createGeminiProvider(env: AiEnv = process.env): AiProvider {
   const apiKey = env.GEMINI_API_KEY;
@@ -43,32 +60,47 @@ export function createGeminiProvider(env: AiEnv = process.env): AiProvider {
         if (opts.signal.aborted) return "aborted";
         const parts: Part[] = [];
         let finishReason: string | undefined;
-        try {
-          const stream = await client.models.generateContentStream({
-            model,
-            contents,
-            config: {
-              systemInstruction: opts.system,
-              tools: [{ functionDeclarations }],
-              maxOutputTokens: MAX_OUTPUT_TOKENS,
-              abortSignal: opts.signal,
-            },
-          });
-          for await (const chunk of stream) {
-            const candidate = chunk.candidates?.[0];
-            finishReason = candidate?.finishReason ?? finishReason;
-            for (const part of candidate?.content?.parts ?? []) {
-              parts.push(part);
-              if (part.text && !part.thought) opts.emit({ type: "text", delta: part.text });
+        for (let attempt = 0; ; attempt++) {
+          let emitted = false;
+          try {
+            const stream = await client.models.generateContentStream({
+              model,
+              contents,
+              config: {
+                systemInstruction: opts.system,
+                tools: [{ functionDeclarations }],
+                maxOutputTokens: MAX_OUTPUT_TOKENS,
+                thinkingConfig: { thinkingLevel: ThinkingLevel.MEDIUM },
+                abortSignal: opts.signal,
+              },
+            });
+            for await (const chunk of stream) {
+              const candidate = chunk.candidates?.[0];
+              finishReason = candidate?.finishReason ?? finishReason;
+              for (const part of candidate?.content?.parts ?? []) {
+                parts.push(part);
+                if (part.text && !part.thought) {
+                  emitted = true;
+                  opts.emit({ type: "text", delta: part.text });
+                }
+              }
             }
+            break;
+          } catch (err) {
+            if (opts.signal.aborted) return "aborted";
+            const status = errorStatus(err);
+            // Retry only before anything reached the user, so text is never duplicated.
+            if ((status === 429 || status === 503) && !emitted && attempt < MAX_RETRIES) {
+              parts.length = 0;
+              await sleep(retryDelayMs(err, attempt), opts.signal);
+              continue;
+            }
+            if (status === 429) throw new ProviderError("Gemini's request quota is exhausted for the moment — try again in a minute.", "rate_limited");
+            if (status === 503) throw new ProviderError("Gemini is overloaded right now — try again shortly.", "upstream_error");
+            if (status === 401 || status === 403) throw new ProviderError("Gemini rejected the server's API key.", "provider_unavailable");
+            console.error("[ai] gemini error", err);
+            throw new ProviderError(`Gemini API error (${status ?? "network"}).`, "upstream_error");
           }
-        } catch (err) {
-          if (opts.signal.aborted) return "aborted";
-          const status = errorStatus(err);
-          if (status === 429) throw new ProviderError("Gemini is rate-limited right now — try again shortly or switch to Claude.", "rate_limited");
-          if (status === 401 || status === 403) throw new ProviderError("Gemini rejected the server's API key.", "provider_unavailable");
-          console.error("[ai] gemini error", err);
-          throw new ProviderError(`Gemini API error (${status ?? "network"}).`, "upstream_error");
         }
 
         if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT" || finishReason === "BLOCKLIST") return "refusal";
