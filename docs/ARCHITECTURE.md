@@ -59,10 +59,11 @@
 ## 3. AI agent
 - Endpoint `POST /api/ai` (Node runtime, streaming SSE). **Two providers behind one
   `AiProvider` interface (`src/lib/ai/providers/`), switchable per request (ADR-012):**
-  - `claude` (default) — `@anthropic-ai/sdk`, model `claude-opus-5-5`,
+  - `claude` (optional) — `@anthropic-ai/sdk`, model `claude-opus-5-5`,
     `thinking: {type: "adaptive"}`, `effort: "medium"`, streaming manual tool loop, cached
     system prompt; a `refusal` stop is surfaced as a polite decline.
-  - `gemini` — `@google/genai`, model from `GEMINI_MODEL`, function calling.
+  - `openai` (default, ADR-015) — `openai` SDK Responses API, model `gpt-6.1-sol` (`OPENAI_MODEL`),
+    `reasoning.effort: medium`, streaming, turn state via `previous_response_id`.
   Both consume the same Zod tool definitions, system prompt and action validation; the agent
   loop is provider-agnostic. `GET /api/ai/providers` reports which providers have keys so the
   UI only offers working ones.
@@ -79,7 +80,7 @@
 - `find_closest_experiments` and `compute` are registered when #8 / `src/lib/science` land.
 - Grounding: the system prompt carries the dataset summary + integrity rules; answers must cite
   evidence ids returned by tools. No tool ⇒ no number.
-- Keys: `ANTHROPIC_API_KEY` and `GEMINI_API_KEY` in Vercel env only. Rate limiting
+- Keys: `OPENAI_API_KEY` (and optional `ANTHROPIC_API_KEY`) in Vercel env only. Rate limiting
   per IP on `/api/ai` since there is no login.
 
 ## 4. What-if Lab matching

@@ -15,7 +15,7 @@ export const MAX_STEPS = 8;
 const MAX_HISTORY = 20;
 
 export const AiRequestSchema = z.strictObject({
-  provider: z.enum(["claude", "gemini"]).optional(),
+  provider: z.enum(["openai", "claude"]).optional(),
   messages: z
     .array(z.strictObject({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(4_000) }))
     .min(1)
@@ -82,7 +82,7 @@ export function runAgentTurn(req: AiRequest, signal: AbortSignal, provider?: AiP
           type: "error",
           code: "provider_unavailable",
           message: req.provider
-            ? `${req.provider === "claude" ? "Claude" : "Gemini"} is not configured on this deployment.`
+            ? `${req.provider === "claude" ? "Claude" : "OpenAI"} is not configured on this deployment.`
             : "No AI provider is configured on this deployment.",
         });
         return finish();

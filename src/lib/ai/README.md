@@ -10,14 +10,14 @@ import { useAssistant } from "@/lib/ai/client/use-assistant";
 const {
   messages,   // AssistantMessage[]: role, content (markdown), provider, model, steps[], evidence[], status, error
   busy,       // a reply is streaming
-  providers,  // AiProvidersResponse | null: render the Claude/Gemini switch from this
+  providers,  // AiProvidersResponse | null: render the OpenAI/Claude switch from this
   provider,   // effective provider id (user choice, else server default)
   send,       // send("Show PMMA rods below 18 % O2")
   stop,       // abort the current reply
   clear,      // new conversation
   undoTurn,   // undoTurn(message.id): revert every dashboard change of that reply
   undoStep,   // undoStep(step.logEntryIds[0]): revert one step and everything after it
-  setProvider // setProvider("gemini"), or setProvider(null) for the server default
+  setProvider // setProvider("claude"), or setProvider(null) for the server default
 } = useAssistant();
 ```
 

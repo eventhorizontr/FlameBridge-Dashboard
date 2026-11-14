@@ -64,7 +64,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | State | Zustand (`src/lib/store/`) — the **only** way UI state changes, so the AI can drive it |
 | URL state | `nuqs` (shareable views) |
 | Validation | Zod (contracts + AI tool schemas) |
-| AI | Switchable providers (ADR-012): Claude via `@anthropic-ai/sdk` (`claude-opus-5-5`, default) and Gemini via `@google/genai`, one interface in `src/lib/ai/providers/` |
+| AI | Switchable providers (ADR-015): OpenAI via `openai` (Responses API, `gpt-6.1-sol`, default) and Claude via `@anthropic-ai/sdk` (`claude-opus-5-5`, optional), one interface in `src/lib/ai/providers/` |
 | Data pipeline | Python (stdlib-first) in `pipeline/` → runs locally or in Google Colab → JSON in `public/data/` |
 | Video | Streamed from NASA S3 via `/api/psi/file/{accession}/{id}` (302 → presigned URL, CORS `*`) |
 | Tests | Vitest (TS), `python -m unittest` (pipeline) |
