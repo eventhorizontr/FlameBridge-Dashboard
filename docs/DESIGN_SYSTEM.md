@@ -26,7 +26,7 @@ Tokens live in [`src/app/globals.css`](../src/app/globals.css). **Components use
 | `--line-strong` | `rgb(148 163 184 / 0.24)` | focused borders, axes |
 | `--text-1` | `#e8edf5` | primary text |
 | `--text-2` | `#a3adbd` | secondary |
-| `--text-3` | `#6b7586` | muted / captions |
+| `--text-3` | `#7f899b` | muted / captions — ≥ 4.5:1 on every surface (WCAG AA, axe-verified) |
 | `--accent` | `#5aa9ff` | "microgravity blue" — interactive, focus, selection |
 | `--accent-soft` | `rgb(90 169 255 / 0.14)` | selection fills |
 | `--flame-core` | `#9fd4ff` | flame visual only (blue μg flame core) |

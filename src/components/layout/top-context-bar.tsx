@@ -143,6 +143,7 @@ export function TopContextBar() {
             onClick={() => shellUiStore.getState().toggleAssistant()}
             aria-expanded={assistantOpen}
             data-highlight="assistant-toggle"
+            aria-label={assistantOpen ? "Close research assistant" : "Open research assistant"}
           >
             <Sparkles className="size-3.5 text-[var(--accent)]" aria-hidden="true" />
             <span className="hidden sm:inline">Research AI</span>

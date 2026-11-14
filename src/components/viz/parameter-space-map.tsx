@@ -272,7 +272,8 @@ export function ParameterSpaceMap({
                 ref={svgRef}
                 viewBox={`0 0 ${SVG_W} ${SVG_H}`}
                 className="w-full h-auto select-none"
-                role="img"
+                role="group"
+                aria-roledescription="scatter plot"
                 aria-label="Initial O2 vs. representative airflow scatter plot"
                 aria-describedby={descId}
               >
