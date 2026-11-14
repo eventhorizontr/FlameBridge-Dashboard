@@ -15,3 +15,10 @@ python -m unittest discover -s pipeline/tests -v    # parser tests
 **Colab:** clone the repo in a notebook, run the same scripts, write heavy intermediates to the
 shared Drive folder ("Nasa Space Apps Data 2026"); promote only small final assets to
 `public/data/`. Owner: Codex.
+
+## PSI-20 and Colab
+
+`python -I pipeline/build_psi20.py .` builds the ACME BRE catalog from NASA PSI-20
+(DOI 10.60555/vb93-3y72). Experiment records use the source daily-summary granularity.
+See `notebooks/psi_pipeline.ipynb` for staging, team Drive storage and promotion of the
+two app bundles. The notebook has a local mode controlled by `PSI_PIPELINE_WORKSPACE`.
