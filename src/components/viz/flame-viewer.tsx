@@ -397,12 +397,12 @@ export function FlameViewer({
               }`}
             >
               {/* Primary Run Video A */}
-              <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg)] overflow-hidden relative">
-                <div className="flex items-center justify-between px-3 py-1.5 bg-[var(--surface-2)] border-b border-[var(--line)] text-[0.75rem]">
-                  <span className="num font-medium text-[var(--text-1)]">
+              <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg)] overflow-hidden relative">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 py-1.5 bg-[var(--surface-2)] border-b border-[var(--line)] text-[0.75rem]">
+                  <span className="num font-medium text-[var(--text-1)] shrink-0">
                     A · Run {experiment.testId} ({KIND_LABELS[activeVideo.kind]})
                   </span>
-                  <span className="num text-[var(--text-3)]">
+                  <span className="num text-[var(--text-3)] min-w-0 max-w-full truncate">
                     {experiment.conditions.o2InitialPct !== null
                       ? `${experiment.conditions.o2InitialPct}% O₂`
                       : "O₂ —"}
@@ -533,7 +533,7 @@ export function FlameViewer({
                 timelinePulse.highlightClassName ?? ""
               }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <input
                   type="range"
                   aria-label="Flame footage timeline scrubber"
@@ -544,7 +544,7 @@ export function FlameViewer({
                   onChange={(e) => seekTo(Number(e.target.value), false)}
                   onPointerUp={(e) => seekTo(Number(e.currentTarget.value), true)}
                   onKeyUp={(e) => seekTo(Number(e.currentTarget.value), true)}
-                  className="flex-1 accent-[var(--accent)] cursor-pointer"
+                  className="min-w-[140px] flex-1 accent-[var(--accent)] cursor-pointer"
                 />
                 <div className="num text-[0.75rem] text-[var(--text-1)] whitespace-nowrap shrink-0">
                   <span>{formatClock(currentTime)}</span>
