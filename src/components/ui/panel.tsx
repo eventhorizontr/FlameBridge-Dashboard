@@ -60,7 +60,7 @@ export function PanelHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-3 px-4 py-3 border-b border-[var(--line)]",
+        "flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 border-b border-[var(--line)]",
         className,
       )}
       {...props}
@@ -82,8 +82,8 @@ export function PanelTitle({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-center justify-between gap-3 w-full", className)}>
-      <div className="min-w-0">
+    <div className={cn("flex flex-wrap items-center justify-between gap-x-3 gap-y-2 w-full min-w-0", className)}>
+      <div className="min-w-0 flex-1 basis-40">
         {eyebrow && (
           <div className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)] leading-tight">
             {eyebrow}
@@ -93,7 +93,7 @@ export function PanelTitle({
           {title}
         </h2>
       </div>
-      {actions && <div className="flex items-center gap-2 shrink-0">{actions}</div>}
+      {actions && <div className="flex flex-wrap items-center gap-2 min-w-0 max-w-full *:min-w-0 *:max-w-full">{actions}</div>}
     </div>
   );
 }

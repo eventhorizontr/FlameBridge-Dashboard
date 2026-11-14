@@ -47,7 +47,7 @@ export function SegmentedControl<T extends string>({
       aria-label={ariaLabel}
       data-highlight={highlightTarget}
       className={cn(
-        "inline-flex items-center p-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)] border border-[var(--line)]",
+        "inline-flex max-w-full items-center overflow-x-auto overscroll-x-contain p-0.5 rounded-[var(--radius-sm)] bg-[var(--surface-2)] border border-[var(--line)] [scrollbar-width:none]",
         className,
       )}
     >
