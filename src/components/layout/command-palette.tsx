@@ -17,6 +17,7 @@ import {
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { cn, Kbd } from "@/components/ui";
+import { useAssistant } from "@/lib/ai/client/use-assistant";
 import { useDispatch } from "@/lib/store";
 
 import { shellUiStore, useShellUi } from "./shell-state";
@@ -43,6 +44,7 @@ const FEATURED_RUNS = [
 export function CommandPalette() {
   const open = useShellUi((s) => s.paletteOpen);
   const dispatch = useDispatch();
+  const { send } = useAssistant();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -203,8 +205,10 @@ export function CommandPalette() {
         hint: "Claude / Gemini",
         icon: <Sparkles className="size-4 text-[var(--accent)]" />,
         run: () => {
+          const prompt = query.trim();
           shellUiStore.getState().setAssistantOpen(true);
           close();
+          if (prompt) void send(prompt);
         },
       },
     ];
@@ -218,7 +222,7 @@ export function CommandPalette() {
         c.hint.toLowerCase().includes(q) ||
         c.group.toLowerCase().includes(q),
     );
-  }, [dispatch, query]);
+  }, [dispatch, query, send]);
 
   if (!open) return null;
 
