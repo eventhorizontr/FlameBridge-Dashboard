@@ -133,7 +133,7 @@ export function FacetBar({ experiments, filteredCount }: FacetBarProps) {
                     }`}
                   >
                     <span>{pi}</span>
-                    <span className="num ml-1 text-[0.6875rem] opacity-75">
+                    <span className="num ml-1 text-[0.6875rem]">
                       {counts.principalInvestigators[pi] ?? 0}
                     </span>
                   </button>
@@ -166,7 +166,7 @@ export function FacetBar({ experiments, filteredCount }: FacetBarProps) {
                     }`}
                   >
                     <span>{mat}</span>
-                    <span className="num ml-1 text-[0.6875rem] opacity-75">
+                    <span className="num ml-1 text-[0.6875rem]">
                       {counts.materials[mat] ?? 0}
                     </span>
                   </button>
@@ -197,7 +197,7 @@ export function FacetBar({ experiments, filteredCount }: FacetBarProps) {
                     }`}
                   >
                     <span>{geom}</span>
-                    <span className="num ml-1 text-[0.6875rem] opacity-75">{count}</span>
+                    <span className="num ml-1 text-[0.6875rem]">{count}</span>
                   </button>
                 );
               })}

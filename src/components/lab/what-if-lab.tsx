@@ -473,7 +473,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                       }`}
                     >
                       <span>{mat}</span>
-                      <span className="num ml-1 opacity-75">{materialCounts.get(mat) ?? 0}</span>
+                      <span className="num ml-1 text-[0.6875rem]">{materialCounts.get(mat) ?? 0}</span>
                     </button>
                   );
                 })}
@@ -502,7 +502,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                       }`}
                     >
                       <span className="capitalize">{geom}</span>
-                      <span className="num ml-1 opacity-75">{grpCount}</span>
+                      <span className="num ml-1 text-[0.6875rem]">{grpCount}</span>
                     </button>
                   );
                 })}
