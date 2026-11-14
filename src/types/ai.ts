@@ -4,11 +4,11 @@
  */
 import type { DashboardAction, ExperimentFilters, LabParams, UserMode } from "./dashboard";
 
-export type AiProviderId = "claude" | "gemini";
+export type AiProviderId = "openai" | "claude";
 
 export interface AiProviderInfo {
   id: AiProviderId;
-  /** Display name, e.g. "Claude" / "Gemini". */
+  /** Display name, e.g. "OpenAI" / "Claude". */
   label: string;
   /** Exact model id used for answers — shown as a badge on each assistant message. */
   model: string;

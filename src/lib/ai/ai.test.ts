@@ -157,10 +157,11 @@ describe("providers", () => {
     const none = describeProviders({});
     expect(none.default).toBeNull();
     expect(none.providers.every((p) => !p.available && p.reason)).toBe(true);
-    expect(resolveProvider(undefined, { GEMINI_API_KEY: "x" })?.id).toBe("gemini");
-    expect(resolveProvider(undefined, { GEMINI_API_KEY: "x", ANTHROPIC_API_KEY: "y" })?.id).toBe("claude");
-    expect(resolveProvider("claude", { GEMINI_API_KEY: "x" })).toBeNull();
-    expect(describeProviders({ ANTHROPIC_API_KEY: "y", CLAUDE_MODEL: "claude-opus-5-5" }).providers[0]?.model).toBe("claude-opus-5-5");
+    expect(resolveProvider(undefined, { ANTHROPIC_API_KEY: "y" })?.id).toBe("claude");
+    expect(resolveProvider(undefined, { OPENAI_API_KEY: "x", ANTHROPIC_API_KEY: "y" })?.id).toBe("openai");
+    expect(resolveProvider(undefined, { OPENAI_API_KEY: "x", ANTHROPIC_API_KEY: "y", AI_DEFAULT_PROVIDER: "claude" })?.id).toBe("claude");
+    expect(resolveProvider("claude", { OPENAI_API_KEY: "x" })).toBeNull();
+    expect(describeProviders({ ANTHROPIC_API_KEY: "y", CLAUDE_MODEL: "claude-opus-5-5" }).providers.find((p) => p.id === "claude")?.model).toBe("claude-opus-5-5");
   });
 });
 
@@ -193,12 +194,12 @@ describe("agent turn", () => {
   });
 
   it("reports an unavailable provider as an error event", async () => {
-    const req: AiRequest = { provider: "gemini", messages: [{ role: "user", content: "hi" }], context };
-    const prev = process.env.GEMINI_API_KEY;
-    delete process.env.GEMINI_API_KEY;
+    const req: AiRequest = { provider: "openai", messages: [{ role: "user", content: "hi" }], context };
+    const prev = process.env.OPENAI_API_KEY;
+    delete process.env.OPENAI_API_KEY;
     const events = await collect(runAgentTurn(req, new AbortController().signal));
-    process.env.GEMINI_API_KEY = prev;
-    expect(events).toEqual([{ type: "error", code: "provider_unavailable", message: "Gemini is not configured on this deployment." }]);
+    if (prev !== undefined) process.env.OPENAI_API_KEY = prev;
+    expect(events).toEqual([{ type: "error", code: "provider_unavailable", message: "OpenAI is not configured on this deployment." }]);
   });
 
   it("request schema requires a trailing user message and a valid context", () => {

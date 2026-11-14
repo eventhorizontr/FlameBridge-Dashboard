@@ -84,3 +84,12 @@ value or dropping footage silently, and the demo needs offline video without re-
 *Consequence:* strict schemas still reject unknown keys; `validateMediaLinks` enforces the
 cross-file rules; `schemaVersion` stays `0.1.0` until the pipeline emits the fields, then
 bumps to `0.2.0`.
+
+**ADR-015 · 2026-11-15 · accepted** (supersedes the Gemini half of ADR-012) — The assistant's
+providers are **OpenAI (default) and Claude (optional)**; Gemini is removed. OpenAI runs through
+the official `openai` SDK Responses API, model `gpt-6.1-sol` (OpenAI's top 6.1 agentic tier,
+confirmed in the key's model list), `reasoning.effort: "medium"`, streamed, with turn state
+carried by `previous_response_id` and Zod validation of every tool call (`strict: false` since
+several inputs are optional). *Why:* owner decision; in live tests it used the action
+vocabulary correctly on the first try and kept integrity caveats. *Consequence:*
+`AiProviderId = "openai" | "claude"`, `OPENAI_API_KEY`/`OPENAI_MODEL` env; `@google/genai` removed.

@@ -29,7 +29,7 @@ Mode is a global switch (URL-persisted); both read the same data.
    the **k closest real experiments** (normalized distance), shows coverage of the measured
    envelope, highlights differences and plays matched footage. Outside the envelope ⇒ explicit
    warning, no extrapolated result.
-6. **AI research assistant** — user can switch between **Claude** and **Gemini**; answers with evidence chips, runs validated calculations,
+6. **AI research assistant** — user can switch between **OpenAI** and **Claude**; answers with evidence chips, runs validated calculations,
    compares experiments and **drives the dashboard** (filter, open, compare, switch mode,
    configure views) through the same store actions as the UI. Every action visible & undoable.
 7. **Learn track** — 4–6 short guided chapters built on real runs.

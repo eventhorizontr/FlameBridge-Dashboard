@@ -56,8 +56,8 @@ dashboardStore.getState().undoGroup(groupId);  // one AI turn
 — parsed and validated in `url.ts`; invalid params are dropped.
 
 ## Preferences
-`usePreferences((p) => p.aiProvider)` / `preferencesStore.getState().setAiProvider("gemini")` —
-the Claude ↔ Gemini switch (ADR-012). Not an action: the AI cannot change its own provider.
+`usePreferences((p) => p.aiProvider)` / `preferencesStore.getState().setAiProvider("openai")` —
+the OpenAI ↔ Claude switch (ADR-015). Not an action: the AI cannot change its own provider.
 
 ## Catalog
 The page that loads the dataset calls once:
