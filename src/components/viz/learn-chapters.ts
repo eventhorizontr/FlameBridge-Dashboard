@@ -140,7 +140,7 @@ export const LEARN_CHAPTERS: readonly LearnChapter[] = [
     interactiveKind: "airflow-regime",
     paragraphs: [
       "Some BASS-II runs record several duct air speeds. The Test Matrix uses a separate column for fan voltage and control settings.",
-      "Published concurrent-flow rod tests observed low-flow quenching and high-flow blowoff under different conditions. When you watch a run, look for changes in the flame outline as the displayed air speed changes.",
+      "Published microgravity tests of PMMA rods in axial stagnation flow mapped a flammability boundary with low-flow quenching and high-flow blowoff under their tested conditions. When you watch a run, look for changes in the flame outline as the displayed air speed changes.",
     ],
     takeaway: "Read the Air display series alongside the run notes before interpreting changes in footage.",
     citations: [datasetSource, rodStudy, runSource("PSI-25:O13a"), runSource("PSI-25:O1"), runSource("PSI-25:T1")],
