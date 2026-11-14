@@ -24,6 +24,10 @@ describe("validated server-side data", () => {
     expect(getManifest("psi-25")).toBe(getManifest());
     expect(getExperiment(" psi-25:o1 ")?.testId).toBe("O1");
     expect(getExperiment("unknown")).toBeUndefined();
+    expect(getExperiment("PSI-99:X")).toBeUndefined();
+    const missing = Object.assign(new Error("missing dataset"), { code: "ENOENT" });
+    vi.mocked(readFileSync).mockImplementationOnce(() => { throw missing; });
+    expect(getExperiment("PSI-20:X")).toBeUndefined();
     expect(() => getDataset("../psi-25")).toThrow("Unknown PSI accession");
   });
 
@@ -34,6 +38,9 @@ describe("validated server-side data", () => {
     expect(() => getDataset("PSI-20")).toThrow(/failed validation:[\s\S]+schemaVersion/);
     vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(getDataset()));
     expect(() => getDataset("PSI-20")).toThrow("contains accession PSI-25");
+    const recovered = { ...getDataset(), accession: "PSI-20", count: 0, experiments: [] };
+    vi.mocked(readFileSync).mockReturnValueOnce(JSON.stringify(recovered));
+    expect(getDataset("PSI-20")).toEqual(recovered);
   });
 });
 
