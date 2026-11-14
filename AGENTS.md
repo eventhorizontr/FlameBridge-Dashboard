@@ -79,7 +79,8 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | `src/app/layout.tsx`, `src/app/globals.css` (tokens) | **Claude** | Antigravity may PR token *additions* |
 | `pipeline/**`, `data/**`, `public/data/**` | **Codex** | — |
 | `src/lib/data/**`, `src/lib/science/**`, `src/lib/psi/**`, `src/app/api/psi/**` | **Codex** | — |
-| `**/*.test.ts`, `pipeline/tests/**` | **Codex** (writes) | everyone runs |
+| `pipeline/tests/**`, tests for data/science | **Codex** | everyone runs |
+| `<module>.test.ts` next to a module | that module's owner | Codex may add cases |
 | `src/components/**`, `src/app/(dashboard)/**`, `src/app/(learn)/**`, `src/app/page.tsx`, `public/brand/**` | **Antigravity** | — |
 | `docs/coordination/status/<agent>.md` | that agent | — |
 | `docs/coordination/handoffs/**` | anyone (append-only) | — |
