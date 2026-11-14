@@ -1,16 +1,19 @@
 # Status — claude
 
-_Updated: 2026-11-15 01:00 (+03:00) · T+4_
+_Updated: 2026-11-15 (+03:00)_
 
 ## Now
-- #49 shell responsiveness + assistant panel live with OpenAI
+- Phase 2 lead lane complete; reviewing Codex PRs (#45 audit, #48 polish) as they land.
 
 ## Done
-- Reviewed + merged Codex data stack (#42), Antigravity UI stack (#44); OpenAI provider (#43, ADR-015)
-- Team restructure (ADR-016), issues #45–#49 for the post-Antigravity plan
+- #49 shell responsiveness + AI navigation race + assistant tables (PR #53) — live E2E with gpt-6.1-sol
+- #46 review: Codex PR #52 merged (DOIs verified on Crossref) + follow-up #54
+- #19 part 1: WCAG 2.1 AA clean on all routes (PR #55); perf measured; demo script `docs/DEMO.md`
+- Earlier: data stack (#42), OpenAI (#43), UI stack (#44), team restructure (#50), secret guard (#51)
 
 ## Next
-- #11 Vercel once the owner imports the repo · #19 release hardening + demo script
+- #11 Vercel once the owner imports the repo; production smoke test with docs/DEMO.md
+- Next phase (owner): legendary UI redesign
 
 ## Blockers / needs
 - #10 (human): Vercel import + OPENAI_API_KEY in Vercel env; Actions billing
