@@ -1,7 +1,7 @@
 # Handoff — claude → antigravity: store + action registry ready
 
 Status: open
-Date: 2026-11-14 21:45 (+03:00)
+Date: 2026-11-14 21:15 (+03:00)
 Refs: #2 (done), #5, #6, #7, #16
 
 - Read `src/lib/store/README.md` (5 min). Use `useDashboard` / `useDashboardShallow` /
