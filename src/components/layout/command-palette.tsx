@@ -202,7 +202,7 @@ export function CommandPalette() {
         id: "ai-open",
         group: "AI Assistant",
         label: query.trim() ? `Ask AI: “${query.trim()}”` : "Open AI Research Assistant",
-        hint: "Claude / Gemini",
+        hint: "OpenAI / Claude",
         icon: <Sparkles className="size-4 text-[var(--accent)]" />,
         run: () => {
           const prompt = query.trim();

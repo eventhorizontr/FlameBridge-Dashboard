@@ -27,7 +27,7 @@ export interface SegmentedControlProps<T extends string> {
 
 /**
  * Animated pill control for Mode Switch (`Expert ⇄ Explore & Learn`) and AI Provider Switch
- * (`Claude ⇄ Gemini`). Uses Motion layout transitions unless `prefers-reduced-motion` is active.
+ * (`OpenAI ⇄ Claude`). Uses Motion layout transitions unless `prefers-reduced-motion` is active.
  */
 export function SegmentedControl<T extends string>({
   value,
