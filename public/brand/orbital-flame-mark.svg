@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Fire in Freefall orbital flame emblem">
+  <defs>
+    <radialGradient id="fg-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9fd4ff" stop-opacity="0.95" />
+      <stop offset="48%" stop-color="#5aa9ff" stop-opacity="0.55" />
+      <stop offset="80%" stop-color="#ff8a3d" stop-opacity="0.28" />
+      <stop offset="100%" stop-color="#06090f" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="fg-core" cx="50%" cy="46%" r="50%">
+      <stop offset="0%" stop-color="#e8edf5" />
+      <stop offset="45%" stop-color="#9fd4ff" />
+      <stop offset="100%" stop-color="#3987e5" stop-opacity="0.85" />
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="28" stroke="#94a3b8" stroke-opacity="0.24" stroke-width="1" />
+  <circle cx="32" cy="32" r="21" stroke="#5aa9ff" stroke-opacity="0.35" stroke-width="1" stroke-dasharray="3 3" />
+  <path d="M32 3V10M32 54V61M3 32H10M54 32H61" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1.25" stroke-linecap="round" />
+  <circle cx="32" cy="32" r="20" fill="url(#fg-halo)" />
+  <circle cx="32" cy="32" r="11.5" stroke="#ff8a3d" stroke-opacity="0.72" stroke-width="1.25" />
+  <circle cx="32" cy="32" r="7.5" fill="url(#fg-core)" />
+  <circle cx="32" cy="32" r="2" fill="#06090f" fill-opacity="0.85" />
+</svg>
