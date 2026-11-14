@@ -50,7 +50,11 @@
      "ext": ".mp4",
      "sizeBytes": 5803980,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cc",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 44.811433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803a7f6aa6a8302103cd",
@@ -60,7 +64,11 @@
      "ext": ".mp4",
      "sizeBytes": 2831066,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cd",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 37.670967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -130,7 +138,11 @@
      "ext": ".mp4",
      "sizeBytes": 7855717,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 57.590867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -204,7 +216,12 @@
      "ext": ".mp4",
      "sizeBytes": 8005417,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103cf",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 58.324933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480,
+     "fallbackHref": "/media/psi25-b3.mp4"
     },
     {
      "id": "6924803a7f6aa6a8302103d0",
@@ -214,7 +231,11 @@
      "ext": ".mp4",
      "sizeBytes": 2072492,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d0",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 26.292933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -284,7 +305,11 @@
      "ext": ".mp4",
      "sizeBytes": 12580563,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 89.4894,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803a7f6aa6a8302103d5",
@@ -294,7 +319,11 @@
      "ext": ".mp4",
      "sizeBytes": 3356673,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d5",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 41.9419,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -366,7 +395,11 @@
      "ext": ".mp4",
      "sizeBytes": 11138074,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 79.646233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803a7f6aa6a8302103d3",
@@ -376,7 +409,11 @@
      "ext": ".mp4",
      "sizeBytes": 2652338,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d3",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 32.8328,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -447,7 +484,11 @@
      "ext": ".mp4",
      "sizeBytes": 7594452,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e9",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 72.005267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103ea",
@@ -457,7 +498,11 @@
      "ext": ".mp4",
      "sizeBytes": 8744904,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103ea",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 72.539133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103eb",
@@ -467,7 +512,11 @@
      "ext": ".mp4",
      "sizeBytes": 1770296,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103eb",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 30.563867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -541,7 +590,11 @@
      "ext": ".mp4",
      "sizeBytes": 4003527,
      "href": "/api/psi/file/PSI-25/692480517f6aa6a830210582",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 50.116733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480517f6aa6a830210583",
@@ -551,7 +604,11 @@
      "ext": ".mp4",
      "sizeBytes": 16692289,
      "href": "/api/psi/file/PSI-25/692480517f6aa6a830210583",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 111.7116,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -621,7 +678,11 @@
      "ext": ".mp4",
      "sizeBytes": 18221098,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103ee",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 106.439667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103ef",
@@ -631,7 +692,11 @@
      "ext": ".mp4",
      "sizeBytes": 15707307,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103ef",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 113.847067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f0",
@@ -645,7 +710,9 @@
     }
    ],
    "qa": {
-    "flags": [],
+    "flags": [
+     "video-metadata-unavailable:6924803c7f6aa6a8302103f0"
+    ],
     "parse": "matrix-v1"
    },
    "raw": {
@@ -711,7 +778,11 @@
      "ext": ".mp4",
      "sizeBytes": 4962193,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103ec",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 43.8438,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103ed",
@@ -721,7 +792,11 @@
      "ext": ".mp4",
      "sizeBytes": 5027782,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103ed",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 41.875167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -797,7 +872,11 @@
      "ext": ".mp4",
      "sizeBytes": 17545851,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 160.126633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f5",
@@ -807,7 +886,11 @@
      "ext": ".mp4",
      "sizeBytes": 1526965,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f5",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 28.4284,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f6",
@@ -817,7 +900,11 @@
      "ext": ".mp4",
      "sizeBytes": 21543949,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f6",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 157.924433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -889,7 +976,11 @@
      "ext": ".mp4",
      "sizeBytes": 1797313,
      "href": "/api/psi/file/PSI-25/692480597f6aa6a830210616",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 33.700333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480597f6aa6a830210617",
@@ -899,7 +990,11 @@
      "ext": ".mp4",
      "sizeBytes": 20368020,
      "href": "/api/psi/file/PSI-25/692480597f6aa6a830210617",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 149.916433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480597f6aa6a830210618",
@@ -909,7 +1004,11 @@
      "ext": ".mp4",
      "sizeBytes": 17478523,
      "href": "/api/psi/file/PSI-25/692480597f6aa6a830210618",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 152.418933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -983,7 +1082,11 @@
      "ext": ".mp4",
      "sizeBytes": 13139046,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 93.4934,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803a7f6aa6a8302103d7",
@@ -993,7 +1096,11 @@
      "ext": ".mp4",
      "sizeBytes": 3387928,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d7",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 42.976267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1070,7 +1177,11 @@
      "ext": ".mp4",
      "sizeBytes": 29172112,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 233.499933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f2",
@@ -1080,7 +1191,11 @@
      "ext": ".mp4",
      "sizeBytes": 2117856,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f2",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 32.298933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f3",
@@ -1090,7 +1205,11 @@
      "ext": ".mp4",
      "sizeBytes": 31584073,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f3",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 229.1289,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1164,7 +1283,11 @@
      "ext": ".mp4",
      "sizeBytes": 10228951,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e0",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 71.438033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480597f6aa6a83021060e",
@@ -1179,7 +1302,8 @@
    ],
    "qa": {
     "flags": [
-     "o2Final: non-numeric 'none'"
+     "o2Final: non-numeric 'none'",
+     "video-metadata-unavailable:692480597f6aa6a83021060e"
     ],
     "parse": "matrix-v1"
    },
@@ -1246,7 +1370,11 @@
      "ext": ".mp4",
      "sizeBytes": 10743193,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 77.6776,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103e7",
@@ -1256,7 +1384,11 @@
      "ext": ".mp4",
      "sizeBytes": 10258618,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e7",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 75.208467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103e8",
@@ -1266,7 +1398,11 @@
      "ext": ".mp4",
      "sizeBytes": 2357480,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e8",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 40.907533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1336,7 +1472,11 @@
      "ext": ".mp4",
      "sizeBytes": 11837789,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d8",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 135.135,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803a7f6aa6a8302103d9",
@@ -1346,7 +1486,11 @@
      "ext": ".mp4",
      "sizeBytes": 18227573,
      "href": "/api/psi/file/PSI-25/6924803a7f6aa6a8302103d9",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 134.7346,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1419,7 +1563,11 @@
      "ext": ".mp4",
      "sizeBytes": 21089860,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 243.977067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103e2",
@@ -1429,7 +1577,11 @@
      "ext": ".mp4",
      "sizeBytes": 31534268,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e2",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 243.710133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1515,7 +1667,11 @@
      "ext": ".mp4",
      "sizeBytes": 1701709,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e4",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 31.598233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103e5",
@@ -1525,11 +1681,17 @@
      "ext": ".mp4",
      "sizeBytes": 22103478,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103e5",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 172.305467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
-    "flags": [],
+    "flags": [
+     "video-metadata-unavailable:6924803b7f6aa6a8302103e3"
+    ],
     "parse": "matrix-v1"
    },
    "raw": {
@@ -1597,7 +1759,11 @@
      "ext": ".mp4",
      "sizeBytes": 10534334,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103da",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 92.826067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103db",
@@ -1621,7 +1787,10 @@
     }
    ],
    "qa": {
-    "flags": [],
+    "flags": [
+     "video-metadata-unavailable:6924803b7f6aa6a8302103db",
+     "video-metadata-unavailable:6924803b7f6aa6a8302103dc"
+    ],
     "parse": "matrix-v1"
    },
    "raw": {
@@ -1688,7 +1857,11 @@
      "ext": ".mp4",
      "sizeBytes": 14714696,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103dd",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 115.148367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803b7f6aa6a8302103de",
@@ -1708,12 +1881,17 @@
      "ext": ".mp4",
      "sizeBytes": 5717139,
      "href": "/api/psi/file/PSI-25/6924803b7f6aa6a8302103df",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 82.916167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
     "flags": [
-     "airflow: pot settings in Air display excluded (Test Matrix)"
+     "airflow: pot settings in Air display excluded (Test Matrix)",
+     "video-metadata-unavailable:6924803b7f6aa6a8302103de"
     ],
     "parse": "matrix-v1"
    },
@@ -1782,7 +1960,11 @@
      "ext": ".mp4",
      "sizeBytes": 20112760,
      "href": "/api/psi/file/PSI-25/692480517f6aa6a830210580",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 166.332833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480517f6aa6a830210581",
@@ -1792,7 +1974,11 @@
      "ext": ".mp4",
      "sizeBytes": 20292338,
      "href": "/api/psi/file/PSI-25/692480517f6aa6a830210581",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 163.4633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1864,7 +2050,11 @@
      "ext": ".mp4",
      "sizeBytes": 13111581,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f7",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 133.199733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803c7f6aa6a8302103f8",
@@ -1874,7 +2064,11 @@
      "ext": ".mp4",
      "sizeBytes": 15753412,
      "href": "/api/psi/file/PSI-25/6924803c7f6aa6a8302103f8",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 132.799333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -1942,7 +2136,11 @@
      "ext": ".mp4",
      "sizeBytes": 1199309,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210403",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 14.781433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210404",
@@ -1952,7 +2150,11 @@
      "ext": ".mp4",
      "sizeBytes": 10773471,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210404",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 78.244833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2077,7 +2279,11 @@
      "ext": ".mp4",
      "sizeBytes": 13139602,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210408",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 117.9178,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210409",
@@ -2087,7 +2293,11 @@
      "ext": ".mp4",
      "sizeBytes": 16089495,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210409",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 116.8167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2157,7 +2367,11 @@
      "ext": ".mp4",
      "sizeBytes": 43977075,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210406",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 370.703667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210407",
@@ -2167,7 +2381,11 @@
      "ext": ".mp4",
      "sizeBytes": 59146861,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210407",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 372.7724,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2239,7 +2457,11 @@
      "ext": ".mp4",
      "sizeBytes": 11636925,
      "href": "/api/psi/file/PSI-25/692480417f6aa6a830210447",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 165.431933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480417f6aa6a830210448",
@@ -2249,7 +2471,11 @@
      "ext": ".mp4",
      "sizeBytes": 57914129,
      "href": "/api/psi/file/PSI-25/692480417f6aa6a830210448",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 404.2038,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2323,7 +2549,11 @@
      "ext": ".mp4",
      "sizeBytes": 5490564,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a83021045a",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 53.4534,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a83021045b",
@@ -2333,7 +2563,11 @@
      "ext": ".mp4",
      "sizeBytes": 11022774,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a83021045b",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 145.8457,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a83021045c",
@@ -2343,7 +2577,11 @@
      "ext": ".mp4",
      "sizeBytes": 212015133,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a83021045c",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1626.3247,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2416,7 +2654,11 @@
      "ext": ".mp4",
      "sizeBytes": 17106964,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a8302104a0",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 119.452667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480457f6aa6a8302104a1",
@@ -2426,7 +2668,11 @@
      "ext": ".mp4",
      "sizeBytes": 11533335,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a8302104a1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 110.777333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2498,7 +2744,11 @@
      "ext": ".mp4",
      "sizeBytes": 153411020,
      "href": "/api/psi/file/PSI-25/6924805c7f6aa6a830210646",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1272.9717,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924805c7f6aa6a830210647",
@@ -2508,7 +2758,11 @@
      "ext": ".mp4",
      "sizeBytes": 189091648,
      "href": "/api/psi/file/PSI-25/6924805c7f6aa6a830210647",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1275.407467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2584,7 +2838,11 @@
      "ext": ".mp4",
      "sizeBytes": 5039147,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a83021043c",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 60.927533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a83021043d",
@@ -2594,7 +2852,11 @@
      "ext": ".mp4",
      "sizeBytes": 10157907,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a83021043d",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 140.273467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a83021043e",
@@ -2604,7 +2866,11 @@
      "ext": ".mp4",
      "sizeBytes": 193476993,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a83021043e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1431.463367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2679,7 +2945,11 @@
      "ext": ".mp4",
      "sizeBytes": 144868608,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021048c",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1179.111267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a83021048d",
@@ -2689,7 +2959,11 @@
      "ext": ".mp4",
      "sizeBytes": 176976715,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021048d",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1176.708867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2764,7 +3038,11 @@
      "ext": ".mp4",
      "sizeBytes": 110011647,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210461",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1127.5264,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a830210462",
@@ -2774,7 +3052,11 @@
      "ext": ".mp4",
      "sizeBytes": 179387384,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210462",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1127.4263,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2847,7 +3129,11 @@
      "ext": ".mp4",
      "sizeBytes": 163852409,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210464",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1551.2497,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a830210465",
@@ -2857,7 +3143,11 @@
      "ext": ".mp4",
      "sizeBytes": 254594784,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210465",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1571.202967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -2928,7 +3218,11 @@
      "ext": ".mp4",
      "sizeBytes": 97701031,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210466",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1045.010633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a830210467",
@@ -2938,7 +3232,11 @@
      "ext": ".mp4",
      "sizeBytes": 161042847,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210467",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1046.578867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3012,7 +3310,11 @@
      "ext": ".mp4",
      "sizeBytes": 209995144,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210484",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1908.273033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a830210485",
@@ -3022,7 +3324,11 @@
      "ext": ".mp4",
      "sizeBytes": 10826556,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210485",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 99.666233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a830210486",
@@ -3032,7 +3338,11 @@
      "ext": ".mp4",
      "sizeBytes": 14428982,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210486",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 98.865433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a830210487",
@@ -3042,7 +3352,11 @@
      "ext": ".mp4",
      "sizeBytes": 254551596,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210487",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1908.139567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480457f6aa6a8302104a2",
@@ -3052,7 +3366,11 @@
      "ext": ".mp4",
      "sizeBytes": 12772956,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a8302104a2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 207.840967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104a4",
@@ -3062,7 +3380,11 @@
      "ext": ".mp4",
      "sizeBytes": 15216538,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 138.505033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3135,7 +3457,11 @@
      "ext": ".mp4",
      "sizeBytes": 172643300,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210468",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1723.6219,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a830210469",
@@ -3145,7 +3471,11 @@
      "ext": ".mp4",
      "sizeBytes": 284270558,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a830210469",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1719.4177,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3213,7 +3543,11 @@
      "ext": ".mp4",
      "sizeBytes": 125655846,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021048e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1027.1261,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a83021048f",
@@ -3223,7 +3557,11 @@
      "ext": ".mp4",
      "sizeBytes": 157206941,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021048f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1026.892533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3297,7 +3635,11 @@
      "ext": ".mp4",
      "sizeBytes": 142341116,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a830210490",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1298.764133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480457f6aa6a830210491",
@@ -3307,7 +3649,11 @@
      "ext": ".mp4",
      "sizeBytes": 185003328,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a830210491",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1296.461833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3379,7 +3725,11 @@
      "ext": ".mp4",
      "sizeBytes": 4390099,
      "href": "/api/psi/file/PSI-25/692480417f6aa6a830210449",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 58.691967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480417f6aa6a83021044a",
@@ -3389,7 +3739,11 @@
      "ext": ".mp4",
      "sizeBytes": 187975972,
      "href": "/api/psi/file/PSI-25/692480417f6aa6a83021044a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1302.301,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3468,7 +3822,11 @@
      "ext": ".mp4",
      "sizeBytes": 142273046,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a83021045e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1333.965967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480427f6aa6a83021045f",
@@ -3478,7 +3836,11 @@
      "ext": ".mp4",
      "sizeBytes": 204744222,
      "href": "/api/psi/file/PSI-25/692480427f6aa6a83021045f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1331.6303,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3553,7 +3915,11 @@
      "ext": ".mp4",
      "sizeBytes": 112162685,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021047e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 885.9851,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a83021047f",
@@ -3563,7 +3929,11 @@
      "ext": ".mp4",
      "sizeBytes": 141580740,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021047f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 882.648433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3636,7 +4006,11 @@
      "ext": ".mp4",
      "sizeBytes": 188454727,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a83021046c",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1889.1873,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480437f6aa6a83021046d",
@@ -3646,7 +4020,11 @@
      "ext": ".mp4",
      "sizeBytes": 311887260,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a83021046d",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1889.420867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3719,7 +4097,11 @@
      "ext": ".mp4",
      "sizeBytes": 154679243,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a83021047c",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1564.8633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a83021047d",
@@ -3729,7 +4111,11 @@
      "ext": ".mp4",
      "sizeBytes": 253121484,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a83021047d",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1564.396167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3804,7 +4190,11 @@
      "ext": ".mp4",
      "sizeBytes": 183298910,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210482",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1549.414533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480447f6aa6a830210483",
@@ -3814,7 +4204,11 @@
      "ext": ".mp4",
      "sizeBytes": 226568634,
      "href": "/api/psi/file/PSI-25/692480447f6aa6a830210483",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1550.382167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3885,7 +4279,11 @@
      "ext": ".mp4",
      "sizeBytes": 170044149,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a830210493",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1540.972767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480457f6aa6a830210494",
@@ -3895,7 +4293,11 @@
      "ext": ".mp4",
      "sizeBytes": 194213946,
      "href": "/api/psi/file/PSI-25/692480457f6aa6a830210494",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1543.608733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -3971,7 +4373,11 @@
      "ext": ".mp4",
      "sizeBytes": 5821593,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a7",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 78.545133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104a8",
@@ -3981,7 +4387,12 @@
      "ext": ".mp4",
      "sizeBytes": 34211955,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a8",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 208.641767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480,
+     "fallbackHref": "/media/psi25-o1.mp4"
     }
    ],
    "qa": {
@@ -4053,7 +4464,11 @@
      "ext": ".mp4",
      "sizeBytes": 2946305,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a5",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 32.265567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104a6",
@@ -4063,7 +4478,11 @@
      "ext": ".mp4",
      "sizeBytes": 31874741,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104a6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 227.227,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4136,7 +4555,11 @@
      "ext": ".mp4",
      "sizeBytes": 23510087,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104ad",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 196.2961,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104ae",
@@ -4146,7 +4569,11 @@
      "ext": ".mp4",
      "sizeBytes": 27893426,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104ae",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 197.130267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104af",
@@ -4156,7 +4583,11 @@
      "ext": ".mp4",
      "sizeBytes": 41601427,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104af",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 297.463833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b0",
@@ -4166,7 +4597,11 @@
      "ext": ".mp4",
      "sizeBytes": 4127161,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b0",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 52.185467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b1",
@@ -4176,7 +4611,11 @@
      "ext": ".mp4",
      "sizeBytes": 42565728,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b1",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 297.563933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4251,7 +4690,11 @@
      "ext": ".mp4",
      "sizeBytes": 23510087,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104ad",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 196.2961,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104ae",
@@ -4261,7 +4704,11 @@
      "ext": ".mp4",
      "sizeBytes": 27893426,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104ae",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 197.130267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104af",
@@ -4271,7 +4718,11 @@
      "ext": ".mp4",
      "sizeBytes": 41601427,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104af",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 297.463833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b0",
@@ -4281,7 +4732,11 @@
      "ext": ".mp4",
      "sizeBytes": 4127161,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b0",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 52.185467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b1",
@@ -4291,7 +4746,11 @@
      "ext": ".mp4",
      "sizeBytes": 42565728,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b1",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 297.563933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4365,7 +4824,11 @@
      "ext": ".mp4",
      "sizeBytes": 146711131,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104be",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1228.060167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104bf",
@@ -4375,7 +4838,11 @@
      "ext": ".mp4",
      "sizeBytes": 184709109,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104bf",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1228.493933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4451,7 +4918,11 @@
      "ext": ".mp4",
      "sizeBytes": 35877343,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 318.184533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c3",
@@ -4461,7 +4932,11 @@
      "ext": ".mp4",
      "sizeBytes": 45934347,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c3",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 318.0177,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c4",
@@ -4471,7 +4946,11 @@
      "ext": ".mp4",
      "sizeBytes": 65190674,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 570.236333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c5",
@@ -4481,7 +4960,11 @@
      "ext": ".mp4",
      "sizeBytes": 1007320,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c5",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 17.751067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c6",
@@ -4491,7 +4974,11 @@
      "ext": ".mp4",
      "sizeBytes": 86629045,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c6",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 567.2667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c7",
@@ -4501,7 +4988,11 @@
      "ext": ".mp4",
      "sizeBytes": 27229112,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c7",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 259.692767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104c8",
@@ -4511,7 +5002,11 @@
      "ext": ".mp4",
      "sizeBytes": 37546934,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104c8",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 259.1589,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480497f6aa6a8302104e1",
@@ -4521,7 +5016,11 @@
      "ext": ".mp4",
      "sizeBytes": 116960369,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104e1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1044.3433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4591,7 +5090,11 @@
      "ext": ".mp4",
      "sizeBytes": 35877343,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 318.184533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c3",
@@ -4601,7 +5104,11 @@
      "ext": ".mp4",
      "sizeBytes": 45934347,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c3",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 318.0177,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c4",
@@ -4611,7 +5118,11 @@
      "ext": ".mp4",
      "sizeBytes": 65190674,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 570.236333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c5",
@@ -4621,7 +5132,11 @@
      "ext": ".mp4",
      "sizeBytes": 1007320,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c5",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 17.751067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c6",
@@ -4631,7 +5146,11 @@
      "ext": ".mp4",
      "sizeBytes": 86629045,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c6",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 567.2667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c7",
@@ -4641,7 +5160,11 @@
      "ext": ".mp4",
      "sizeBytes": 27229112,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c7",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 259.692767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104c8",
@@ -4651,7 +5174,11 @@
      "ext": ".mp4",
      "sizeBytes": 37546934,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104c8",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 259.1589,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480497f6aa6a8302104e1",
@@ -4661,7 +5188,11 @@
      "ext": ".mp4",
      "sizeBytes": 116960369,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104e1",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1044.3433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4731,7 +5262,11 @@
      "ext": ".mp4",
      "sizeBytes": 86823830,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 899.632067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b3",
@@ -4741,7 +5276,11 @@
      "ext": ".mp4",
      "sizeBytes": 129208937,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b3",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 899.031467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4815,7 +5354,11 @@
      "ext": ".mp4",
      "sizeBytes": 87589566,
      "href": "/api/psi/file/PSI-25/692480557f6aa6a8302105cd",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 861.927733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480557f6aa6a8302105ce",
@@ -4825,7 +5368,11 @@
      "ext": ".mp4",
      "sizeBytes": 130240123,
      "href": "/api/psi/file/PSI-25/692480557f6aa6a8302105ce",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 859.391867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480557f6aa6a8302105cf",
@@ -4835,7 +5382,11 @@
      "ext": ".mp4",
      "sizeBytes": 6363631,
      "href": "/api/psi/file/PSI-25/692480557f6aa6a8302105cf",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 60.393667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -4909,7 +5460,11 @@
      "ext": ".mp4",
      "sizeBytes": 51121188,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 530.296433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b5",
@@ -4919,7 +5474,11 @@
      "ext": ".mp4",
      "sizeBytes": 78581776,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b5",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 529.795933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104b6",
@@ -4929,7 +5488,11 @@
      "ext": ".mp4",
      "sizeBytes": 56114010,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104b6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 537.4369,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104b7",
@@ -4939,7 +5502,11 @@
      "ext": ".mp4",
      "sizeBytes": 81020427,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104b7",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 537.2367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5013,7 +5580,11 @@
      "ext": ".mp4",
      "sizeBytes": 51121188,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b4",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 530.296433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480467f6aa6a8302104b5",
@@ -5023,7 +5594,11 @@
      "ext": ".mp4",
      "sizeBytes": 78581776,
      "href": "/api/psi/file/PSI-25/692480467f6aa6a8302104b5",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 529.795933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104b6",
@@ -5033,7 +5608,11 @@
      "ext": ".mp4",
      "sizeBytes": 56114010,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104b6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 537.4369,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104b7",
@@ -5043,7 +5622,11 @@
      "ext": ".mp4",
      "sizeBytes": 81020427,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104b7",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 537.2367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5117,7 +5700,11 @@
      "ext": ".mp4",
      "sizeBytes": 61078814,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104b9",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 593.7932,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104ba",
@@ -5127,7 +5714,11 @@
      "ext": ".mp4",
      "sizeBytes": 88666756,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104ba",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 595.261333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5203,7 +5794,11 @@
      "ext": ".mp4",
      "sizeBytes": 1973986,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cf",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 36.169467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d0",
@@ -5213,7 +5808,11 @@
      "ext": ".mp4",
      "sizeBytes": 116397522,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d0",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 674.2736,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5287,7 +5886,11 @@
      "ext": ".mp4",
      "sizeBytes": 120784326,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104bc",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1034.2332,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104bd",
@@ -5297,7 +5900,11 @@
      "ext": ".mp4",
      "sizeBytes": 163544771,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104bd",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1044.510133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5369,7 +5976,11 @@
      "ext": ".mp4",
      "sizeBytes": 58379498,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c0",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 521.153967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480477f6aa6a8302104c1",
@@ -5379,7 +5990,11 @@
      "ext": ".mp4",
      "sizeBytes": 71465162,
      "href": "/api/psi/file/PSI-25/692480477f6aa6a8302104c1",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 531.797933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5454,7 +6069,11 @@
      "ext": ".mp4",
      "sizeBytes": 11497596,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104c9",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 98.9989,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104ca",
@@ -5464,7 +6083,11 @@
      "ext": ".mp4",
      "sizeBytes": 15704573,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104ca",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 101.434667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cb",
@@ -5474,7 +6097,11 @@
      "ext": ".mp4",
      "sizeBytes": 153642786,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cb",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1371.2699,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cc",
@@ -5484,7 +6111,11 @@
      "ext": ".mp4",
      "sizeBytes": 29477038,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cc",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 271.0708,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cd",
@@ -5494,7 +6125,11 @@
      "ext": ".mp4",
      "sizeBytes": 214947327,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cd",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 1371.536833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104ce",
@@ -5504,7 +6139,11 @@
      "ext": ".mp4",
      "sizeBytes": 42885447,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104ce",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 271.204267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5574,7 +6213,11 @@
      "ext": ".mp4",
      "sizeBytes": 11497596,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104c9",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 98.9989,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104ca",
@@ -5584,7 +6227,11 @@
      "ext": ".mp4",
      "sizeBytes": 15704573,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104ca",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 101.434667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cb",
@@ -5594,7 +6241,11 @@
      "ext": ".mp4",
      "sizeBytes": 153642786,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cb",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1371.2699,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cc",
@@ -5604,7 +6255,11 @@
      "ext": ".mp4",
      "sizeBytes": 29477038,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cc",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 271.0708,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104cd",
@@ -5614,7 +6269,11 @@
      "ext": ".mp4",
      "sizeBytes": 214947327,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104cd",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 1371.536833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104ce",
@@ -5624,7 +6283,11 @@
      "ext": ".mp4",
      "sizeBytes": 42885447,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104ce",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 271.204267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5701,7 +6364,11 @@
      "ext": ".mp4",
      "sizeBytes": 110402103,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104da",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 985.3844,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480497f6aa6a8302104db",
@@ -5711,7 +6378,11 @@
      "ext": ".mp4",
      "sizeBytes": 130246895,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104db",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 981.747433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5784,7 +6455,11 @@
      "ext": ".mp4",
      "sizeBytes": 78319609,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 641.107133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d7",
@@ -5794,7 +6469,11 @@
      "ext": ".mp4",
      "sizeBytes": 80420113,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d7",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 637.637,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d8",
@@ -5804,7 +6483,11 @@
      "ext": ".mp4",
      "sizeBytes": 222205165,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d8",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 2372.036333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d9",
@@ -5814,7 +6497,11 @@
      "ext": ".mp4",
      "sizeBytes": 256091463,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d9",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 2368.01565,
+     "fps": 59.94005994005994,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5887,7 +6574,11 @@
      "ext": ".mp4",
      "sizeBytes": 78319609,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d6",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 641.107133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d7",
@@ -5897,7 +6588,11 @@
      "ext": ".mp4",
      "sizeBytes": 80420113,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d7",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 637.637,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d8",
@@ -5907,7 +6602,11 @@
      "ext": ".mp4",
      "sizeBytes": 222205165,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d8",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 2372.036333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d9",
@@ -5917,7 +6616,11 @@
      "ext": ".mp4",
      "sizeBytes": 256091463,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d9",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 2368.01565,
+     "fps": 59.94005994005994,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -5989,7 +6692,11 @@
      "ext": ".mp4",
      "sizeBytes": 20782392,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210504",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 172.138633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210505",
@@ -5999,7 +6706,11 @@
      "ext": ".mp4",
      "sizeBytes": 23987409,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210505",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 172.0719,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210506",
@@ -6009,7 +6720,11 @@
      "ext": ".mp4",
      "sizeBytes": 37529587,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210506",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 321.7214,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210507",
@@ -6019,7 +6734,11 @@
      "ext": ".mp4",
      "sizeBytes": 44141476,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210507",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 318.8185,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6093,7 +6812,11 @@
      "ext": ".mp4",
      "sizeBytes": 1581765,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d1",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 29.2292,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d2",
@@ -6103,7 +6826,11 @@
      "ext": ".mp4",
      "sizeBytes": 154147156,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d2",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 887.5867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6182,7 +6909,11 @@
      "ext": ".mp4",
      "sizeBytes": 75137697,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d3",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 641.3407,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d4",
@@ -6192,7 +6923,11 @@
      "ext": ".mp4",
      "sizeBytes": 4500363,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d4",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 36.369667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480487f6aa6a8302104d5",
@@ -6202,7 +6937,11 @@
      "ext": ".mp4",
      "sizeBytes": 88269340,
      "href": "/api/psi/file/PSI-25/692480487f6aa6a8302104d5",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 639.5389,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6276,7 +7015,11 @@
      "ext": ".mp4",
      "sizeBytes": 109651737,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104dd",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1031.5305,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480497f6aa6a8302104de",
@@ -6286,7 +7029,11 @@
      "ext": ".mp4",
      "sizeBytes": 121826337,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104de",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1031.964267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6549,7 +7296,11 @@
      "ext": ".mp4",
      "sizeBytes": 2882887,
      "href": "/api/psi/file/PSI-25/692480527f6aa6a830210588",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 39.005633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480527f6aa6a830210589",
@@ -6559,7 +7310,11 @@
      "ext": ".mp4",
      "sizeBytes": 60357231,
      "href": "/api/psi/file/PSI-25/692480527f6aa6a830210589",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 425.258167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480527f6aa6a83021058a",
@@ -6569,7 +7324,11 @@
      "ext": ".mp4",
      "sizeBytes": 53049877,
      "href": "/api/psi/file/PSI-25/692480527f6aa6a83021058a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 380.6803,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6643,7 +7402,11 @@
      "ext": ".mp4",
      "sizeBytes": 56626643,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 463.1627,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040b",
@@ -6653,7 +7416,11 @@
      "ext": ".mp4",
      "sizeBytes": 649879,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040b",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 13.380033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040c",
@@ -6663,7 +7430,11 @@
      "ext": ".mp4",
      "sizeBytes": 69541663,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 482.0816,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6736,7 +7507,11 @@
      "ext": ".mp4",
      "sizeBytes": 60651360,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 508.875033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040e",
@@ -6746,7 +7521,11 @@
      "ext": ".mp4",
      "sizeBytes": 1101615,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040e",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 15.9159,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040f",
@@ -6756,7 +7535,11 @@
      "ext": ".mp4",
      "sizeBytes": 76631703,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 509.675833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210410",
@@ -6766,7 +7549,11 @@
      "ext": ".mp4",
      "sizeBytes": 109145356,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210410",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1024.857167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210411",
@@ -6776,7 +7563,11 @@
      "ext": ".mp4",
      "sizeBytes": 146388142,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210411",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1018.984633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6848,7 +7639,11 @@
      "ext": ".mp4",
      "sizeBytes": 60651360,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 508.875033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040e",
@@ -6858,7 +7653,11 @@
      "ext": ".mp4",
      "sizeBytes": 1101615,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040e",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 15.9159,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a83021040f",
@@ -6868,7 +7667,11 @@
      "ext": ".mp4",
      "sizeBytes": 76631703,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a83021040f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 509.675833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210410",
@@ -6878,7 +7681,11 @@
      "ext": ".mp4",
      "sizeBytes": 109145356,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210410",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1024.857167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803d7f6aa6a830210411",
@@ -6888,7 +7695,11 @@
      "ext": ".mp4",
      "sizeBytes": 146388142,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210411",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1018.984633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -6960,7 +7771,11 @@
      "ext": ".mp4",
      "sizeBytes": 156209211,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210420",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1291.323367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7036,7 +7851,11 @@
      "ext": ".mp4",
      "sizeBytes": 184104096,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a83021059e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1610.0084,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a83021059f",
@@ -7046,7 +7865,11 @@
      "ext": ".mp4",
      "sizeBytes": 14026261,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a83021059f",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 110.0099,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a8302105a0",
@@ -7056,7 +7879,11 @@
      "ext": ".mp4",
      "sizeBytes": 262920726,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a0",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1610.041767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7128,7 +7955,11 @@
      "ext": ".mp4",
      "sizeBytes": 57618947,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041f",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 449.2488,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7267,7 +8098,11 @@
      "ext": ".mp4",
      "sizeBytes": 109313158,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210424",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1041.874167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a830210425",
@@ -7277,7 +8112,11 @@
      "ext": ".mp4",
      "sizeBytes": 175423824,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210425",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1041.306933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7418,7 +8257,11 @@
      "ext": ".mp4",
      "sizeBytes": 108299394,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1010.943267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a83021042e",
@@ -7428,7 +8271,11 @@
      "ext": ".mp4",
      "sizeBytes": 6919902,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042e",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 58.7587,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a83021042f",
@@ -7438,7 +8285,11 @@
      "ext": ".mp4",
      "sizeBytes": 5360493,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 46.4464,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a830210430",
@@ -7448,7 +8299,11 @@
      "ext": ".mp4",
      "sizeBytes": 124770577,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a830210430",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1008.440767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7522,7 +8377,11 @@
      "ext": ".mp4",
      "sizeBytes": 56412853,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a3",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 466.999867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a8302105a4",
@@ -7532,7 +8391,11 @@
      "ext": ".mp4",
      "sizeBytes": 246980311,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a4",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1432.063967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a8302105a5",
@@ -7542,7 +8405,11 @@
      "ext": ".mp4",
      "sizeBytes": 177851046,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a5",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1432.297533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7616,7 +8483,11 @@
      "ext": ".mp4",
      "sizeBytes": 56412853,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a3",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 466.999867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a8302105a4",
@@ -7626,7 +8497,11 @@
      "ext": ".mp4",
      "sizeBytes": 246980311,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a4",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1432.063967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a8302105a5",
@@ -7636,7 +8511,11 @@
      "ext": ".mp4",
      "sizeBytes": 177851046,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a8302105a5",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1432.297533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7708,7 +8587,11 @@
      "ext": ".mp4",
      "sizeBytes": 84961435,
      "href": "/api/psi/file/PSI-25/6924803d7f6aa6a830210412",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 732.298233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a830210413",
@@ -7718,7 +8601,11 @@
      "ext": ".mp4",
      "sizeBytes": 145518568,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210413",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 732.498433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7790,7 +8677,11 @@
      "ext": ".mp4",
      "sizeBytes": 70783057,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210414",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 629.462167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a830210415",
@@ -7800,7 +8691,11 @@
      "ext": ".mp4",
      "sizeBytes": 4692297,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210415",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 30.964267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a830210416",
@@ -7810,7 +8705,11 @@
      "ext": ".mp4",
      "sizeBytes": 114699073,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210416",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 611.477533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7884,7 +8783,11 @@
      "ext": ".mp4",
      "sizeBytes": 87525194,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a830210427",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 781.547433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a830210428",
@@ -7894,7 +8797,11 @@
      "ext": ".mp4",
      "sizeBytes": 131505253,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a830210428",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 781.413967,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -7970,7 +8877,11 @@
      "ext": ".mp4",
      "sizeBytes": 104648639,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042b",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 933.465867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a83021042c",
@@ -7980,7 +8891,11 @@
      "ext": ".mp4",
      "sizeBytes": 133500600,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 931.497233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8055,7 +8970,11 @@
      "ext": ".mp4",
      "sizeBytes": 88432562,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a830210475",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 591.9914,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480437f6aa6a830210476",
@@ -8065,7 +8984,11 @@
      "ext": ".mp4",
      "sizeBytes": 59472326,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a830210476",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 594.560633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480437f6aa6a830210477",
@@ -8075,7 +8998,11 @@
      "ext": ".mp4",
      "sizeBytes": 91179442,
      "href": "/api/psi/file/PSI-25/692480437f6aa6a830210477",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 874.1733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8150,7 +9077,11 @@
      "ext": ".mp4",
      "sizeBytes": 153447514,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a830210429",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1291.3901,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803f7f6aa6a83021042a",
@@ -8160,7 +9091,11 @@
      "ext": ".mp4",
      "sizeBytes": 219574375,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a83021042a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1287.953333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8235,7 +9170,11 @@
      "ext": ".mp4",
      "sizeBytes": 98151714,
      "href": "/api/psi/file/PSI-25/6924803f7f6aa6a830210431",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 895.961733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210432",
@@ -8245,7 +9184,11 @@
      "ext": ".mp4",
      "sizeBytes": 15425545,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210432",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 120.053267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210433",
@@ -8255,7 +9198,11 @@
      "ext": ".mp4",
      "sizeBytes": 11577077,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210433",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 94.327567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210434",
@@ -8265,7 +9212,11 @@
      "ext": ".mp4",
      "sizeBytes": 122172164,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210434",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 898.631067,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8337,7 +9288,11 @@
      "ext": ".mp4",
      "sizeBytes": 44226366,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041b",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 381.714667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041c",
@@ -8347,7 +9302,11 @@
      "ext": ".mp4",
      "sizeBytes": 58580059,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 378.711667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041d",
@@ -8357,7 +9316,11 @@
      "ext": ".mp4",
      "sizeBytes": 35882022,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 312.2119,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041e",
@@ -8367,7 +9330,11 @@
      "ext": ".mp4",
      "sizeBytes": 45866697,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041e",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 308.875233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8439,7 +9406,11 @@
      "ext": ".mp4",
      "sizeBytes": 44226366,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041b",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 381.714667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041c",
@@ -8449,7 +9420,11 @@
      "ext": ".mp4",
      "sizeBytes": 58580059,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 378.711667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041d",
@@ -8459,7 +9434,11 @@
      "ext": ".mp4",
      "sizeBytes": 35882022,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 312.2119,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a83021041e",
@@ -8469,7 +9448,11 @@
      "ext": ".mp4",
      "sizeBytes": 45866697,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a83021041e",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 308.875233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8543,7 +9526,11 @@
      "ext": ".mp4",
      "sizeBytes": 32998129,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210597",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 249.182267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a830210598",
@@ -8553,7 +9540,11 @@
      "ext": ".mp4",
      "sizeBytes": 37816979,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210598",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 248.681767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a830210599",
@@ -8563,7 +9554,11 @@
      "ext": ".mp4",
      "sizeBytes": 73175049,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210599",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 618.484533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a83021059a",
@@ -8573,7 +9568,11 @@
      "ext": ".mp4",
      "sizeBytes": 92114874,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a83021059a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 613.0124,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8649,7 +9648,11 @@
      "ext": ".mp4",
      "sizeBytes": 32998129,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210597",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 249.182267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a830210598",
@@ -8659,7 +9662,11 @@
      "ext": ".mp4",
      "sizeBytes": 37816979,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210598",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 248.681767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a830210599",
@@ -8669,7 +9676,11 @@
      "ext": ".mp4",
      "sizeBytes": 73175049,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a830210599",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 618.484533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480537f6aa6a83021059a",
@@ -8679,7 +9690,11 @@
      "ext": ".mp4",
      "sizeBytes": 92114874,
      "href": "/api/psi/file/PSI-25/692480537f6aa6a83021059a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 613.0124,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8756,7 +9771,11 @@
      "ext": ".mp4",
      "sizeBytes": 154030119,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210435",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1211.4102,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210436",
@@ -8766,7 +9785,11 @@
      "ext": ".mp4",
      "sizeBytes": 169994682,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210436",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1211.1099,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8841,7 +9864,11 @@
      "ext": ".mp4",
      "sizeBytes": 138309330,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210437",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 1260.325733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210438",
@@ -8851,7 +9878,11 @@
      "ext": ".mp4",
      "sizeBytes": 2619212,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210438",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 61.494767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480407f6aa6a830210439",
@@ -8861,7 +9892,11 @@
      "ext": ".mp4",
      "sizeBytes": 174010269,
      "href": "/api/psi/file/PSI-25/692480407f6aa6a830210439",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 1257.8566,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -8935,7 +9970,11 @@
      "ext": ".mp4",
      "sizeBytes": 103836812,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210422",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 835.901733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924803e7f6aa6a830210423",
@@ -8945,7 +9984,11 @@
      "ext": ".mp4",
      "sizeBytes": 128498079,
      "href": "/api/psi/file/PSI-25/6924803e7f6aa6a830210423",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 833.299133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9015,7 +10058,11 @@
      "ext": ".mp4",
      "sizeBytes": 2030280,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210501",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 20.7207,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210502",
@@ -9025,7 +10072,12 @@
      "ext": ".mp4",
      "sizeBytes": 11667714,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210502",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 101.0009,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480,
+     "fallbackHref": "/media/psi25-t1.mp4"
     }
    ],
    "qa": {
@@ -9099,7 +10151,11 @@
      "ext": ".mp4",
      "sizeBytes": 13699222,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210508",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 116.483033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210509",
@@ -9109,7 +10165,11 @@
      "ext": ".mp4",
      "sizeBytes": 4696375,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210509",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 55.9559,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9182,7 +10242,11 @@
      "ext": ".mp4",
      "sizeBytes": 37727321,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 319.8195,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a83021052e",
@@ -9192,7 +10256,11 @@
      "ext": ".mp4",
      "sizeBytes": 61076311,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052e",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 379.2789,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a83021052f",
@@ -9202,7 +10270,11 @@
      "ext": ".mp4",
      "sizeBytes": 32963113,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052f",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 297.530567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210530",
@@ -9212,7 +10284,11 @@
      "ext": ".mp4",
      "sizeBytes": 1156844,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210530",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 21.287933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210531",
@@ -9222,7 +10298,11 @@
      "ext": ".mp4",
      "sizeBytes": 49264051,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210531",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 295.461833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9293,7 +10373,11 @@
      "ext": ".mp4",
      "sizeBytes": 8085062,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a83021050a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 63.7637,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a83021050b",
@@ -9303,7 +10387,11 @@
      "ext": ".mp4",
      "sizeBytes": 2545773,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a83021050b",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 32.565867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9377,7 +10465,11 @@
      "ext": ".mp4",
      "sizeBytes": 1859994,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210514",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 18.785433,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a830210515",
@@ -9387,7 +10479,11 @@
      "ext": ".mp4",
      "sizeBytes": 35706820,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210515",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 255.321733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9459,7 +10555,11 @@
      "ext": ".mp4",
      "sizeBytes": 23605877,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210516",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 166.299467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9535,7 +10635,11 @@
      "ext": ".mp4",
      "sizeBytes": 4317209,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210542",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 38.972267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210543",
@@ -9545,7 +10649,11 @@
      "ext": ".mp4",
      "sizeBytes": 6634818,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210543",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 39.105733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210544",
@@ -9555,7 +10663,11 @@
      "ext": ".mp4",
      "sizeBytes": 50199185,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210544",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 421.988233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210545",
@@ -9565,7 +10677,11 @@
      "ext": ".mp4",
      "sizeBytes": 1545417,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210545",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 25.8258,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210546",
@@ -9575,7 +10691,11 @@
      "ext": ".mp4",
      "sizeBytes": 68237025,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210546",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 426.793033,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9645,7 +10765,11 @@
      "ext": ".mp4",
      "sizeBytes": 10800404,
      "href": "/api/psi/file/PSI-25/692480577f6aa6a8302105e8",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 110.376933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9717,7 +10841,11 @@
      "ext": ".mp4",
      "sizeBytes": 9733029,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210519",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 103.536767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a83021051a",
@@ -9727,7 +10855,11 @@
      "ext": ".mp4",
      "sizeBytes": 16223672,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 103.436667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9797,7 +10929,11 @@
      "ext": ".mp4",
      "sizeBytes": 12444685,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 119.285833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a83021051e",
@@ -9807,7 +10943,11 @@
      "ext": ".mp4",
      "sizeBytes": 3654022,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051e",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 66.933533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a83021051f",
@@ -9817,7 +10957,11 @@
      "ext": ".mp4",
      "sizeBytes": 31544262,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051f",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 189.155633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9887,7 +11031,11 @@
      "ext": ".mp4",
      "sizeBytes": 4644924,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210525",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 45.8458,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a830210526",
@@ -9897,7 +11045,11 @@
      "ext": ".mp4",
      "sizeBytes": 5549434,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210526",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 41.9419,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -9968,7 +11120,11 @@
      "ext": ".mp4",
      "sizeBytes": 65749185,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104e2",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 664.580583,
+     "fps": 59.94005994005994,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480497f6aa6a8302104e3",
@@ -9978,7 +11134,11 @@
      "ext": ".mp4",
      "sizeBytes": 166705,
      "href": "/api/psi/file/PSI-25/692480497f6aa6a8302104e3",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 2.068733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10049,7 +11209,11 @@
      "ext": ".mp4",
      "sizeBytes": 13747923,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 136.803333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a83021052b",
@@ -10059,7 +11223,11 @@
      "ext": ".mp4",
      "sizeBytes": 1007930,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052b",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 20.5205,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a83021052c",
@@ -10069,7 +11237,11 @@
      "ext": ".mp4",
      "sizeBytes": 17673653,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a83021052c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 137.3372,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10140,7 +11312,11 @@
      "ext": ".mp4",
      "sizeBytes": 2626885,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210510",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 27.193833,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804b7f6aa6a830210511",
@@ -10150,7 +11326,11 @@
      "ext": ".mp4",
      "sizeBytes": 4715080,
      "href": "/api/psi/file/PSI-25/6924804b7f6aa6a830210511",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 43.009633,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10223,7 +11403,11 @@
      "ext": ".mp4",
      "sizeBytes": 34952158,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210517",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 276.609667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a830210518",
@@ -10233,7 +11417,11 @@
      "ext": ".mp4",
      "sizeBytes": 35875159,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a830210518",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 289.756133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a830210565",
@@ -10243,7 +11431,11 @@
      "ext": ".mp4",
      "sizeBytes": 307586,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a830210565",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 4.337667,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a830210566",
@@ -10253,7 +11445,11 @@
      "ext": ".mp4",
      "sizeBytes": 4018563,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a830210566",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 39.973267,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a830210567",
@@ -10263,7 +11459,11 @@
      "ext": ".mp4",
      "sizeBytes": 15951867,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a830210567",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 109.676233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10333,7 +11533,11 @@
      "ext": ".mp4",
      "sizeBytes": 9404429,
      "href": "/api/psi/file/PSI-25/692480577f6aa6a8302105ef",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 96.329567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480577f6aa6a8302105f0",
@@ -10343,7 +11547,11 @@
      "ext": ".mp4",
      "sizeBytes": 12303319,
      "href": "/api/psi/file/PSI-25/692480577f6aa6a8302105f0",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 93.560133,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10416,7 +11624,11 @@
      "ext": ".mp4",
      "sizeBytes": 10344053,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051b",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 107.640867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804c7f6aa6a83021051c",
@@ -10426,7 +11638,11 @@
      "ext": ".mp4",
      "sizeBytes": 17331258,
      "href": "/api/psi/file/PSI-25/6924804c7f6aa6a83021051c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 110.243467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10498,7 +11714,11 @@
      "ext": ".mp4",
      "sizeBytes": 9216046,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210538",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 79.4794,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210539",
@@ -10508,7 +11728,11 @@
      "ext": ".mp4",
      "sizeBytes": 11583343,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210539",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 79.7797,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10579,7 +11803,11 @@
      "ext": ".mp4",
      "sizeBytes": 992495,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053a",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 16.7167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a83021053b",
@@ -10589,7 +11817,11 @@
      "ext": ".mp4",
      "sizeBytes": 4689812,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053b",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 32.8328,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10660,7 +11892,11 @@
      "ext": ".mp4",
      "sizeBytes": 4704569,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053c",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 41.574867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a83021053d",
@@ -10670,7 +11906,11 @@
      "ext": ".mp4",
      "sizeBytes": 1346447,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053d",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 22.155467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a83021053e",
@@ -10680,7 +11920,11 @@
      "ext": ".mp4",
      "sizeBytes": 6420548,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053e",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 43.910533,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a830210568",
@@ -10690,7 +11934,11 @@
      "ext": ".mp4",
      "sizeBytes": 253248,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a830210568",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 3.269933,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a830210569",
@@ -10700,7 +11948,11 @@
      "ext": ".mp4",
      "sizeBytes": 907519,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a830210569",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 9.2092,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "692480507f6aa6a83021056a",
@@ -10710,7 +11962,11 @@
      "ext": ".mp4",
      "sizeBytes": 219187,
      "href": "/api/psi/file/PSI-25/692480507f6aa6a83021056a",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 3.036367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10781,7 +12037,11 @@
      "ext": ".mp4",
      "sizeBytes": 5016477,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a83021053f",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 45.879167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210540",
@@ -10791,7 +12051,11 @@
      "ext": ".mp4",
      "sizeBytes": 956973,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210540",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 15.849167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804e7f6aa6a830210541",
@@ -10801,7 +12065,11 @@
      "ext": ".mp4",
      "sizeBytes": 7744804,
      "href": "/api/psi/file/PSI-25/6924804e7f6aa6a830210541",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 50.6506,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10871,7 +12139,11 @@
      "ext": ".mp4",
      "sizeBytes": 5688672,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210532",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 48.615233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210533",
@@ -10881,7 +12153,11 @@
      "ext": ".mp4",
      "sizeBytes": 323810,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210533",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 6.139467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210534",
@@ -10891,7 +12167,11 @@
      "ext": ".mp4",
      "sizeBytes": 7433909,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210534",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 48.181467,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -10961,7 +12241,11 @@
      "ext": ".mp4",
      "sizeBytes": 13938018,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210535",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 115.8157,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210536",
@@ -10971,7 +12255,11 @@
      "ext": ".mp4",
      "sizeBytes": 4470351,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210536",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 64.898167,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804d7f6aa6a830210537",
@@ -10981,7 +12269,11 @@
      "ext": ".mp4",
      "sizeBytes": 17866853,
      "href": "/api/psi/file/PSI-25/6924804d7f6aa6a830210537",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 115.648867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11052,7 +12344,11 @@
      "ext": ".mp4",
      "sizeBytes": 8626310,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210554",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 81.748333,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210555",
@@ -11062,7 +12358,11 @@
      "ext": ".mp4",
      "sizeBytes": 9516662,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210555",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 81.5815,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210556",
@@ -11072,7 +12372,11 @@
      "ext": ".mp4",
      "sizeBytes": 2239487,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210556",
-     "kind": "still-sequence"
+     "kind": "still-sequence",
+     "durationS": 16.549867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11145,7 +12449,11 @@
      "ext": ".mp4",
      "sizeBytes": 15332738,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210552",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 131.197733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210553",
@@ -11155,7 +12463,11 @@
      "ext": ".mp4",
      "sizeBytes": 22126263,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210553",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 171.3712,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11228,7 +12540,11 @@
      "ext": ".mp4",
      "sizeBytes": 13981372,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055d",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 113.179733,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a83021055e",
@@ -11238,7 +12554,11 @@
      "ext": ".mp4",
      "sizeBytes": 12998036,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055e",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 109.676233,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11308,7 +12628,11 @@
      "ext": ".mp4",
      "sizeBytes": 9339780,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210557",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 78.1781,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210558",
@@ -11318,7 +12642,11 @@
      "ext": ".mp4",
      "sizeBytes": 9534038,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210558",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 78.311567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210559",
@@ -11328,7 +12656,11 @@
      "ext": ".mp4",
      "sizeBytes": 8378753,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210559",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 71.104367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a83021055a",
@@ -11338,7 +12670,11 @@
      "ext": ".mp4",
      "sizeBytes": 8411087,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 70.503767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11410,7 +12746,11 @@
      "ext": ".mp4",
      "sizeBytes": 9339780,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210557",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 78.1781,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210558",
@@ -11420,7 +12760,11 @@
      "ext": ".mp4",
      "sizeBytes": 9534038,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210558",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 78.311567,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a830210559",
@@ -11430,7 +12774,11 @@
      "ext": ".mp4",
      "sizeBytes": 8378753,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a830210559",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 71.104367,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a83021055a",
@@ -11440,7 +12788,11 @@
      "ext": ".mp4",
      "sizeBytes": 8411087,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055a",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 70.503767,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
@@ -11512,7 +12864,11 @@
      "ext": ".mp4",
      "sizeBytes": 19142967,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055b",
-     "kind": "primary"
+     "kind": "primary",
+     "durationS": 160.693867,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     },
     {
      "id": "6924804f7f6aa6a83021055c",
@@ -11522,7 +12878,11 @@
      "ext": ".mp4",
      "sizeBytes": 20913019,
      "href": "/api/psi/file/PSI-25/6924804f7f6aa6a83021055c",
-     "kind": "second-view"
+     "kind": "second-view",
+     "durationS": 160.16,
+     "fps": 29.97002997002997,
+     "width": 720,
+     "height": 480
     }
    ],
    "qa": {
