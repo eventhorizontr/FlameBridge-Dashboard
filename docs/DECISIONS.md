@@ -135,3 +135,14 @@ study found the dark body is the holder). (3) *Lab 3D*: O₂ × √flow × log s
 the measured runs with the query and the group envelope. (4) Peaks use frames fully inside the
 view (igniter glow excluded); still-camera playback layouts are measured on the photo only
 (vision v1.3.0). Deps: three, @react-three/fiber, @react-three/drei.
+
+**ADR-019 · 2026-11-15 · accepted** (amends ADR-018) — **Flame 3D Studio.** The 3D flame is a
+volumetric *emission* reconstruction rendered by ray marching with bloom, not a coloured surface.
+Axisymmetric samples (rods, spheres, candles): onion-peeling Abel inversion (Dasch 1992, Appl. Opt.
+31:1146, DOI 10.1364/AO.31.001146) of every column of the current video frame, per colour channel,
+optically thin assumption. Planar samples: side-view brightness spread across the Nikon face-view
+silhouette preserving the side projection (two-camera) or through an illustrative depth (planar).
+Pixels are linearised from sRGB, masked to the measured flame (main flame only; remote reflections
+dropped); values are relative emission and clipped pixels are reported. "Auto" picks the valid model
+per sample; the studio drives the viewer video so the reconstruction follows playback. Deps:
+@react-three/postprocessing, postprocessing (bloom).
