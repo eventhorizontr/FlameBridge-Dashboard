@@ -126,9 +126,12 @@ and the `setFlameOverlay` action. Ownership: `pipeline/vision/**`, `src/lib/visi
 `tool_result` events (contract `FrameGallery` in `src/types/ai.ts`) and render as clickable tiles.
 (2) *3D flame*: built only from measured outlines; three models with stated assumptions — revolve
 (axisymmetric; default for rods, spheres, candles in axial flow), extrude (planar samples, depth
-illustrative), space-time (x, y, t; assumption-free). A two-camera visual hull is not built: video
-and still cameras are unsynchronised and uncalibrated (FlameBridge's rod-scale study found the
-dark body is the holder, so no mm scale either). (3) *Lab 3D*: O₂ × √flow × log size scatter of
+illustrative), space-time (x, y, t; assumption-free), and for planar samples a two-camera
+silhouette hull (video camera edge-on + Nikon still camera face-on, verified on B-series films where
+the video shows both flame sheets and the still shows one): views normalised by flame length on
+the shared flow axis, mirroring by profile correlation, frames paired by burn phase because the
+cameras are not synchronised (Nikon clock offset by minutes). No mm scale (FlameBridge's rod-scale
+study found the dark body is the holder). (3) *Lab 3D*: O₂ × √flow × log size scatter of
 the measured runs with the query and the group envelope. (4) Peaks use frames fully inside the
 view (igniter glow excluded); still-camera playback layouts are measured on the photo only
 (vision v1.3.0). Deps: three, @react-three/fiber, @react-three/drei.
