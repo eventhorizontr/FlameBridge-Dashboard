@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 
 import { SITE } from "@/config/site";
 
+import { DEMO_VIDEO_URL, LandingVideo } from "./landing-video";
 import "./landing.css";
 
 const unbounded = Unbounded({ variable: "--font-unbounded", subsets: ["latin"], weight: ["700", "800"] });
@@ -148,6 +149,12 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
           </p>
           <DashboardCta large />
           <nav aria-label="Open a section" className="nf-quick">
+            <a href="#demo" className="nf-ghost nf-ghost-accent">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" />
+              </svg>
+              Watch the demo
+            </a>
             {SECTIONS.map((l) => (
               <Link key={l.href} href={l.href} className="nf-ghost">
                 {l.label}
@@ -194,6 +201,31 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
           </div>
         </div>
       </header>
+
+      <section id="demo" aria-labelledby="demo-title" className="nf-wrap nf-stack nf-demo">
+        <div className="nf-head nf-rv">
+          <div>
+            <div className="nf-kicker">Watch the demo</div>
+            <h2 id="demo-title" className="nf-h2">
+              See {PRODUCT_NAME} in action.
+            </h2>
+          </div>
+          <p className="nf-lead">
+            A short walkthrough by the team: real ISS footage, the flame traced by computer vision, and how the
+            dashboard turns NASA&apos;s records into answers.
+          </p>
+        </div>
+        <div className="nf-rv">
+          <LandingVideo />
+          <div className="nf-video-meta">
+            <span>Video by team {TEAM_NAME} · plays from YouTube</span>
+            <a href={DEMO_VIDEO_URL} target="_blank" rel="noreferrer" className="nf-video-link">
+              Open on YouTube
+              <Arrow size={14} />
+            </a>
+          </div>
+        </div>
+      </section>
 
       <section id="problem" className="nf-wrap nf-stack" style={{ paddingTop: 72, paddingBottom: 80, gap: 48 }}>
         <SectionHead

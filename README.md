@@ -11,11 +11,20 @@ conditions. It connects each finding to its experimental context — the ISS run
 and its footage — and makes explicit where the measured evidence ends and a new test would be
 needed. It does not replace physical testing or certification.
 
-![FlameBridge Home: mission overview of the PSI-25 BASS-II dataset](docs/media/home.png)
+## Watch the demo
 
-| Live app | Guided example |
-|---|---|
-| **[nasa-space-apps-2026-seven.vercel.app](https://nasa-space-apps-2026-seven.vercel.app)** · [Dashboard](https://nasa-space-apps-2026-seven.vercel.app/overview) | [Source → condition → reasoning → validation need](docs/DEMO.md#guided-example-one-real-scenario-1-min) |
+<p align="center">
+  <a href="https://youtu.be/5k1sTZwlpyk" title="Watch the FlameBridge demo on YouTube">
+    <img src="docs/media/demo-video.jpg" alt="FlameBridge demo video: play on YouTube" width="820" />
+  </a>
+</p>
+<p align="center"><a href="https://youtu.be/5k1sTZwlpyk"><strong>▶ Watch the FlameBridge demo on YouTube</strong></a></p>
+
+| Live app | Demo video | Guided example |
+|---|---|---|
+| **[nasa-space-apps-2026-seven.vercel.app](https://nasa-space-apps-2026-seven.vercel.app)** · [Dashboard](https://nasa-space-apps-2026-seven.vercel.app/overview) | [youtu.be/5k1sTZwlpyk](https://youtu.be/5k1sTZwlpyk) | [Source → condition → reasoning → validation need](docs/DEMO.md#guided-example-one-real-scenario-1-min) |
+
+![FlameBridge Home: mission overview of the PSI-25 BASS-II dataset](docs/media/home.png)
 
 ## Problem and users
 
