@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useStore } from "zustand";
-import { createStore } from "zustand/vanilla";
 
+import { playbackStore, type PlaybackState } from "@/lib/vision/playback";
 import type { VisionContours, VisionVideo } from "@/types/vision";
+
+export { playbackStore };
 
 /* ------------------------------------------------------------------ fetching */
 
@@ -55,24 +57,6 @@ export function useVisionContours(accession: string, videoId: string | null | un
 }
 
 /* ------------------------------------------------------- playback time sync */
-
-/**
- * Current media time of the flame viewer, published ~10×/s so charts can draw a playhead without
- * putting a 60 Hz value through the undoable dashboard store.
- */
-interface PlaybackState {
-  videoId: string | null;
-  timeS: number;
-  playing: boolean;
-  publish: (videoId: string, timeS: number, playing: boolean) => void;
-}
-
-export const playbackStore = createStore<PlaybackState>()((set) => ({
-  videoId: null,
-  timeS: 0,
-  playing: false,
-  publish: (videoId, timeS, playing) => set({ videoId, timeS, playing }),
-}));
 
 export function usePlayback<T>(selector: (s: PlaybackState) => T): T {
   return useStore(playbackStore, selector);

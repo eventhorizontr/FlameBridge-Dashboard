@@ -186,3 +186,38 @@ export function digestVideo(v: VisionVideo, points = 0) {
 }
 
 export type VisionDigest = ReturnType<typeof digestVideo>;
+
+/** Everything measured at the stored sample nearest `timeS` (for "what is the flame doing now?"). */
+export function frameAt(v: VisionVideo, timeS: number) {
+  if (v.status !== "ok" || !v.series) return { videoId: v.videoId, status: v.status, reason: v.reason ?? null };
+  const s = v.series;
+  const i = sampleIndexAt(s.t, timeS);
+  const flags = s.flags?.[i] ?? 0;
+  const segment = v.embedding?.segments.findIndex((g) => s.t[i] >= g.startS && s.t[i] < g.endS) ?? -1;
+  const osd = v.osd
+    ? Object.fromEntries(v.osd.fields.map((f) => [f.key, { value: v.osd!.series[f.key]?.[i] ?? null, unit: f.unit }]))
+    : null;
+  return {
+    videoId: v.videoId,
+    experimentId: v.experimentId,
+    requestedS: timeS,
+    sampleS: s.t[i],
+    measured: s.valid[i] === 1 && (flags & 1) === 0,
+    flameVisible: s.visible[i] === 1,
+    areaPx: s.areaPx[i],
+    luminousCorePx: s.corePx[i],
+    bboxPx: s.bboxX[i] != null ? { x: s.bboxX[i], y: s.bboxY[i], w: s.bboxW[i], h: s.bboxH[i] } : null,
+    centroidPx: s.cx[i] != null ? { x: s.cx[i], y: s.cy[i] } : null,
+    brightness: s.brightness[i],
+    motionPxS: s.flowPxS[i],
+    similarityToPrevious: { ssim: s.ssim[i], maskIou: s.iou[i] },
+    overlayTelemetry: osd,
+    qaFlags: flagLabels(flags),
+    imagePhase: segment >= 0 ? { index: segment + 1, of: v.embedding!.segments.length, ...v.embedding!.segments[segment] } : null,
+    vsVideo: {
+      areaShareOfPeak: s.areaPx[i] != null && v.events?.peakAreaPx ? Math.round((s.areaPx[i]! / v.events.peakAreaPx) * 1000) / 1000 : null,
+      firstFlameS: v.events?.firstFlameS ?? null,
+      peakAreaS: v.events?.peakAreaS ?? null,
+    },
+  };
+}

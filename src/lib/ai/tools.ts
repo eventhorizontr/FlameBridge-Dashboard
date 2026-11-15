@@ -14,7 +14,7 @@ import type { DashboardAction } from "@/types/dashboard";
 import type { Experiment } from "@/types/experiment";
 import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema, LabParamsSchema } from "@/types/schemas";
 
-import { digestVideo } from "@/lib/vision/digest";
+import { digestVideo, frameAt } from "@/lib/vision/digest";
 import { getVisionIndex, getVisionVideo, RANK_METRICS, visionEntriesFor, type RankMetric } from "@/lib/vision/server";
 
 import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
@@ -316,6 +316,28 @@ export const TOOLS: AgentTool[] = [
           ...(e ? [experimentEvidence(e)] : []),
           { id: `vision:${v.videoId}`, label: `Vision ${e?.testId ?? ""} ${v.kind ?? ""}`.trim(), kind: "file", href: `/api/vision/${v.videoId}` },
         ],
+      };
+    },
+  }),
+
+  defineTool({
+    name: "get_flame_at_time",
+    description:
+      "What the vision layer measured at one moment of a video: flame visible or not, area, luminous core and bounding frame (px), centroid, motion, similarity to the previous frame, overlay telemetry (AIR, FAN, RAD) at that second, QA flags and the DINOv2 image phase. Use dashboard_state.video (videoId + timeS) for questions about 'now' / 'this frame'.",
+    input: z.strictObject({
+      videoId: z.string().regex(/^[0-9a-f]{24}$/i),
+      timeS: z.number().finite().nonnegative().describe("Seconds from the start of the video"),
+    }),
+    execute: ({ videoId, timeS }) => {
+      const v = getVisionVideo(videoId);
+      if (!v) return { ok: false, content: { error: `No vision analysis for video ${videoId}.` }, summary: "No vision data", evidence: [] };
+      const e = getExperiment(v.experimentId);
+      const at = frameAt(v, timeS);
+      return {
+        ok: true,
+        content: at,
+        summary: `Read the flame at ${timeS.toFixed(1)} s in ${e?.testId ?? v.experimentId}`,
+        evidence: e ? [experimentEvidence(e)] : [],
       };
     },
   }),

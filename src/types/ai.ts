@@ -3,6 +3,7 @@
  * Owner: Claude. UI (#16) consumes this through `useAssistant()`; never parse the stream yourself.
  */
 import type { DashboardAction, ExperimentFilters, LabParams, UserMode } from "./dashboard";
+import type { FlameOverlayMode } from "./vision";
 
 export type AiProviderId = "openai" | "claude";
 
@@ -38,6 +39,8 @@ export interface AiClientContext {
   openExperimentId: string | null;
   compareIds: string[];
   labParams: LabParams;
+  /** Where the flame viewer is: lets the assistant answer "what is the flame doing now?". */
+  video?: { experimentId: string; videoId: string; timeS: number; overlay: FlameOverlayMode } | null;
 }
 
 /** POST /api/ai body. Last message must be from the user. */

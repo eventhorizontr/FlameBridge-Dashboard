@@ -3,6 +3,7 @@
  * with the shared tools, and streams `AiStreamEvent`s as NDJSON.
  */
 import { z } from "zod";
+import { FLAME_OVERLAY_MODES } from "@/types/vision";
 
 import type { AiRequest, AiStreamEvent } from "@/types/ai";
 import { ExperimentFiltersSchema, LabParamsSchema, UserModeSchema } from "@/types/schemas";
@@ -29,6 +30,15 @@ export const AiRequestSchema = z.strictObject({
     openExperimentId: z.string().max(80).nullable(),
     compareIds: z.array(z.string().max(80)).max(4),
     labParams: LabParamsSchema,
+    video: z
+      .strictObject({
+        experimentId: z.string().max(80),
+        videoId: z.string().regex(/^[0-9a-f]{24}$/i),
+        timeS: z.number().finite().nonnegative(),
+        overlay: z.enum(FLAME_OVERLAY_MODES),
+      })
+      .nullable()
+      .optional(),
   }),
 });
 

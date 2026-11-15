@@ -4,7 +4,7 @@ import { createDashboardStore } from "@/lib/store/store";
 import { DashboardActionSchema } from "@/types/schemas";
 import { VisionContoursSchema, VisionVideoSchema, type VisionVideo } from "@/types/vision";
 
-import { boxAt, digestVideo, flagLabels, polygonsAt, sampleIndexAt, stats, thin } from "./digest";
+import { boxAt, digestVideo, flagLabels, frameAt, polygonsAt, sampleIndexAt, stats, thin } from "./digest";
 
 const series = {
   t: [0, 0.2, 0.4, 0.6, 0.8],
@@ -127,6 +127,20 @@ describe("digestVideo", () => {
       source: undefined,
     });
     expect(digestVideo(skipped)).toMatchObject({ status: "skipped", reason: "screen recording" });
+  });
+});
+
+describe("frameAt", () => {
+  it("reports what was measured at a moment, with telemetry and flags", () => {
+    const at = frameAt(video, 0.61) as Extract<ReturnType<typeof frameAt>, { areaPx: unknown }>;
+    expect(at.sampleS).toBe(0.6);
+    expect(at.areaPx).toBe(300);
+    expect(at.flameVisible).toBe(true);
+    expect(at.overlayTelemetry?.rad.value).toBe(1.2);
+    expect(at.qaFlags).toHaveLength(1);
+    expect(at.vsVideo.areaShareOfPeak).toBe(1);
+    const lit = frameAt(video, 0) as Extract<ReturnType<typeof frameAt>, { measured: unknown }>;
+    expect(lit.measured).toBe(false);
   });
 });
 

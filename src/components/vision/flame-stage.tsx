@@ -11,6 +11,7 @@ import { playbackStore } from "./use-vision";
 interface FlameStageProps {
   videoRef: RefObject<HTMLVideoElement | null>;
   videoId: string | null;
+  experimentId?: string | null;
   /** File-name stem for "Save frame", e.g. "PSI-25_B1". */
   captureName?: string;
   analysis: VisionVideo | null;
@@ -50,17 +51,26 @@ function contentRect(video: HTMLVideoElement, width: number, height: number, src
  * frame (so "follow" zoom moves picture and drawing together) and publishes playback time.
  * All geometry comes from the stored analysis; nothing is computed from pixels in the browser.
  */
-export function FlameStage({ videoRef, videoId, captureName = "frame", analysis, contours, overlay, children }: FlameStageProps) {
+export function FlameStage({
+  videoRef,
+  videoId,
+  experimentId = null,
+  captureName = "frame",
+  analysis,
+  contours,
+  overlay,
+  children,
+}: FlameStageProps) {
   const [captureError, setCaptureError] = useState<string | null>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
-  const latest = useRef({ analysis, contours, overlay, videoId });
+  const latest = useRef({ analysis, contours, overlay, videoId, experimentId });
 
   useEffect(() => {
-    latest.current = { analysis, contours, overlay, videoId };
-  }, [analysis, contours, overlay, videoId]);
+    latest.current = { analysis, contours, overlay, videoId, experimentId };
+  }, [analysis, contours, overlay, videoId, experimentId]);
 
   useEffect(() => {
     const accent = readToken("--flame-edge", "#ff8a3d");
@@ -77,12 +87,12 @@ export function FlameStage({ videoRef, videoId, captureName = "frame", analysis,
       const canvas = canvasRef.current;
       const frame = frameRef.current;
       if (!video || !canvas || !frame) return;
-      const { analysis: a, contours: c, overlay: o, videoId: id } = latest.current;
+      const { analysis: a, contours: c, overlay: o, videoId: id, experimentId: expId } = latest.current;
       const t = video.currentTime || 0;
 
       if (id && now - lastPublish > 100) {
         lastPublish = now;
-        playbackStore.getState().publish(id, t, !video.paused);
+        playbackStore.getState().publish(expId, id, t, !video.paused);
       }
 
       const width = frame.clientWidth;

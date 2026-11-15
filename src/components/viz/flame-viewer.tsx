@@ -474,6 +474,7 @@ export function FlameViewer({
                   <FlameStage
                     videoRef={videoRef}
                     videoId={activeVideo.id}
+                    experimentId={experiment.id}
                     captureName={`${experiment.investigation}_${experiment.testId}`}
                     analysis={vision}
                     contours={contours}
