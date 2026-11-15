@@ -3,7 +3,7 @@
 import { Flame, ScanEye } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { Badge, Panel, PanelBody, PanelHeader, PanelTitle, SegmentedControl } from "@/components/ui";
+import { SegmentedControl } from "@/components/ui";
 import { useDispatch } from "@/lib/store";
 
 import { formatTime } from "./time-chart";
@@ -111,87 +111,40 @@ function Card({ e, accession, onOpen }: { e: LibraryEntry; accession: string; on
 }
 
 /**
- * Overview gallery of every run whose footage the vision layer measured: pick a flame before
- * opening the viewer. Thumbnails are real keyframes; hover plays the 12-frame keyframe strip.
+ * Runs gallery: every run whose primary footage the vision layer measured, shown by its peak
+ * flame. Filtering is done by the Runs filters; this only sorts and lays out. Hover plays the
+ * 12-frame keyframe strip.
  */
 export function FlameLibrary({ entries, accession = "PSI-25" }: { entries: LibraryEntry[]; accession?: string }) {
   const dispatch = useDispatch();
-  const pis = useMemo(() => ["All", ...[...new Set(entries.map((e) => e.principalInvestigator))].sort()], [entries]);
-  const [pi, setPi] = useState("All");
-  const [geometry, setGeometry] = useState<string>("all");
   const [sort, setSort] = useState<SortKey>("visible");
-  const geometries = useMemo(() => [...new Set(entries.map((e) => e.geometry ?? "unknown"))].sort(), [entries]);
 
   const shown = useMemo(() => {
-    const list = entries.filter((e) => (pi === "All" || e.principalInvestigator === pi) && (geometry === "all" || (e.geometry ?? "unknown") === geometry));
     const key = (e: LibraryEntry) => (sort === "visible" ? e.visibleS : sort === "peak" ? e.peakAreaPx ?? -1 : e.o2Pct ?? -1);
-    return [...list].sort((a, b) => key(b) - key(a));
-  }, [entries, pi, geometry, sort]);
+    return [...entries].sort((a, b) => key(b) - key(a));
+  }, [entries, sort]);
 
   return (
-    <section id="flame-library" aria-labelledby="flame-library-title">
-      <Panel surface="surface-1">
-        <PanelHeader>
-          <PanelTitle
-            eyebrow={`Flame library · ${entries.length} runs measured by computer vision`}
-            title="Choose a flame"
-            actions={
-              <SegmentedControl<SortKey>
-                ariaLabel="Sort flames"
-                size="sm"
-                value={sort}
-                onChange={setSort}
-                options={[
-                  { value: "visible", label: "Longest burn" },
-                  { value: "peak", label: "Largest flame" },
-                  { value: "o2", label: "Highest O₂" },
-                ]}
-              />
-            }
-          />
-        </PanelHeader>
-        <PanelBody className="space-y-3">
-          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by principal investigator">
-            {pis.map((p) => (
-              <button
-                key={p}
-                type="button"
-                aria-pressed={pi === p}
-                onClick={() => setPi(p)}
-                className={`min-h-7 rounded-full border px-2.5 text-[0.75rem] cursor-pointer ${
-                  pi === p ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]" : "border-[var(--line)] text-[var(--text-2)] hover:text-[var(--text-1)]"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-            <span className="mx-1 h-4 w-px bg-[var(--line-strong)]" aria-hidden="true" />
-            {["all", ...geometries].map((g) => (
-              <button
-                key={g}
-                type="button"
-                aria-pressed={geometry === g}
-                onClick={() => setGeometry(g)}
-                className={`min-h-7 rounded-full border px-2.5 text-[0.75rem] cursor-pointer ${
-                  geometry === g ? "border-[var(--flame-edge)] text-[var(--flame-edge)]" : "border-[var(--line)] text-[var(--text-2)] hover:text-[var(--text-1)]"
-                }`}
-              >
-                {g === "all" ? "All shapes" : g}
-              </button>
-            ))}
-            <Badge className="ml-auto num">{shown.length} shown</Badge>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-            {shown.map((e) => (
-              <Card key={e.experimentId} e={e} accession={accession} onOpen={() => dispatch({ type: "openExperiment", id: e.experimentId })} />
-            ))}
-          </div>
-          <p className="text-[0.6875rem] text-[var(--text-3)]">
-            Thumbnails are keyframes of the primary ISS camera across the flame-visible span; hover to play them. Areas are pixels of the
-            720×480 frame (image-derived).
-          </p>
-        </PanelBody>
-      </Panel>
+    <section id="flame-library" aria-label="Flame gallery" className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-[0.75rem] text-[var(--text-3)]">Peak flame of each measured run · hover to play · areas in px of the 720×480 frame</p>
+        <SegmentedControl<SortKey>
+          ariaLabel="Sort flames"
+          size="sm"
+          value={sort}
+          onChange={setSort}
+          options={[
+            { value: "visible", label: "Longest burn" },
+            { value: "peak", label: "Largest flame" },
+            { value: "o2", label: "Highest O₂" },
+          ]}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 2xl:grid-cols-4">
+        {shown.map((e) => (
+          <Card key={e.experimentId} e={e} accession={accession} onOpen={() => dispatch({ type: "openExperiment", id: e.experimentId })} />
+        ))}
+      </div>
     </section>
   );
 }
