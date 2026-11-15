@@ -31,7 +31,7 @@ export function LearnGate({ children }: { children: ReactNode }) {
       icon={<BookOpen className="size-5" aria-hidden="true" />}
       eyebrow="Guided mode"
       title="The Learn Academy is part of Guided mode"
-      description="Expert mode keeps to the research views: Home, Runs, Compare and the What-if Lab. Switch to Guided mode to open the Academy."
+      description="Expert mode keeps to the research views: Home, Explore, Compare and the What-if Lab. Switch to Guided mode to open the Academy."
       actions={
         <>
           <Button variant="primary" size="sm" onClick={() => dispatch({ type: "setMode", mode: "learn" })}>

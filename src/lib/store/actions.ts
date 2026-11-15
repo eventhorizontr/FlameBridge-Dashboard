@@ -80,9 +80,17 @@ export function describeFilters(f: Partial<ExperimentFilters>): string {
 
 export const ACTIONS: Registry = {
   setMode: {
-    touches: ["mode"],
+    touches: ["mode", "route"],
     undoable: true,
-    reduce: (_s, a) => ({ mode: a.mode }),
+    // Guided mode is the Learn Academy only; Expert mode is the research views (ADR-026).
+    // Switching mode therefore also moves to that mode's home: /learn or /overview.
+    reduce: (s, a) => {
+      if (a.mode === s.mode) return { mode: a.mode };
+      const onLearn = s.route === "/learn" || s.route.startsWith("/learn/");
+      if (a.mode === "learn" && !onLearn) return { mode: a.mode, route: "/learn" };
+      if (a.mode === "expert" && onLearn) return { mode: a.mode, route: "/overview" };
+      return { mode: a.mode };
+    },
     label: (a) => (a.mode === "learn" ? "Switched to Guided mode" : "Switched to Expert mode"),
   },
   setFilters: {

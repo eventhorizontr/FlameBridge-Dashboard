@@ -253,3 +253,15 @@ AI and the command palette, use the owner's flame icon as the brand, and keep th
   match labels are de-cluttered. Matches and footage follow in the next row.
 - *Home:* the hero clip starts on its measured steady-peak frame; the flame gallery shows the top 6
   and links to Runs › Gallery.
+
+
+**ADR-026 · 2026-11-15 · accepted** — **Modes as two products; Explore is its own place again.** Owner
+request: clicking Guided opens only the Learn screen; clicking Expert brings back Home, Explore,
+Compare and the Lab; Explore and Compare are separate places, as in the design before #62.
+- `setMode` now also moves to that mode's home when the mode changes: Guided → `/learn` (unless a
+  module is already open), Expert on a Learn page → `/overview`. It touches `route`, so undo returns
+  to the previous page. The AI and the command palette get the same behaviour.
+- Rail and phone tab bar: Guided shows only Learn; Expert shows Home · Explore · Compare · Lab.
+- "Runs" (ADR-022) is renamed back to **Explore** (Experiment explorer, compass icon) in the rail,
+  breadcrumb, page title and AI prompt; Compare keeps its own page. Selecting 2–4 runs in Explore
+  still sends them to Compare, as before #62.
