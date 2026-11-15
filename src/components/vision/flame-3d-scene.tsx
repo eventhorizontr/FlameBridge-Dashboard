@@ -4,8 +4,11 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useMemo } from "react";
 import * as THREE from "three";
+import { MarchingCubes } from "three/examples/jsm/objects/MarchingCubes.js";
 
 import { profileOf, revolveRadius, toPixels, type MeshModel, type Profile } from "@/lib/vision/mesh";
+
+import type { Hull } from "./two-view";
 
 export interface FramePixels {
   data: Uint8ClampedArray;
@@ -19,7 +22,8 @@ export interface SpaceTimeSlice {
 }
 
 interface SceneProps {
-  model: MeshModel;
+  model: MeshModel | "twoview";
+  hull?: Hull | null;
   polygons: number[][] | null;
   slices: SpaceTimeSlice[];
   currentT: number;
@@ -168,6 +172,28 @@ function SpaceTime({ slices, currentT, axisY, colors }: Pick<SceneProps, "slices
   );
 }
 
+function TwoViewMesh({ hull, colors }: { hull: Hull; colors: SceneProps["colors"] }) {
+  const object = useMemo(() => {
+    const material = new THREE.MeshStandardMaterial({
+      color: colors.edge,
+      emissive: colors.ember,
+      emissiveIntensity: 0.35,
+      roughness: 0.5,
+      transparent: true,
+      opacity: 0.9,
+      side: THREE.DoubleSide,
+    });
+    const mc = new MarchingCubes(hull.n, material, false, false, 120000);
+    mc.isolation = 0.5;
+    mc.field.set(hull.field);
+    mc.update();
+    const length = 6; // scene units for one flame length
+    mc.scale.set(((hull.extent.u[1] - hull.extent.u[0]) * length) / 2, hull.extent.v * length, hull.extent.v * length);
+    return mc;
+  }, [hull, colors.edge, colors.ember]);
+  return <primitive object={object} />;
+}
+
 export function Flame3DScene(props: SceneProps) {
   const { model, autoRotate, colors } = props;
   return (
@@ -178,6 +204,7 @@ export function Flame3DScene(props: SceneProps) {
       {model === "revolve" && <RevolveMesh {...props} />}
       {model === "extrude" && <ExtrudeMesh {...props} />}
       {model === "spacetime" && <SpaceTime {...props} />}
+      {model === "twoview" && props.hull && <TwoViewMesh hull={props.hull} colors={props.colors} />}
       {/* flow axis */}
       <mesh rotation={[0, 0, Math.PI / 2]}>
         <cylinderGeometry args={[0.006, 0.006, 9, 6]} />

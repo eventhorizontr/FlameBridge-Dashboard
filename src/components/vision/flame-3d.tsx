@@ -11,6 +11,7 @@ import type { Experiment } from "@/types/experiment";
 
 import type { FramePixels, SpaceTimeSlice } from "./flame-3d-scene";
 import { formatTime } from "./time-chart";
+import { rasterise, visualHull, type Hull } from "./two-view";
 import { usePlayback, useVisionContours, useVisionVideo } from "./use-vision";
 
 const Flame3DScene = dynamic(() => import("./flame-3d-scene").then((m) => m.Flame3DScene), {
@@ -19,8 +20,14 @@ const Flame3DScene = dynamic(() => import("./flame-3d-scene").then((m) => m.Flam
 });
 
 const AXISYMMETRIC = new Set(["rod", "spherical-section", "candle"]);
+/** Planar samples: the Nikon still camera looks at the face, the video camera at the edge. */
+const PLANAR = new Set(["film", "slab", "fabric"]);
 
-const MODEL_NOTES: Record<MeshModel, string> = {
+type Model = MeshModel | "twoview";
+
+const MODEL_NOTES: Record<Model, string> = {
+  twoview:
+    "Two-view silhouette hull (shape-from-silhouette, Laurentini 1994): the video camera sees the sample edge-on, the Nikon still camera face-on, both along the same flow axis. Each view is scaled by its own flame length and the hull keeps only points inside both silhouettes — an upper bound of the flame volume. The cameras are not synchronised, so the two frames are paired by burn phase, not by time.",
   revolve:
     "Solid of revolution about the flow axis through the flame centroid. Rods, spheres and candles in axial flow burn axisymmetrically, so the projected half-width at each position is the radius. Surface colours are the footage pixels the camera saw.",
   extrude:
@@ -71,7 +78,18 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
   const contoursLoad = useVisionContours(experiment.investigation, videoId, Boolean(analysis));
   const contours = contoursLoad.status === "ready" ? contoursLoad.data : null;
 
-  const [model, setModel] = useState<MeshModel>(AXISYMMETRIC.has(experiment.fuel.geometry ?? "") ? "revolve" : "extrude");
+  const stillVideo = experiment.videos.find((v) => v.kind === "still-sequence") ?? null;
+  const planar = PLANAR.has(experiment.fuel.geometry ?? "");
+  const stillLoad = useVisionVideo(experiment.investigation, planar ? stillVideo?.id : null);
+  const still = stillLoad.status === "ready" && stillLoad.data.status === "ok" && stillLoad.data.events?.peakAreaS != null ? stillLoad.data : null;
+  const [model, setModel] = useState<Model>(AXISYMMETRIC.has(experiment.fuel.geometry ?? "") ? "revolve" : "extrude");
+  const stillContoursLoad = useVisionContours(experiment.investigation, still?.videoId, model === "twoview" && Boolean(still));
+  const stillContours = stillContoursLoad.status === "ready" ? stillContoursLoad.data : null;
+  const stillVisible = useMemo(
+    () => (still?.series ? still.series.t.map((_, i) => i).filter((i) => still.series!.visible[i] && !((still.series!.flags?.[i] ?? 0) & (1 | 2 | 16))) : []),
+    [still],
+  );
+  const [stillPick, setStillPick] = useState<number | null>(null);
   const [followVideo, setFollowVideo] = useState(true);
   const [pinnedT, setPinnedT] = useState<number | null>(null);
   const [autoRotate, setAutoRotate] = useState(true);
@@ -115,6 +133,23 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
 
   const visible = series && index >= 0 ? series.visible[index] === 1 : false;
 
+  const stillIndex =
+    stillPick ?? (still?.series && still.events?.peakAreaS != null ? sampleIndexAt(still.series.t, still.events.peakAreaS) : -1);
+  const hull = useMemo<Hull | null>(() => {
+    if (model !== "twoview" || !still?.series || !still.source || !stillContours || !polygons || !analysis?.source || stillIndex < 0) return null;
+    const facePolys = stillContours.polygons[stillIndex];
+    if (!facePolys?.length) return null;
+    const toPx = (polys: number[][], w: number, h: number) =>
+      polys.map((flat) => {
+        const pts: [number, number][] = [];
+        for (let k = 0; k + 1 < flat.length; k += 2) pts.push([(flat[k] / 1000) * w, (flat[k + 1] / 1000) * h]);
+        return pts;
+      });
+    const side = rasterise(toPx(polygons, analysis.source.width, analysis.source.height), analysis.source.width, analysis.source.height);
+    const face = rasterise(toPx(facePolys, still.source.width, still.source.height), still.source.width, still.source.height);
+    return side && face ? visualHull(side, face, 56) : null;
+  }, [model, still, stillContours, polygons, analysis, stillIndex]);
+
   return (
     <Panel surface="surface-1">
       <PanelHeader>
@@ -123,7 +158,7 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
           title="Interactive Flame Model"
           actions={
             <div className="flex flex-wrap items-center gap-2">
-              <SegmentedControl<MeshModel>
+              <SegmentedControl<Model>
                 ariaLabel="3D model"
                 size="sm"
                 value={model}
@@ -131,6 +166,7 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
                 options={[
                   { value: "revolve", label: "Revolve", icon: <Orbit className="size-3.5" aria-hidden="true" /> },
                   { value: "extrude", label: "Extrude", icon: <Box className="size-3.5" aria-hidden="true" /> },
+                  ...(still ? [{ value: "twoview" as const, label: "Two-view hull" }] : []),
                   { value: "spacetime", label: "Space-time" },
                 ]}
               />
@@ -160,6 +196,7 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
                 ) : (
                   <Flame3DScene
                     model={model}
+                    hull={hull}
                     polygons={polygons}
                     slices={slices}
                     currentT={sampleT}
@@ -179,8 +216,8 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
               <div className="space-y-3 text-[0.75rem] text-[var(--text-2)]">
                 <div className="flex flex-wrap gap-1.5">
                   <Badge variant="accent">{experiment.fuel.geometry ?? "geometry unknown"}</Badge>
-                  <Badge>{model === "revolve" ? "axisymmetric model" : model === "extrude" ? "planar model" : "measured outlines"}</Badge>
-                  {model !== "spacetime" && (pixels ? <Badge>footage colours</Badge> : <Badge>palette colours</Badge>)}
+                  <Badge>{model === "revolve" ? "axisymmetric model" : model === "extrude" ? "planar model" : model === "twoview" ? "two-camera hull" : "measured outlines"}</Badge>
+                  {(model === "revolve" || model === "extrude") && (pixels ? <Badge>footage colours</Badge> : <Badge>palette colours</Badge>)}
                 </div>
                 <p className="leading-relaxed">{MODEL_NOTES[model]}</p>
                 {model === "revolve" && profile && (
@@ -188,6 +225,35 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
                     Upper/lower asymmetry {(profile.asymmetry * 100).toFixed(0)} %
                     {profile.asymmetry > 0.35 ? " — high: the flame is not axisymmetric here, read the model as a shape sketch." : ""}
                   </p>
+                )}
+                {model === "twoview" && (
+                  <div className="space-y-2">
+                    {hull ? (
+                      <p className="num">
+                        Profile agreement r = {hull.agreement.toFixed(2)}
+                        {hull.mirrored ? " · face view mirrored to match" : ""}
+                        {hull.agreement < 0.4 ? " — weak: the two frames show different burn states, read as a sketch." : ""}
+                      </p>
+                    ) : (
+                      <p>{stillContoursLoad.status === "loading" ? "Loading the still-camera outline…" : "No flame in one of the two views at this moment."}</p>
+                    )}
+                    {stillVisible.length > 1 && still?.series && (
+                      <label className="block space-y-1">
+                        <span className="num text-[0.6875rem] text-[var(--text-3)]">
+                          Still-camera frame {formatTime(still.series.t[stillIndex] ?? 0)} of the photo sequence
+                        </span>
+                        <input
+                          type="range"
+                          min={0}
+                          max={stillVisible.length - 1}
+                          value={Math.max(0, stillVisible.indexOf(stillIndex))}
+                          onChange={(e) => setStillPick(stillVisible[Number(e.target.value)])}
+                          className="w-full accent-[var(--flame-edge)]"
+                          aria-label="Choose the still-camera frame"
+                        />
+                      </label>
+                    )}
+                  </div>
                 )}
                 {model === "revolve" && !AXISYMMETRIC.has(experiment.fuel.geometry ?? "") && (
                   <p className="text-[var(--warning)]">This sample is planar; the revolved shape is illustrative only. Prefer Extrude.</p>
@@ -209,10 +275,13 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
                     </Button>
                   )}
                 </div>
-                <p className="text-[0.6875rem] text-[var(--text-3)]">
-                  Two orthogonal views (video side view + still-camera view) could give a visual hull, but the two cameras are not
-                  synchronised and have different, uncalibrated magnifications, so it is not built.
-                </p>
+                {!still && (
+                  <p className="text-[0.6875rem] text-[var(--text-3)]">
+                    {planar
+                      ? "A two-camera hull needs a measured still-camera (face-on) sequence for this run; none is available."
+                      : "Rods and spheres are viewed from the side by both cameras, so a second view adds no depth; the axisymmetric model applies."}
+                  </p>
+                )}
               </div>
             </div>
           </>
