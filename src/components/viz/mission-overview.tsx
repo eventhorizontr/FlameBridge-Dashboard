@@ -198,6 +198,9 @@ export function MissionOverview({
                   Open Flame Viewer →
                 </button>
               )}
+              <a href="#flame-library" className="shrink-0 text-[var(--flame-edge)] hover:underline font-medium">
+                Choose a flame ↓
+              </a>
             </div>
           </div>
         </div>
