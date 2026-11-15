@@ -15,8 +15,8 @@ import { shellUiStore, useShellUi } from "./shell-state";
 
 const SECTION: Record<string, string> = {
   overview: "Home",
-  explore: "Runs",
-  experiments: "Runs",
+  explore: "Explore",
+  experiments: "Explore",
   compare: "Compare",
   lab: "What-if Lab",
   learn: "Learn",
@@ -30,7 +30,7 @@ function Breadcrumb() {
   const [first, second] = pathname.split("/").filter(Boolean);
   if (!first) return <span className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-[var(--text-1)]">{SITE.name}</span>;
   const section = SECTION[first] ?? first;
-  // second crumb: a run ("Runs › B1") or a Learn module ("Learn › M2")
+  // second crumb: a run ("Explore › B1") or a Learn module ("Learn › M2")
   const run =
     first === "experiments" && second
       ? decodeURIComponent(second).split(":").pop()

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, FlaskConical, GitCompareArrows, House, Rows3 } from "lucide-react";
+import { BookOpen, Compass, FlaskConical, GitCompareArrows, House } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
@@ -27,10 +27,10 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   {
     route: "/explore",
-    label: "Runs",
-    shortLabel: "Runs",
-    description: "Find any of the 129 burns: filters, table, map, gallery",
-    Icon: Rows3,
+    label: "Experiment explorer",
+    shortLabel: "Explore",
+    description: "All 129 burns: filters, table, O₂ × airflow map, gallery",
+    Icon: Compass,
   },
   {
     route: "/compare",
@@ -55,10 +55,10 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
 ] as const;
 
-/** Nav items for the current mode: the Learn track is shown only in Explore & Learn mode. */
+/** Nav items for the current mode (ADR-026): Guided mode is the Learn Academy only; Expert mode is everything else. */
 function useNavItems(): readonly NavItem[] {
   const isLearn = useIsLearnMode();
-  return isLearn ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.route !== "/learn");
+  return NAV_ITEMS.filter((item) => (item.route === "/learn") === isLearn);
 }
 
 function isItemActive(pathname: string, route: NavItem["route"]) {

@@ -85,8 +85,8 @@ describe("undo", () => {
 
   it("reverts a whole AI turn and navigates back", () => {
     const s = fresh();
-    s.getState().syncRoute("/explore");
     s.getState().dispatch({ type: "setMode", mode: "learn" });
+    s.getState().syncRoute("/explore");
     s.getState().dispatchMany(
       [
         { type: "setFilters", filters: { materials: ["SIBAL"] } },
@@ -113,6 +113,33 @@ describe("undo", () => {
     expect(s.getState().undoTo(second.entry.id)).toBe(2);
     expect(s.getState().labParams).toEqual(INITIAL_DATA.labParams);
     expect(s.getState().mode).toBe("learn");
+  });
+});
+
+describe("mode switch (ADR-026)", () => {
+  it("Guided opens the Learn Academy, Expert returns to Home, and undo restores the page", () => {
+    const s = fresh();
+    s.getState().syncRoute("/explore");
+    s.getState().dispatch({ type: "setMode", mode: "learn" });
+    expect(s.getState().route).toBe("/learn");
+    expect(s.getState().navigationRequest?.route).toBe("/learn");
+    s.getState().dispatch({ type: "setMode", mode: "expert" });
+    expect(s.getState().route).toBe("/overview");
+    s.getState().undo();
+    expect(s.getState().route).toBe("/learn");
+    s.getState().undo();
+    expect(s.getState().route).toBe("/explore");
+    expect(s.getState().mode).toBe("expert");
+  });
+
+  it("keeps the page when the mode does not change or a module is already open", () => {
+    const s = fresh();
+    s.getState().syncRoute("/lab");
+    s.getState().dispatch({ type: "setMode", mode: "expert" });
+    expect(s.getState().route).toBe("/lab");
+    s.getState().syncRoute("/learn/m2-gravity");
+    s.getState().dispatch({ type: "setMode", mode: "learn" });
+    expect(s.getState().route).toBe("/learn/m2-gravity");
   });
 });
 

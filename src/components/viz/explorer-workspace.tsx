@@ -59,11 +59,11 @@ export function ExplorerWorkspace({ dataset, library = [] }: { dataset: Experime
       <CatalogHydrator experiments={dataset.experiments} />
 
       <div>
-        <h1 className="text-[1.75rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">Runs</h1>
+        <h1 className="text-[1.75rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">Experiment Explorer</h1>
         <p className="text-[0.9375rem] text-[var(--text-2)]">
           {mode === "learn"
             ? "Every burn NASA ran in BASS-II. Pick one to watch it, or narrow the list with the filters."
-            : "Every BASS-II burn on the ISS. Filter, select, compare."}
+            : "Every BASS-II burn on the ISS. Filter, sort and open a run; tick 2–4 to send them to Compare."}
         </p>
       </div>
 

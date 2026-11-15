@@ -161,7 +161,7 @@ export function FlameLibrary({
           href="/explore?view=gallery"
           className="inline-flex min-h-11 items-center gap-1.5 text-[0.875rem] font-medium text-[var(--accent)] hover:underline"
         >
-          See all {entries.length} measured burns in Runs › Gallery
+          See all {entries.length} measured burns in Explore › Gallery
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       )}
