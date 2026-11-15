@@ -36,6 +36,7 @@ needed. It does not replace physical testing or certification.
 | **[Challenge fit](CHALLENGE.md)** | Each thing the challenge asks for, and where FlameBridge does it |
 | **[AI (SI) usage](AI_USAGE.md)** | Where and how SI tools were used, rule by rule: code, data, images, video, audio |
 | **[Resources and references](RESOURCES.md)** | Every dataset, paper, visual and tool used, with links and licences |
+| **[Our road](OUR_ROAD.md)** | How the team got here: ten weeks of preparation and the experts who advised us |
 
 ## Problem and users
 
