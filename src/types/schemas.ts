@@ -284,6 +284,7 @@ const ExperimentIdSchema = z.string().regex(/^PSI-\d+:.+$/, "expected an experim
 
 export const RouteSchema = z.union([
   z.literal("/"),
+  z.literal("/overview"),
   z.literal("/explore"),
   z.literal("/compare"),
   z.literal("/lab"),

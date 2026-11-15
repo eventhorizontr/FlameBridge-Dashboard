@@ -20,6 +20,8 @@ import { cn, Kbd } from "@/components/ui";
 import { useAssistant } from "@/lib/ai/client/use-assistant";
 import { useDispatch } from "@/lib/store";
 
+import { useIsLearnMode } from "./learn-gate";
+
 import { shellUiStore, useShellUi } from "./shell-state";
 
 interface PaletteCommand {
@@ -44,6 +46,7 @@ const FEATURED_RUNS = [
 export function CommandPalette() {
   const open = useShellUi((s) => s.paletteOpen);
   const dispatch = useDispatch();
+  const isLearn = useIsLearnMode();
   const { send } = useAssistant();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -79,10 +82,10 @@ export function CommandPalette() {
         id: "nav-overview",
         group: "Navigate",
         label: "Mission Overview",
-        hint: "/",
+        hint: "/overview",
         icon: <Radar className="size-4 text-[var(--accent)]" />,
         run: () => {
-          dispatch({ type: "navigate", route: "/" });
+          dispatch({ type: "navigate", route: "/overview" });
           close();
         },
       },
@@ -119,17 +122,21 @@ export function CommandPalette() {
           close();
         },
       },
-      {
-        id: "nav-learn",
-        group: "Navigate",
-        label: "Explore & Learn Track",
-        hint: "/learn",
-        icon: <BookOpen className="size-4 text-[var(--accent)]" />,
-        run: () => {
-          dispatch({ type: "navigate", route: "/learn" });
-          close();
-        },
-      },
+      ...(isLearn
+        ? ([
+            {
+              id: "nav-learn",
+              group: "Navigate",
+              label: "Explore & Learn Track",
+              hint: "/learn",
+              icon: <BookOpen className="size-4 text-[var(--accent)]" />,
+              run: () => {
+                dispatch({ type: "navigate", route: "/learn" });
+                close();
+              },
+            },
+          ] satisfies PaletteCommand[])
+        : []),
       {
         id: "mode-expert",
         group: "Mode",
@@ -222,7 +229,7 @@ export function CommandPalette() {
         c.hint.toLowerCase().includes(q) ||
         c.group.toLowerCase().includes(q),
     );
-  }, [dispatch, query, send]);
+  }, [dispatch, isLearn, query, send]);
 
   if (!open) return null;
 
