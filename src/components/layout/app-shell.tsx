@@ -1,77 +1,74 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, Suspense, useContext, type ReactNode } from "react";
 
 import { EvidenceChip } from "@/components/ui";
 import { SITE } from "@/config/site";
 
 import { AssistantDock } from "./assistant-dock";
 import { CommandPalette } from "./command-palette";
-import { LeftRail } from "./left-rail";
-import { TopContextBar } from "./top-context-bar";
+import { RunDirectoryContext, type RunDirectoryEntry } from "./run-directory";
+import { MobileTabs, TopNav } from "./top-nav";
 
 const AppShellMountedContext = createContext(false);
 
-export function AppShell({ children }: { children: ReactNode }) {
+/**
+ * App frame (ADR-020): glass top navigation, content, assistant dock, compact footer.
+ * `bleed` lets a page (the landing) span the full width and manage its own spacing.
+ */
+export function AppShell({ children, bleed = false, runs = [] }: { children: ReactNode; bleed?: boolean; runs?: RunDirectoryEntry[] }) {
   const alreadyMounted = useContext(AppShellMountedContext);
   if (alreadyMounted) return <>{children}</>;
 
   return (
     <AppShellMountedContext.Provider value={true}>
-      <div className="min-h-screen flex bg-[var(--bg)] text-[var(--text-1)]">
+      <RunDirectoryContext.Provider value={runs}>
+      <div className="flex min-h-screen flex-col text-[var(--text-1)]">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-[var(--radius-sm)] focus:bg-[var(--accent)] focus:text-[var(--bg)] focus:text-sm focus:font-medium"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-[var(--accent)] focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-[var(--bg)]"
         >
           Skip to main content
         </a>
 
-        <LeftRail />
+        <TopNav />
 
-        <div className="flex-1 min-w-0 flex flex-col pb-14 md:pb-0">
-          <TopContextBar />
-
-          <div className="flex-1 flex min-w-0">
-            <main id="main-content" className="flex-1 min-w-0">
-              <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
-                {children}
-              </div>
-            </main>
-            <AssistantDock />
-          </div>
-
-          <footer className="border-t border-[var(--line)] bg-[var(--surface-1)]/60">
-            <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[0.75rem] text-[var(--text-2)]">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <span className="font-medium text-[var(--text-1)]">{SITE.challenge}</span>
-                <span aria-hidden="true" className="text-[var(--text-3)]">·</span>
-                <span>
-                  Team <strong className="font-medium text-[var(--text-1)]">{SITE.team.name}</strong>:{" "}
-                  {SITE.team.members.join(" · ")}
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <EvidenceChip
-                  id="doi:10.60555/4qc4-de67"
-                  label="PSI-25 · CC0 1.0"
-                  kind="dataset"
-                  href="https://psi.nasa.gov/physci/repo/data/investigations/PSI-25"
-                />
-                <a
-                  href={SITE.repository}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[var(--text-2)] hover:text-[var(--accent)] transition-colors"
-                >
-                  GitHub
-                </a>
-              </div>
-            </div>
-          </footer>
+        <div className="flex min-w-0 flex-1 pb-14 md:pb-0">
+          <main id="main-content" className="min-w-0 flex-1">
+            {bleed ? children : <div className="mx-auto max-w-[1680px] px-4 py-6 sm:px-6 sm:py-8">{children}</div>}
+          </main>
+          <AssistantDock />
         </div>
 
+        <footer className="border-t border-[var(--line)]">
+          <div className="mx-auto flex max-w-[1680px] flex-col justify-between gap-2 px-4 py-5 text-[0.75rem] text-[var(--text-3)] sm:flex-row sm:items-center sm:px-6">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="text-[var(--text-2)]">{SITE.challenge}</span>
+              <span aria-hidden="true">·</span>
+              <span>
+                Built by <strong className="font-medium text-[var(--text-1)]">{SITE.team.name}</strong> — {SITE.team.members.join(", ")}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <EvidenceChip
+                id="doi:10.60555/4qc4-de67"
+                label="NASA PSI-25 · CC0 1.0"
+                kind="dataset"
+                href="https://psi.nasa.gov/physci/repo/data/investigations/PSI-25"
+              />
+              <a href={SITE.repository} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)]">
+                GitHub
+              </a>
+            </div>
+          </div>
+        </footer>
+
+        <Suspense fallback={null}>
+          <MobileTabs />
+        </Suspense>
         <CommandPalette />
       </div>
+      </RunDirectoryContext.Provider>
     </AppShellMountedContext.Provider>
   );
 }

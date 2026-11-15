@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui";
 import { loadPsi25Dataset } from "@/components/viz/dataset-bridge";
 import { ExplorerWorkspace } from "@/components/viz/explorer-workspace";
+import { flameLibraryEntries } from "@/lib/vision/library";
 
 export default function ExplorePage() {
   const dataset = loadPsi25Dataset();
@@ -16,7 +17,7 @@ export default function ExplorePage() {
         </div>
       }
     >
-      <ExplorerWorkspace dataset={dataset} />
+      <ExplorerWorkspace dataset={dataset} library={flameLibraryEntries(dataset)} />
     </Suspense>
   );
 }

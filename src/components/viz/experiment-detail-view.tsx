@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ChevronDown, ChevronRight, FlaskConical, GitCompareArrows, Sparkles } from "lucide-react";
+import { Activity, ArrowLeft, Box, ChevronDown, ChevronRight, FlaskConical, GitCompareArrows, Sparkles, Table2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -17,6 +17,9 @@ import {
   PanelTitle,
   QABadge,
   Stat,
+  tabPanelId,
+  Tabs,
+  tabId,
   Tooltip,
 } from "@/components/ui";
 import { useAssistant } from "@/lib/ai/client/use-assistant";
@@ -35,6 +38,25 @@ type ConditionsWithCoBound = Experiment["conditions"] & {
   coFinalLowerBoundPpm?: number | null;
 };
 
+type RunTab = "signals" | "3d" | "conditions";
+
+const RUN_TABS = [
+  { value: "signals", label: "Signals", icon: <Activity />, hint: "Flame area, brightness and telemetry over time; similar frames" },
+  { value: "3d", label: "3D Studio", icon: <Box />, hint: "Volumetric flame reconstructed from the footage" },
+  { value: "conditions", label: "Conditions & source", icon: <Table2 />, hint: "Gas readings, fuel, hardware, QA and the verbatim PSI row" },
+] as const;
+
+function Glance({ label, value, className }: { label: string; value: string; className?: string }) {
+  return (
+    <div className={`min-w-0 px-4 py-3 ${className ?? ""}`}>
+      <p className="text-[0.625rem] uppercase tracking-[0.12em] text-[var(--text-3)]">{label}</p>
+      <p className="num mt-1 truncate text-[0.9375rem] font-medium text-[var(--text-1)]" title={value}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
 export interface ExperimentDetailViewProps {
   experiment: Experiment;
   allExperiments: readonly Experiment[];
@@ -50,6 +72,7 @@ export function ExperimentDetailView({
   const dispatch = useDispatch();
   const { send } = useAssistant();
   const [showRaw, setShowRaw] = useState(false);
+  const [tab, setTab] = useState<RunTab>("signals");
 
   const cond = experiment.conditions as ConditionsWithCoBound;
   const repAir = representativeAirflow(experiment);
@@ -98,7 +121,9 @@ export function ExperimentDetailView({
       <CatalogHydrator experiments={allExperiments} />
 
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+      <div className="glass relative overflow-hidden rounded-[var(--radius-xl)]">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-[radial-gradient(circle,rgb(255_138_61/0.22),transparent_65%)] blur-2xl" />
+      <div className="relative flex flex-col lg:flex-row lg:items-end justify-between gap-4 p-5 sm:p-6">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2 text-[0.75rem]">
             <Link
@@ -106,7 +131,7 @@ export function ExperimentDetailView({
               className="inline-flex items-center gap-1 text-[var(--text-2)] hover:text-[var(--accent)]"
             >
               <ArrowLeft className="size-3.5" aria-hidden="true" />
-              <span>Experiment Explorer</span>
+              <span>Atlas</span>
             </Link>
             <span className="text-[var(--text-3)]">/</span>
             <span className="num text-[var(--text-2)]">{experiment.id}</span>
@@ -162,14 +187,36 @@ export function ExperimentDetailView({
           </Button>
         </div>
       </div>
+      <div className="relative grid grid-cols-2 divide-[var(--line)] border-t border-[var(--line)] sm:grid-cols-3 lg:grid-cols-6 lg:divide-x">
+        <Glance label="Fuel" value={experiment.fuel.raw} className="col-span-2 sm:col-span-3 lg:col-span-2" />
+        <Glance label="Initial O₂" value={cond.o2InitialPct != null ? `${cond.o2InitialPct} % vol` : "—"} />
+        <Glance label="Airflow (median set-point)" value={repAir != null ? `${repAir} cm/s` : "—"} />
+        <Glance label="Characteristic size" value={sizeMm != null ? `${sizeMm} mm` : "—"} />
+        <Glance label="Footage" value={experiment.videos.length ? `${experiment.videos.length} video${experiment.videos.length > 1 ? "s" : ""}` : "none archived"} />
+      </div>
+      </div>
 
       {/* Signature Flame Viewer */}
       <FlameViewer experiment={experiment} allExperiments={allExperiments} />
 
-      <FlameAnalytics experiment={experiment} />
+      <div className="sticky top-[4.5rem] z-20 flex justify-center">
+        <Tabs<RunTab> ariaLabel="Run sections" idBase="run" value={tab} onChange={setTab} items={RUN_TABS} className="shadow-[var(--shadow-float)]" />
+      </div>
 
-      <FlameStudio experiment={experiment} />
+      {tab === "signals" && (
+        <div role="tabpanel" id={tabPanelId("run", "signals")} aria-labelledby={tabId("run", "signals")}>
+          <FlameAnalytics experiment={experiment} />
+        </div>
+      )}
 
+      {tab === "3d" && (
+        <div role="tabpanel" id={tabPanelId("run", "3d")} aria-labelledby={tabId("run", "3d")}>
+          <FlameStudio experiment={experiment} />
+        </div>
+      )}
+
+      {tab === "conditions" && (
+      <div role="tabpanel" id={tabPanelId("run", "conditions")} aria-labelledby={tabId("run", "conditions")} className="space-y-6">
       {/* Gas Telemetry KPI Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <Stat
@@ -408,6 +455,8 @@ export function ExperimentDetailView({
           </PanelBody>
         )}
       </Panel>
+      </div>
+      )}
     </div>
   );
 }

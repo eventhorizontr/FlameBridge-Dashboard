@@ -89,6 +89,12 @@ def write_json(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(data, separators=(",", ":"), ensure_ascii=False), encoding="utf8")
+    for attempt in range(20):  # Windows: a reader (dev server, scanner) may briefly hold the file
+        try:
+            tmp.replace(path)
+            return
+        except PermissionError:
+            time.sleep(0.25 * (attempt + 1))
     tmp.replace(path)
 
 
@@ -159,6 +165,10 @@ def poster_one(args: tuple) -> str:
     cap.release()
     if not ok:
         return "unreadable"
+    box = (data.get("segmentation") or {}).get("overlayBox")
+    if box:  # posters show the flame, not the telemetry overlay
+        bx, by, bw, bh = box
+        frame[by:by + bh, bx:bx + bw] = 0
     crop = frame[y0:y0 + int(ch), x0:x0 + int(cw)]
     out = Path(json_path).parent / "frames" / f"{data['videoId']}.poster.webp"
     cv2.imwrite(str(out), cv2.resize(crop, POSTER, interpolation=cv2.INTER_AREA), [cv2.IMWRITE_WEBP_QUALITY, 80])
