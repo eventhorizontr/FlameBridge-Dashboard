@@ -146,3 +146,26 @@ Pixels are linearised from sRGB, masked to the measured flame (main flame only; 
 dropped); values are relative emission and clipped pixels are reported. "Auto" picks the valid model
 per sample; the studio drives the viewer video so the reconstruction follows playback. Deps:
 @react-three/postprocessing, postprocessing (bloom).
+
+**ADR-020 · 2026-11-15 · reverted** — "Orbital Glass" UI redesign (#62) was reverted at the
+owner's request (#65). The redesign will be redone from Codex-generated visual references; the
+non-UI parts of #62 (OSD-blanked posters, `write_json` retry) were kept.
+
+**ADR-021 · 2026-11-15 · proposed** (contract) — **Pressure in the What-if Lab, without assumed values.**
+Owner request: add cabin pressure to the system. The data does not record it: the PSI-25 BASS-II
+test table and ReadMe give no pressure; the Ops procedure mentions only "adding GN2 to the WV to
+reduce the O2 partial pressure"; the PSI-20 ACME BRE table says "The chamber pressures were also
+varied but are not identified in this summary table." Decisions: (1) *Contract*:
+`Conditions.pressureKpa?: number` + `pressureBasis?: "recorded" | "stated-for-series" |
+"not-stated"` (absent = not stated); `LabParams.pressureKpa: number | null` (Zod default null, so
+older params still parse); `LabMatch.deltas.pressureKpa`; `LabResult.pressure: PressureCoverage`
+with the verbatim series statements. (2) *No assumed cabin pressure* for any run, ever; a pressure
+query on today's data is reported as `not-recorded` and the Lab and the assistant say the query is
+outside the envelope on pressure. (3) *Ratio scale*: pressures are compared by
+r = max/min; matched r ≤ 1.10, near r ≤ 1.30 (retrieval choices, mirroring the FlameBridge
+Katman 4 profiles). Pressure enters the distance only when at least one run states it
+(term (|ln r| / ln(p_max/p_min))², weight 1), so today's ranking is unchanged. (4) *Derived ppO₂*
+(Dalton) only for the query, or a run with both values stated. Code: `src/lib/science/pressure.ts`
+(shared by the server matcher and the client matcher), tests `pressure.test.ts`. Follow-ups
+(Codex): pipeline emits `pressureBasis: "not-stated"` explicitly; Lab pressure control design pass.
+

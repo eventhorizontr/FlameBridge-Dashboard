@@ -3,6 +3,15 @@ import { extent, median } from "d3-array";
 import type { ExperimentFilters, LabMatch, LabParams, LabResult, Range } from "@/types/dashboard";
 import type { Experiment, ExperimentDataset, Fuel, InvestigationManifest } from "@/types/experiment";
 
+import {
+  pressureActive,
+  pressureCoverage,
+  pressureInsideEnvelope,
+  pressureScale,
+  pressureTerm,
+  runPressureKpa,
+} from "@/lib/science/pressure";
+
 export type FuelFamily = "film-slab" | "rod-sphere" | "fabric-other";
 
 function inRange(value: number | null, range: Range): boolean {
@@ -176,7 +185,9 @@ const ENVELOPE_THRESHOLD = 0.25;
 const MATCH_METHOD =
   "Range-normalized weighted Euclidean distance on measured O₂, median airflow and optional size. " +
   "Unit penalties for material and geometry mismatch. The measured envelope requires a same-material, " +
-  "same-geometry complete neighbor within 0.25 normalized distance and in-range inputs in that group.";
+  "same-geometry complete neighbor within 0.25 normalized distance and in-range inputs in that group. " +
+  "Pressure (ADR-021) is compared on a ratio scale and enters the distance only when a run states it; " +
+  "a pressure query with no stated run pressure is outside the envelope on pressure.";
 
 export function findClosestExperimentsClient(
   params: LabParams,
@@ -194,6 +205,8 @@ export function findClosestExperimentsClient(
     .filter(({ values }) => values.o2Pct !== null && values.airflowCmS !== null);
 
   const active = NUMERIC_FEATURES.filter((feature) => params[feature] !== null);
+  const pScale = pressureScale(rows.map(({ experiment }) => experiment));
+  const pActive = pressureActive(params.pressureKpa, pScale);
   const spans = Object.fromEntries(
     active.map((feature) => {
       const [min, max] = extent(rows, ({ values }) => values[feature] ?? undefined);
@@ -213,13 +226,17 @@ export function findClosestExperimentsClient(
           params.characteristicSizeMm === null || values.characteristicSizeMm === null
             ? null
             : params.characteristicSizeMm - values.characteristicSizeMm,
+        pressureKpa: (() => {
+          const run = runPressureKpa(experiment);
+          return params.pressureKpa === null || run === null ? null : params.pressureKpa - run;
+        })(),
       };
       const squared = active.reduce((sum, feature) => {
         const diff = deltas[feature];
         const span = spans[feature];
         const normalized = diff === 0 ? 0 : diff === null || span === 0 ? 1 : diff / span;
         return sum + WEIGHTS[feature] * normalized ** 2;
-      }, categoricalMismatches.length);
+      }, categoricalMismatches.length + pressureTerm(params.pressureKpa, runPressureKpa(experiment), pScale));
 
       const match: LabMatch = {
         experimentId: experiment.id,
@@ -238,12 +255,15 @@ export function findClosestExperimentsClient(
   const completeGroup = ranked.filter(
     ({ match }) =>
       match.categoricalMismatches.length === 0 &&
-      active.every((feature) => match.deltas[feature] !== null),
+      active.every((feature) => match.deltas[feature] !== null) &&
+      (!pActive || match.deltas.pressureKpa !== null),
   );
+  const pressure = pressureCoverage(params.pressureKpa, params.o2Pct, experiments);
   const nearest = completeGroup[0];
   const insideEnvelope =
     nearest !== undefined &&
     nearest.match.distance <= ENVELOPE_THRESHOLD &&
+    pressureInsideEnvelope(pressure) &&
     active.every((feature) => {
       const [min, max] = extent(completeGroup, ({ values }) => values[feature] ?? undefined);
       const val = params[feature];
@@ -255,6 +275,7 @@ export function findClosestExperimentsClient(
     matches: ranked.slice(0, params.k).map(({ match }) => match),
     insideEnvelope,
     method: MATCH_METHOD,
+    pressure,
   };
 }
 
