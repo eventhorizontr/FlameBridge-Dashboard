@@ -56,6 +56,8 @@ class SegmentationParams:
     halo_px: float = 14.0  # work-scale px a weak pixel may sit from the luminous core (28 full-res px)
     core_fraction: float = 0.35  # core = excess above this fraction of the frame's P99.9 excess
     merge_px: float = 20.0  # work-scale gap below which regions belong to one flame (40 full-res px)
+    min_mean_chroma: float = 7.0  # 8-bit counts of max-min channel; grey objects ~3, dim blue flame ~10
+    saturated_value: float = 240.0  # work-scale (blurred) brightness that marks a saturated core
     lit_threshold: float = 22.0  # scene median (8-bit) above which the chamber counts as lit
     transient_factor: float = 3.0  # area > factor x rolling median (+-3 s) => transient
     transient_min_area_px: int = 15000  # ... and at least this large (~4 % of the frame): a glow, not flicker

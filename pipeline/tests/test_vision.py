@@ -100,6 +100,16 @@ class Segmentation(unittest.TestCase):
         self.assertLess(m.bbox[0] + m.bbox[2], 300)
         self.assertGreater(m.other_px, 0)
 
+    def test_grey_object_is_not_a_flame(self):
+        frame = self.dark[6].copy()
+        cv2.rectangle(frame, (100, 300), (220, 380), (110, 112, 108), -1)  # bright but colourless
+        self.assertEqual(self.measure(frame).area_px, 0)
+
+    def test_white_saturated_core_is_a_flame(self):
+        frame = self.dark[7].copy()
+        cv2.circle(frame, (400, 300), 30, (255, 255, 255), -1)
+        self.assertGreater(self.measure(frame).area_px, 2000)
+
     def test_lit_chamber_is_detected(self):
         lit = np.full((480, 720, 3), 90, np.uint8)
         self.assertGreater(self.seg.lit_level(self.seg.prepare(lit, self.params), self.background), self.params.lit_threshold)

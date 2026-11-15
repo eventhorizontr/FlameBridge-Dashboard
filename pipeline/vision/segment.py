@@ -16,6 +16,8 @@ Model (documented, deterministic, no training data required):
   dropped glow is reported as ``halo_px`` for QA.
 * **Primary group**: regions closer than ``merge_px`` are grouped; the group with the most excess
   light is the flame. Other luminous regions (reflections, debris) are reported as ``other_px``.
+* **Colour test**: a region must be coloured (mean chroma >= ``min_mean_chroma``) or hold a
+  saturated core; grey objects that appear when the scene changes are rejected.
 * **Lit chamber**: if the scene median exceeds ``lit_threshold`` the cabin lights are on and the
   frame is flagged instead of measured.
 
@@ -107,6 +109,18 @@ def segment(prepared: np.ndarray, raw_bgr: np.ndarray, background: Background,
         luminous = has_strong & (areas >= params.min_component_px)
         mean = sums / np.maximum(areas, 1)
         dim = ~has_strong & (areas >= params.dim_min_area_px) & (mean >= params.dim_min_mean_factor * background.t_lo)
+        # Colour test: flames are coloured (red/pink soot glow, blue chemiluminescence) or have a
+        # saturated white core; grey, unsaturated objects that appear when the scene changes
+        # (hardware, a crew hand under dim light) are not flames.
+        chroma = prepared.max(axis=2) - prepared.min(axis=2)
+        mean_chroma = np.bincount(labels.ravel(), weights=chroma.ravel(), minlength=count) / np.maximum(areas, 1)
+        peak_value = np.zeros(count, dtype=np.float32)
+        bright = prepared.max(axis=2)
+        hot = bright >= params.saturated_value
+        peak_value[np.unique(labels[hot])] = 1.0
+        coloured = (mean_chroma >= params.min_mean_chroma) | (peak_value > 0)
+        luminous &= coloured
+        dim &= coloured
         luminous[0] = dim[0] = False
         # Halo rule: inside luminous regions keep weak pixels only near the core, so light thrown onto
         # the chamber walls (connected to the flame, but far from it) is not counted as flame.

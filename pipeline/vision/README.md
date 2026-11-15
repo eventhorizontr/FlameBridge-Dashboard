@@ -55,6 +55,15 @@ brightest group is the flame — remote reflections are reported as `otherPx`. F
 lights on are flagged, not measured. Known bias: the mask includes the ~2 px blurred fringe of bright
 edges, so compact flames read up to ~15–20 % large; every run is measured the same way.
 
+A colour test rejects grey, unsaturated regions (hardware that appears when the scene changes):
+a flame must be coloured (mean max−min channel ≥ 7 counts) or hold a saturated core.
+
+**Known limits.** Coloured scene light that appears when hardware moves or work lights change
+(e.g. F3 at 105–110 s) can still pass for flame for a few seconds; such boxes usually touch the
+frame edge and carry flag 16. During long igniter glow the box frames the glowing igniter region,
+not only the incipient flame. A last overlay digit clipped by the frame edge (e.g. T5's RAD) is
+left unread rather than guessed.
+
 **Per-frame QA flags** (bitmask in `series.flags`): 1 lit chamber · 2 transient (area > 3× the
 ±3 s median: igniter flash) · 4 other luminous regions · 8 > 25 % of the mask saturated · 16 flame
 touches the frame edge. Peaks and summaries exclude transient frames.

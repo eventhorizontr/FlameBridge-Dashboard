@@ -24,7 +24,7 @@ from profiles import VisionProfile
 import segment as seg
 import similarity as sim
 
-ALGORITHM_VERSION = "1.1.0"
+ALGORITHM_VERSION = "1.2.0"
 KEYFRAME_TILE = (192, 128)
 KEYFRAME_COUNT = 12
 EMBED_SIZE = (336, 224)  # multiples of the DINOv2 patch size (14)

@@ -63,6 +63,16 @@ def run_one(args: tuple) -> tuple[str, str, float]:
         result = analyze(path, profile=profile_for(accession), experiment=experiment, video=video,
                          keyframe_path=out_dir / "frames" / f"{video['id']}.webp", embed_sink=sink)
     contours = result.pop("contours", None)
+    previous = out_dir / f"{video['id']}.json"
+    if result.get("status") == "ok" and previous.exists():
+        # DINOv2 embeddings depend only on the frames (overlay blanked), not on segmentation: keep them
+        try:
+            old = json.loads(previous.read_text(encoding="utf8"))
+            same_box = (old.get("segmentation") or {}).get("overlayBox") == (result.get("segmentation") or {}).get("overlayBox")
+            if old.get("embedding") and same_box:
+                result["embedding"] = old["embedding"]
+        except ValueError:
+            pass
     write_json(out_dir / f"{video['id']}.json", result)
     if contours is not None:
         write_json(out_dir / f"{video['id']}.contours.json",
