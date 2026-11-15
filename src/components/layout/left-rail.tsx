@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Compass, FlaskConical, GitCompareArrows, Radar } from "lucide-react";
+import { BookOpen, FlaskConical, GitCompareArrows, House, Rows3 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
@@ -12,43 +12,43 @@ export interface NavItem {
   label: string;
   shortLabel: string;
   description: string;
-  Icon: typeof Radar;
+  Icon: typeof House;
 }
 
 export const NAV_ITEMS: readonly NavItem[] = [
   {
     route: "/",
-    label: "Mission overview",
-    shortLabel: "Overview",
-    description: "BASS-II apparatus, telemetry coverage & mission brief",
-    Icon: Radar,
+    label: "Home",
+    shortLabel: "Home",
+    description: "What this is, the numbers, and where to start",
+    Icon: House,
   },
   {
     route: "/explore",
-    label: "Experiment explorer",
-    shortLabel: "Explore",
-    description: "129 runs matrix + O₂ × flow parameter-space map",
-    Icon: Compass,
+    label: "Runs",
+    shortLabel: "Runs",
+    description: "Find any of the 129 burns: filters, table, map, gallery",
+    Icon: Rows3,
   },
   {
     route: "/compare",
-    label: "Compare runs",
+    label: "Compare",
     shortLabel: "Compare",
-    description: "Side-by-side footage, conditions diff & flow overlay",
+    description: "Watch burns in sync and see what differs",
     Icon: GitCompareArrows,
   },
   {
     route: "/lab",
     label: "What-if Lab",
     shortLabel: "Lab",
-    description: "Match parameter combinations against real ISS burns",
+    description: "Set conditions, get the closest real ISS burns",
     Icon: FlaskConical,
   },
   {
     route: "/learn",
-    label: "Explore & Learn",
+    label: "Learn",
     shortLabel: "Learn",
-    description: "Guided microgravity combustion chapters on real footage",
+    description: "Five short chapters on real ISS footage",
     Icon: BookOpen,
   },
 ] as const;
@@ -86,7 +86,7 @@ function DesktopNavLinks() {
               aria-label={label}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative w-full min-h-11 rounded-[var(--radius-sm)] flex flex-col items-center justify-center gap-0.5 px-1 py-1.5",
+                "relative w-full min-h-14 rounded-[var(--radius-sm)] flex flex-col items-center justify-center gap-1 px-1 py-2",
                 "transition-colors duration-[var(--dur-1)] cursor-pointer border",
                 active
                   ? "bg-[var(--accent-soft)] text-[var(--accent)] border-[var(--accent)]/40"
@@ -94,7 +94,7 @@ function DesktopNavLinks() {
               )}
             >
               <Icon className="size-4 shrink-0" aria-hidden="true" />
-              <span className="text-[0.625rem] font-medium leading-none tracking-tight">
+              <span className="text-[0.75rem] font-medium leading-none">
                 {shortLabel}
               </span>
               {route === "/compare" && compareCount > 0 && (
@@ -137,7 +137,7 @@ function MobileNavLinks() {
             )}
           >
             <Icon className="size-4" aria-hidden="true" />
-            <span className="text-[0.625rem] leading-none">{shortLabel}</span>
+            <span className="text-[0.6875rem] leading-none">{shortLabel}</span>
           </button>
         );
       })}
@@ -153,7 +153,7 @@ export function LeftRail() {
       {/* Desktop slim orbital instrument rail */}
       <aside
         aria-label="Primary navigation"
-        className="hidden md:flex flex-col items-center w-16 shrink-0 border-r border-[var(--line)] bg-[var(--surface-1)] py-3 gap-2 sticky top-0 h-screen z-30"
+        className="hidden md:flex flex-col items-center w-[72px] shrink-0 border-r border-[var(--line)] bg-[var(--surface-1)] py-3 gap-2 sticky top-0 h-screen z-30"
       >
         <button
           type="button"
@@ -169,9 +169,6 @@ export function LeftRail() {
           <DesktopNavLinks />
         </Suspense>
 
-        <div className="text-[0.5625rem] num uppercase tracking-[0.1em] text-[var(--text-3)] rotate-180 [writing-mode:vertical-rl] py-2 select-none">
-          ISS · MSG · PSI-25
-        </div>
       </aside>
 
       {/* Mobile bottom bar (< 768px) */}
@@ -186,7 +183,7 @@ function DesktopNavLinksFallback() {
   return (
     <div className="flex flex-col items-center gap-1.5 flex-1 w-full px-2" aria-hidden="true">
       {NAV_ITEMS.map(({ route }) => (
-        <div key={route} className="w-full min-h-11 rounded-[var(--radius-sm)] bg-[var(--surface-2)]/40" />
+        <div key={route} className="w-full min-h-14 rounded-[var(--radius-sm)] bg-[var(--surface-2)]/40" />
       ))}
     </div>
   );

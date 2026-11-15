@@ -25,7 +25,7 @@ const ROUTE_NAMES: Record<string, string> = {
   "/explore": "Experiment explorer",
   "/compare": "Compare",
   "/lab": "What-if Lab",
-  "/learn": "Explore & Learn",
+  "/learn": "Learn",
 };
 
 /** "PSI-25:O13a" → "O13a" for labels. */
@@ -79,7 +79,7 @@ export const ACTIONS: Registry = {
     touches: ["mode"],
     undoable: true,
     reduce: (_s, a) => ({ mode: a.mode }),
-    label: (a) => (a.mode === "learn" ? "Switched to Explore & Learn" : "Switched to Expert mode"),
+    label: (a) => (a.mode === "learn" ? "Switched to Guided mode" : "Switched to Expert mode"),
   },
   setFilters: {
     touches: ["filters"],

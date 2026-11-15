@@ -12,4 +12,5 @@ export { QABadge, type QABadgeProps } from "./qa-badge";
 export { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from "./segmented-control";
 export { Skeleton } from "./skeleton";
 export { Stat, type StatProps } from "./stat";
+export { tabId, tabPanelId, Tabs, type TabItem, type TabsProps } from "./tabs";
 export { Tooltip, type TooltipProps } from "./tooltip";

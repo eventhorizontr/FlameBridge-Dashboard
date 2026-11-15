@@ -203,6 +203,21 @@ export function FlameViewer({
     };
   }, [activeVideo, rate, retryNonce, useFallback]);
 
+  // Open on the measured steady peak flame (vision poster time; transients excluded) instead of
+  // the dark pre-ignition frame, falling back to the first flame. Runs once per video; an AI/store
+  // seek for this run or a user seek always wins.
+  const firstFlameS = vision?.poster?.t ?? vision?.events?.firstFlameS ?? null;
+  const autoSeekedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    const key = activeVideo?.id ?? "";
+    if (!v || firstFlameS == null || loadState !== "ready" || autoSeekedRef.current === key) return;
+    autoSeekedRef.current = key;
+    if (videoCursor && videoCursor.experimentId === experiment.id) return;
+    if (v.currentTime > 0.05 || !v.paused) return;
+    v.currentTime = firstFlameS;
+  }, [activeVideo?.id, experiment.id, firstFlameS, loadState, videoCursor]);
+
   // Apply AI / store-driven seekVideo cursor changes
   useEffect(() => {
     if (!videoCursor || videoCursor.experimentId !== experiment.id) return;
@@ -328,8 +343,7 @@ export function FlameViewer({
     >
       <PanelHeader className="flex-wrap">
         <PanelTitle
-          eyebrow={`Flame Viewer · ${experiment.testId} · ${experiment.principalInvestigator}`}
-          title={titleOverride ?? `ISS Footage — ${experiment.fuel.raw}`}
+          title={titleOverride ?? "ISS footage"}
           actions={
             <div className="flex flex-wrap items-center gap-2">
               {videos.length > 1 && activeVideo && (
@@ -412,6 +426,7 @@ export function FlameViewer({
             >
               {/* Primary Run Video A */}
               <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--bg)] overflow-hidden relative">
+                {abCompare && (
                 <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 py-1.5 bg-[var(--surface-2)] border-b border-[var(--line)] text-[0.75rem]">
                   <span className="num font-medium text-[var(--text-1)] shrink-0">
                     A · Run {experiment.testId} ({KIND_LABELS[activeVideo.kind]})
@@ -424,16 +439,7 @@ export function FlameViewer({
                     {activeVideo.fileName}
                   </span>
                 </div>
-
-                <VisionToolbar
-                  available={Boolean(vision)}
-                  loading={visionLoad.status === "loading"}
-                  note={visionNote}
-                  mode={flameOverlay.mode}
-                  follow={flameOverlay.follow}
-                  onMode={(mode) => dispatch({ type: "setFlameOverlay", overlay: { mode } })}
-                  onFollow={(follow) => dispatch({ type: "setFlameOverlay", overlay: { follow } })}
-                />
+                )}
 
                 {loadState === "error" ? (
                   <div className="aspect-video flex flex-col items-center justify-center p-5 text-center space-y-3">
@@ -662,6 +668,16 @@ export function FlameViewer({
                   </Button>
                 </div>
 
+                <VisionToolbar
+                  available={Boolean(vision)}
+                  loading={visionLoad.status === "loading"}
+                  note={visionNote}
+                  mode={flameOverlay.mode}
+                  follow={flameOverlay.follow}
+                  onMode={(mode) => dispatch({ type: "setFlameOverlay", overlay: { mode } })}
+                  onFollow={(follow) => dispatch({ type: "setFlameOverlay", overlay: { follow } })}
+                />
+
                 {/* Speed Controls */}
                 <div className="flex flex-wrap items-center gap-1" role="group" aria-label="Playback speed">
                   {PLAYBACK_RATES.map((r) => (
@@ -683,52 +699,41 @@ export function FlameViewer({
               </div>
             </div>
 
-            {/* Honest Data-Driven Event-Marker Lane */}
-            <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] px-3.5 py-2.5 space-y-2">
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-                <span>Event & Telemetry Marker Lane (Source-Verified)</span>
-                <span className="normal-case tracking-normal">
-                  Keyboard: <code className="text-[var(--text-2)]">Space</code> play/pause ·{" "}
-                  <code className="text-[var(--text-2)]">← / →</code> frame-step
-                </span>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 text-[0.75rem]">
-                <button
-                  type="button"
-                  onClick={() => seekTo(0, true)}
-                  className="num inline-flex items-center gap-1.5 min-h-6 px-2 rounded-[var(--radius-sm)] border border-[var(--line-strong)] bg-[var(--surface-1)] text-[var(--text-1)] hover:border-[var(--accent)] cursor-pointer"
-                >
-                  <span className="size-1.5 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-                  <span>0.00 s · Run Start</span>
-                </button>
-
-                {experiment.outcomeHints.map((hint) => (
-                  <Badge key={hint} variant="warning">
-                    Operator hint: {hint}
-                  </Badge>
-                ))}
-
+            {/* Events: measured (vision) and recorded (PSI table) — click to jump */}
+            {(vision?.events || experiment.outcomeHints.length > 0 || experiment.conditions.airflowSetpointsCmS.length > 0) && (
+              <div className="flex flex-wrap items-center gap-1.5 text-[0.75rem]" title="Keyboard: Space play/pause · ← / → frame-step">
+                {vision?.events?.firstFlameS != null && (
+                  <button
+                    type="button"
+                    onClick={() => seekTo(vision.events!.firstFlameS!, true)}
+                    className="num inline-flex min-h-7 items-center gap-1.5 rounded-full border border-[var(--line-strong)] px-2.5 text-[var(--text-1)] hover:border-[var(--flame-edge)] cursor-pointer"
+                  >
+                    <span className="size-1.5 rounded-full bg-[var(--flame-edge)]" aria-hidden="true" />
+                    First flame {formatClock(vision.events.firstFlameS)}
+                  </button>
+                )}
+                {vision?.poster && (
+                  <button
+                    type="button"
+                    onClick={() => seekTo(vision.poster!.t, true)}
+                    className="num inline-flex min-h-7 items-center gap-1.5 rounded-full border border-[var(--line-strong)] px-2.5 text-[var(--text-1)] hover:border-[var(--flame-edge)] cursor-pointer"
+                  >
+                    <span className="size-1.5 rounded-full bg-[var(--ember)]" aria-hidden="true" />
+                    Peak flame {formatClock(vision.poster.t)}
+                  </button>
+                )}
                 {experiment.conditions.airflowSetpointsCmS.length > 0 && (
                   <Badge className="h-auto max-w-full whitespace-normal">
-                    Airflow set-points ({experiment.conditions.airflowSetpointsCmS.join(" → ")} cm/s · ~1 min duct lag)
+                    Airflow set-points {experiment.conditions.airflowSetpointsCmS.join(" → ")} cm/s · ~1 min duct lag
                   </Badge>
                 )}
-
-                {experiment.totalFramesShot !== null && (
-                  <Badge>
-                    Total frames shot: <span className="num ml-1">{experiment.totalFramesShot}</span>
+                {experiment.outcomeHints.map((hint) => (
+                  <Badge key={hint} variant="warning">
+                    Operator note: {hint}
                   </Badge>
-                )}
-
-                {experiment.outcomeHints.length === 0 &&
-                  experiment.conditions.airflowSetpointsCmS.length === 0 && (
-                    <span className="text-[var(--text-3)]">
-                      No timestamped event markers recorded in PSI-25 CSV — scrub or frame-step to inspect burn progression.
-                    </span>
-                  )}
+                ))}
               </div>
-            </div>
+            )}
           </div>
         )}
       </PanelBody>
@@ -763,9 +768,9 @@ function VisionToolbar({
   return (
     <div
       data-highlight="flame-overlay"
-      className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-1.5 border-b border-[var(--line)] bg-[var(--surface-1)] text-[0.75rem]"
+      className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[0.75rem]"
+      title="Flame vision: measured flame frame, outline or flame-only view"
     >
-      <span className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">Flame vision</span>
       {available ? (
         <>
           <SegmentedControl<FlameOverlayMode>
