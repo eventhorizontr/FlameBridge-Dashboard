@@ -3,15 +3,17 @@
 _Updated: 2026-11-15_
 
 ## Now
-- #46 Learn science and quiz accuracy pass submitted for review. Verified chapter copy, widgets and the overview against PSI-25 and linked publications.
+- #45 data-view audit submitted. Shared matching, source and missing-data labels, keyboard flow and route payload checks verified.
 
 ## Done
-- PSI-25 matrix reconciliation (#30) and the data/science stack (#42) merged.
+- #46 Learn science and quiz accuracy (#52 and #54).
+- #47 page overflow work landed with Claude’s shell fixes (#53).
+- PSI-25 reconciliation (#30) and data/science stack (#42).
 
 ## Next
-- #45 audit merged data views.
-- #47 coordinate responsive fixes with Claude’s shell work.
-- #48 address UI review findings.
+- #48 visual polish.
+- #57 vision explorer, Learn and visual QA when the vision base lands.
 
 ## Blockers / needs
-- Six public PSI-25 MP4s lack readable container headers and are flagged in the catalog.
+- Six source PSI-25 MP4s lack readable container headers and are flagged in the catalog.
+- Optional new assistant actions for presentation controls are described in the #45 handoff.

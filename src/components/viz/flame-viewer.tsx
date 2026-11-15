@@ -27,22 +27,15 @@ import {
   SegmentedControl,
   useHighlightPulse,
 } from "@/components/ui";
+import { formatSourceFps, localVideoPoster } from "./video-presentation";
+
 import { useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentVideo, VideoKind } from "@/types/experiment";
 
 const PLAYBACK_RATES = [0.25, 0.5, 1, 1.5, 2] as const;
 
-type VideoWithOptionalMeta = ExperimentVideo & {
-  fallbackHref?: string | null;
-  fps?: number | null;
-  durationS?: number | null;
-  width?: number | null;
-  height?: number | null;
-};
-
 interface RVFCMeta {
   mediaTime: number;
-  presentedFrames: number;
 }
 
 type VideoWithRVFC = HTMLVideoElement & {
@@ -56,7 +49,7 @@ const KIND_LABELS: Record<VideoKind, string> = {
   "still-sequence": "Still Seq",
 };
 
-function isStreamableVideo(video: ExperimentVideo): boolean {
+function isStreamableVideo(video: Pick<ExperimentVideo, "ext">): boolean {
   const ext = video.ext.toLowerCase();
   return ext === ".mp4" || ext === ".webm" || ext === ".mov" || ext === ".m4v";
 }
@@ -68,10 +61,15 @@ function formatClock(seconds: number): string {
   return `${mins}:${secs}`;
 }
 
+export type FlameCompanion = Pick<Experiment, "id" | "testId" | "principalInvestigator"> & {
+  videos: readonly Pick<ExperimentVideo, "id" | "href" | "kind" | "ext" | "fallbackHref">[];
+  conditions: Pick<Experiment["conditions"], "o2InitialPct">;
+};
+
 export interface FlameViewerProps {
   experiment: Experiment;
-  companionExperiment?: Experiment | null;
-  allExperiments?: readonly Experiment[];
+  companionExperiment?: FlameCompanion | null;
+  allExperiments?: readonly FlameCompanion[];
   compact?: boolean;
   titleOverride?: string;
 }
@@ -87,7 +85,7 @@ export function FlameViewer({
   const videoCursor = useDashboard((s) => s.videoCursor);
   const timelinePulse = useHighlightPulse("video-timeline");
 
-  const videos = experiment.videos as VideoWithOptionalMeta[];
+  const videos = experiment.videos;
   const defaultVideo =
     videos.find((v) => v.kind === "primary" && isStreamableVideo(v)) ??
     videos.find((v) => isStreamableVideo(v)) ??
@@ -105,7 +103,6 @@ export function FlameViewer({
   const [rate, setRate] = useState<number>(1);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [presentedFrames, setPresentedFrames] = useState<number | null>(null);
 
   // A/B split compare state
   const [abCompare, setAbCompare] = useState(Boolean(companionExperiment));
@@ -125,7 +122,9 @@ export function FlameViewer({
   // Keep selected video ID valid if parent changes experiment prop
   const activeVideo =
     videos.find((v) => v.id === activeVideoId) ?? defaultVideo;
-  const fps = activeVideo?.fps && activeVideo.fps > 0 ? activeVideo.fps : 30;
+  const sourceFps = useFallback ? null : activeVideo?.fps ?? null;
+  // Use a small seek increment when the source has no reported frame rate.
+  const fps = sourceFps ?? 30;
   const streamSrc =
     activeVideo && useFallback && activeVideo.fallbackHref
       ? activeVideo.fallbackHref
@@ -135,9 +134,8 @@ export function FlameViewer({
     allExperiments.find((e) => e.id === companionId) ??
     (companionExperiment?.id === companionId ? companionExperiment : null);
   const companionVideo = companionExp
-    ? ((companionExp.videos.find((v) => v.kind === "primary" && isStreamableVideo(v)) ??
-        companionExp.videos.find((v) => isStreamableVideo(v)) ??
-        null) as VideoWithOptionalMeta | null)
+    ? companionExp.videos.find((v) => v.kind === "primary" && isStreamableVideo(v)) ??
+      companionExp.videos.find(isStreamableVideo) ?? null
     : null;
 
   // Bind requestVideoFrameCallback with timeupdate fallback
@@ -151,7 +149,6 @@ export function FlameViewer({
     const tickRVFC = (_now: number, meta: RVFCMeta) => {
       if (cancelled) return;
       setCurrentTime(meta.mediaTime);
-      setPresentedFrames(meta.presentedFrames);
       if (video.requestVideoFrameCallback) {
         rvfcId = video.requestVideoFrameCallback(tickRVFC);
       }
@@ -189,34 +186,40 @@ export function FlameViewer({
     };
   }, [activeVideo, rate, retryNonce, useFallback]);
 
-  // Apply AI / store-driven seekVideo cursor changes
+  // Keep the cursor pending until the requested camera is mounted and seekable.
   useEffect(() => {
     if (!videoCursor || videoCursor.experimentId !== experiment.id) return;
     if (lastCursorSeqRef.current === videoCursor.seq) return;
-    lastCursorSeqRef.current = videoCursor.seq;
 
-    const targetVideo = videos.find((v) => v.id === videoCursor.videoId);
-    const nextTime = Number.isFinite(videoCursor.timeS) ? Math.max(0, videoCursor.timeS) : null;
-
-    const timer = window.setTimeout(() => {
-      if (targetVideo && targetVideo.id !== activeVideo?.id) {
+    const targetVideo = videos.find((video) => video.id === videoCursor.videoId);
+    if (!targetVideo) return;
+    if (targetVideo.id !== activeVideo?.id) {
+      const switchCamera = window.setTimeout(() => {
         setActiveVideoId(targetVideo.id);
         setUseFallback(false);
         setLoadState("idle");
-      }
+        setDuration(0);
+      }, 0);
+      return () => window.clearTimeout(switchCamera);
+    }
 
-      const v = videoRef.current;
-      if (v && nextTime !== null) {
-        v.currentTime = nextTime;
-        setCurrentTime(v.currentTime);
-      }
-      if (abCompare && videoBRef.current && nextTime !== null) {
-        videoBRef.current.currentTime = nextTime;
-      }
-    }, 0);
-
-    return () => window.clearTimeout(timer);
-  }, [abCompare, activeVideo?.id, experiment.id, videoCursor, videos]);
+    const video = videoRef.current;
+    if (!video) return;
+    const applyCursor = () => {
+      lastCursorSeqRef.current = videoCursor.seq;
+      const requested = videoCursor.timeS;
+      video.currentTime = Number.isFinite(video.duration)
+        ? Math.min(requested, video.duration)
+        : requested;
+      if (abCompare && videoBRef.current) videoBRef.current.currentTime = video.currentTime;
+    };
+    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+      applyCursor();
+      return;
+    }
+    video.addEventListener("loadedmetadata", applyCursor, { once: true });
+    return () => video.removeEventListener("loadedmetadata", applyCursor);
+  }, [abCompare, activeVideo?.id, experiment.id, loadState, retryNonce, useFallback, videoCursor, videos]);
 
   const togglePlay = useCallback(() => {
     const v = videoRef.current;
@@ -227,7 +230,6 @@ export function FlameViewer({
       if (vb) {
         void vb.play().catch(() => undefined);
       }
-      setPlaying(true);
     } else {
       v.pause();
       vb?.pause();
@@ -287,7 +289,7 @@ export function FlameViewer({
     setPlaying(false);
   };
 
-  const frameNumber = Math.round(currentTime * fps);
+  const frameNumber = sourceFps === null ? null : Math.round(currentTime * sourceFps);
   const comparableRuns = allExperiments.filter(
     (e) => e.id !== experiment.id && e.videos.some((v) => isStreamableVideo(v)),
   );
@@ -299,7 +301,7 @@ export function FlameViewer({
       tabIndex={0}
       onKeyDown={(e) => {
         const tag = (e.target as HTMLElement | null)?.tagName;
-        if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
+        if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA" || tag === "BUTTON" || tag === "A") return;
         if (e.key === "ArrowLeft") {
           e.preventDefault();
           stepFrame(-1);
@@ -451,6 +453,7 @@ export function FlameViewer({
                     key={`${activeVideo.id}-${useFallback ? "fb" : "pri"}-${retryNonce}`}
                     ref={videoRef}
                     src={streamSrc}
+                    poster={localVideoPoster(activeVideo.fallbackHref)}
                     crossOrigin="anonymous"
                     playsInline
                     muted={muted}
@@ -505,6 +508,7 @@ export function FlameViewer({
                       key={companionVideo.id}
                       ref={videoBRef}
                       src={companionVideo.href}
+                      poster={localVideoPoster(companionVideo.fallbackHref)}
                       crossOrigin="anonymous"
                       playsInline
                       muted
@@ -550,9 +554,11 @@ export function FlameViewer({
                   <span>{formatClock(currentTime)}</span>
                   <span className="text-[var(--text-3)]"> / {duration > 0 ? formatClock(duration) : "—"}</span>
                   <span className="ml-2 text-[var(--accent)]">
-                    f{presentedFrames ?? frameNumber}
+                    {frameNumber === null ? null : `≈ f${frameNumber}`}
                   </span>
-                  <span className="ml-1 text-[var(--text-3)]">@{fps}fps</span>
+                  <span className="ml-1 text-[var(--text-3)]">
+                    {formatSourceFps(sourceFps)}
+                  </span>
                 </div>
               </div>
 
@@ -576,21 +582,21 @@ export function FlameViewer({
                     size="sm"
                     variant="ghost"
                     onClick={() => stepFrame(-1)}
-                    aria-label="Step back one frame"
+                    aria-label={sourceFps === null ? "Seek back a short step" : "Step back one frame"}
                     title="Step -1 frame (ArrowLeft)"
                   >
                     <StepBack className="size-3.5" aria-hidden="true" />
-                    <span className="num">-1f</span>
+                    <span className="num">{sourceFps === null ? "Back" : "-1f"}</span>
                   </Button>
 
                   <Button
                     size="sm"
                     variant="ghost"
                     onClick={() => stepFrame(1)}
-                    aria-label="Step forward one frame"
+                    aria-label={sourceFps === null ? "Seek forward a short step" : "Step forward one frame"}
                     title="Step +1 frame (ArrowRight)"
                   >
-                    <span className="num">+1f</span>
+                    <span className="num">{sourceFps === null ? "Forward" : "+1f"}</span>
                     <StepForward className="size-3.5" aria-hidden="true" />
                   </Button>
 
@@ -656,7 +662,7 @@ export function FlameViewer({
                   className="num inline-flex items-center gap-1.5 min-h-6 px-2 rounded-[var(--radius-sm)] border border-[var(--line-strong)] bg-[var(--surface-1)] text-[var(--text-1)] hover:border-[var(--accent)] cursor-pointer"
                 >
                   <span className="size-1.5 rounded-full bg-[var(--accent)]" aria-hidden="true" />
-                  <span>0.00 s · Run Start</span>
+                  <span>0.00 s · Video start</span>
                 </button>
 
                 {experiment.outcomeHints.map((hint) => (
@@ -666,7 +672,7 @@ export function FlameViewer({
                 ))}
 
                 {experiment.conditions.airflowSetpointsCmS.length > 0 && (
-                  <Badge>
+                  <Badge className="min-w-0 whitespace-normal">
                     Airflow set-points ({experiment.conditions.airflowSetpointsCmS.join(" → ")} cm/s · ~1 min duct lag)
                   </Badge>
                 )}

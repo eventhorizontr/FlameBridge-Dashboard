@@ -28,7 +28,7 @@ export function ExplorerWorkspace({ dataset }: { dataset: ExperimentDataset }) {
         <p className="text-[0.875rem] text-[var(--text-2)] max-w-3xl">
           {mode === "learn"
             ? "Explore every ISS combustion test in NASA's BASS-II archive. Click fuel pills or drag across the Oxygen × Airflow map to isolate real burns."
-            : "Faceted 129-run telemetry matrix linked symmetrically to a D3 O₂ × representative-airflow map. Missing telemetry is listed verbatim, never coerced to 0."}
+            : `Filter ${dataset.count} runs in the telemetry matrix and inspect initial O₂ versus median airflow on the linked scatterplot.`}
         </p>
       </div>
 

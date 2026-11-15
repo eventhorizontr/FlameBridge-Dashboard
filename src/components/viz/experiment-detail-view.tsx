@@ -10,7 +10,6 @@ import {
   Button,
   EvidenceChip,
   formatMetricValue,
-  formatNullWithReason,
   Panel,
   PanelBody,
   PanelHeader,
@@ -25,16 +24,13 @@ import type { Experiment } from "@/types/experiment";
 
 import { CatalogHydrator } from "./catalog-hydrator";
 import { characteristicSizeMm, representativeAirflow } from "./dataset-queries";
-import { FlameViewer } from "./flame-viewer";
+import { FlameViewer, type FlameCompanion } from "./flame-viewer";
 import { FlowSparkline } from "./flow-sparkline";
-
-type ConditionsWithCoBound = Experiment["conditions"] & {
-  coFinalLowerBoundPpm?: number | null;
-};
+import { measurementReason, missingValue } from "./measurement-notes";
 
 export interface ExperimentDetailViewProps {
   experiment: Experiment;
-  allExperiments: readonly Experiment[];
+  allExperiments: readonly FlameCompanion[];
   doi: string;
 }
 
@@ -45,17 +41,13 @@ export function ExperimentDetailView({
 }: ExperimentDetailViewProps) {
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
+  const dispatchMany = useDashboard((s) => s.dispatchMany);
   const { send } = useAssistant();
   const [showRaw, setShowRaw] = useState(false);
 
-  const cond = experiment.conditions as ConditionsWithCoBound;
+  const cond = experiment.conditions;
   const repAir = representativeAirflow(experiment);
   const sizeMm = characteristicSizeMm(experiment.fuel);
-
-  const coFinalDisplay =
-    cond.coFinalLowerBoundPpm != null
-      ? `>${cond.coFinalLowerBoundPpm}`
-      : formatMetricValue(cond.coFinalPpm, { unit: "ppm", mode }).text;
 
   const companion =
     allExperiments.find(
@@ -68,7 +60,7 @@ export function ExperimentDetailView({
     null;
 
   const openInWhatIf = () => {
-    dispatch({
+    dispatchMany([{
       type: "setLabParams",
       params: {
         ...(cond.o2InitialPct !== null ? { o2Pct: cond.o2InitialPct } : {}),
@@ -77,8 +69,7 @@ export function ExperimentDetailView({
         ...(experiment.fuel.geometry ? { geometry: experiment.fuel.geometry } : {}),
         characteristicSizeMm: sizeMm,
       },
-    });
-    window.setTimeout(() => dispatch({ type: "navigate", route: "/lab" }), 80);
+    }, { type: "navigate", route: "/lab" }]);
   };
 
   const askAiAboutRun = () => {
@@ -124,7 +115,7 @@ export function ExperimentDetailView({
           <div className="flex flex-wrap items-center gap-3 text-[0.8125rem] text-[var(--text-2)]">
             <Tooltip content="Actual ISS test date per NASA ReadMe; the on-board camera overlay shows +1 day due to a 2012 leap-year counter offset.">
               <span className="cursor-help">
-                Test Date: <span className="num text-[var(--text-1)]">{experiment.date ?? "—"}</span>
+                Test Date: <span className="num text-[var(--text-1)]">{experiment.date ?? missingValue("Date unavailable")}</span>
                 {experiment.gmtDay !== null ? ` (GMT day ${experiment.gmtDay})` : ""}
               </span>
             </Tooltip>
@@ -169,31 +160,31 @@ export function ExperimentDetailView({
           label="Initial O₂"
           value={cond.o2InitialPct}
           unit="% vol"
-          nullReason="Missing or flagged implausible in source row"
+          nullReason={measurementReason(experiment, "o2InitialPct")}
         />
         <Stat
           label="Final O₂"
           value={cond.o2FinalPct}
           unit="% vol"
-          nullReason="Not recorded in PSI-25 experiment table"
+          nullReason={measurementReason(experiment, "o2FinalPct")}
         />
         <Stat
           label="Initial CO₂"
           value={cond.co2InitialPct}
           unit="% vol"
-          nullReason="Not recorded in PSI-25 experiment table"
+          nullReason={measurementReason(experiment, "co2InitialPct")}
         />
         <Stat
           label="Final CO₂"
           value={cond.co2FinalPct}
           unit="% vol"
-          nullReason="Not recorded in PSI-25 experiment table"
+          nullReason={measurementReason(experiment, "co2FinalPct")}
         />
         <Stat
           label="Initial CO"
           value={cond.coInitialPpm}
           unit="ppm"
-          nullReason="Not recorded in PSI-25 experiment table"
+          nullReason={measurementReason(experiment, "coInitialPpm")}
         />
         <Stat
           label="Final CO"
@@ -203,14 +194,8 @@ export function ExperimentDetailView({
               : cond.coFinalPpm
           }
           unit="ppm"
-          nullReason="Not recorded or censored (>500 ppm bound on sensor saturation)"
-          delta={
-            cond.coFinalLowerBoundPpm != null
-              ? "Sensor upper bound (>500 ppm)"
-              : coFinalDisplay === "—"
-                ? undefined
-                : undefined
-          }
+          nullReason={measurementReason(experiment, "coFinalPpm")}
+          delta={cond.coFinalLowerBoundPpm != null ? "Exclusive lower bound" : undefined}
         />
       </div>
 
@@ -233,35 +218,35 @@ export function ExperimentDetailView({
             <dl className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <div>
                 <dt className="text-[var(--text-3)]">Material</dt>
-                <dd className="font-medium text-[var(--text-1)]">{experiment.fuel.material ?? "—"}</dd>
+                <dd className="font-medium text-[var(--text-1)]">{experiment.fuel.material ?? missingValue("Material unavailable")}</dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Geometry</dt>
                 <dd className="font-medium capitalize text-[var(--text-1)]">
-                  {experiment.fuel.geometry ?? "—"}
+                  {experiment.fuel.geometry ?? missingValue("Geometry unavailable")}
                 </dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Char. Size</dt>
                 <dd className="num text-[var(--text-1)]">
-                  {sizeMm !== null ? formatMetricValue(sizeMm, { unit: "mm", mode }).text : "—"}
+                  {sizeMm !== null ? formatMetricValue(sizeMm, { unit: "mm", mode }).text : missingValue("No comparable thickness or diameter")}
                 </dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Width</dt>
                 <dd className="num text-[var(--text-2)]">
-                  {formatMetricValue(experiment.fuel.widthCm, { unit: "cm", mode }).text}
+                  {experiment.fuel.widthCm === undefined ? missingValue("Width unavailable") : formatMetricValue(experiment.fuel.widthCm, { unit: "cm", mode }).text}
                 </dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Burn Sides</dt>
                 <dd className="num text-[var(--text-2)]">
-                  {experiment.fuel.burnSides ?? "—"}
+                  {experiment.fuel.burnSides ?? missingValue("Burn sides unavailable")}
                 </dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Color</dt>
-                <dd className="capitalize text-[var(--text-2)]">{experiment.fuel.color ?? "—"}</dd>
+                <dd className="capitalize text-[var(--text-2)]">{experiment.fuel.color ?? missingValue("Color unavailable")}</dd>
               </div>
             </dl>
 
@@ -293,7 +278,7 @@ export function ExperimentDetailView({
                 <p className="num text-[0.875rem] font-medium text-[var(--text-1)] mt-0.5">
                   {cond.airflowSetpointsCmS.length > 0
                     ? cond.airflowSetpointsCmS.join(" → ") + " cm/s"
-                    : "—"}
+                    : missingValue(measurementReason(experiment, "airflow"))}
                 </p>
                 {cond.airflowRaw && (
                   <p className="num text-[0.75rem] text-[var(--text-3)]">Raw cell: {cond.airflowRaw}</p>
@@ -308,16 +293,16 @@ export function ExperimentDetailView({
                 <dd className="num text-[var(--text-1)]">
                   {cond.flowRestrictor !== null
                     ? `${cond.flowRestrictor} (0=open … 2=max restriction)`
-                    : formatNullWithReason("Not specified")}
+                    : missingValue("Restrictor position unavailable")}
                 </dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Fan / Pot Display (raw)</dt>
-                <dd className="num text-[var(--text-2)]">{cond.fanDisplayRaw || "—"}</dd>
+                <dd className="num text-[var(--text-2)]">{cond.fanDisplayRaw || missingValue("Fan display cell empty")}</dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Radiometer Gain (raw)</dt>
-                <dd className="num text-[var(--text-2)]">{cond.radiometerGainRaw || "—"}</dd>
+                <dd className="num text-[var(--text-2)]">{cond.radiometerGainRaw || missingValue("Radiometer gain cell empty")}</dd>
               </div>
               <div>
                 <dt className="text-[var(--text-3)]">Operator Keyword Hints</dt>

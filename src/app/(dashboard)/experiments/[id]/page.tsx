@@ -9,17 +9,23 @@ import { ExperimentDetailView } from "@/components/viz/experiment-detail-view";
 
 async function ExperimentDetailLoader({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const decodedId = decodeURIComponent(id);
+  // The navigation bridge encodes full PSI IDs for the dynamic segment.
+  let runId = id;
+  try {
+    runId = decodeURIComponent(id);
+  } catch {
+    // Leave malformed IDs on the unknown-record path.
+  }
   const dataset = loadPsi25Dataset();
-  const experiment = lookupExperiment(decodedId, dataset.experiments);
+  const experiment = lookupExperiment(runId, dataset.experiments);
 
   if (!experiment) {
     return (
       <EmptyState
         icon={<FileQuestion className="size-5" />}
         eyebrow="Unknown Experiment Record"
-        title={`Run "${decodedId}" was not found in ${dataset.accession}`}
-        description="Verify the run identifier (e.g. PSI-25:O1, PSI-25:B3, PSI-25:M5) or return to the Experiment Explorer to browse all 129 runs."
+        title={`Run "${runId}" was not found in ${dataset.accession}`}
+        description="Verify the run identifier (e.g. PSI-25:O1, PSI-25:B3, PSI-25:M5) or return to the Experiment Explorer to browse the catalog."
         actions={
           <Link
             href="/explore"
@@ -35,7 +41,11 @@ async function ExperimentDetailLoader({ params }: { params: Promise<{ id: string
   return (
     <ExperimentDetailView
       experiment={experiment}
-      allExperiments={dataset.experiments}
+      allExperiments={dataset.experiments.map(({ id, testId, principalInvestigator, videos, conditions }) => ({
+        id, testId, principalInvestigator,
+        videos: videos.map(({ id, href, kind, ext, fallbackHref }) => ({ id, href, kind, ext, fallbackHref })),
+        conditions: { o2InitialPct: conditions.o2InitialPct },
+      }))}
       doi={dataset.doi}
     />
   );
