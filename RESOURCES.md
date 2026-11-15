@@ -22,7 +22,7 @@ open-source and freely available ones. Licences are stated where they apply. Whe
 | NASA NSSDCA Planetary Fact Sheet | Learn Academy | [nssdc.gsfc.nasa.gov](https://nssdc.gsfc.nasa.gov/planetary/factsheet/) | |
 | NASA-STD-6001, Test 1 (upward flame propagation) | Named as the ground screening test the project compares against | | |
 
-File-level trail with hashes: [data-manifest.csv](data-manifest.csv). No Space Agency Partner
+File-level trail with hashes: [data-manifest.csv](docs/data-manifest.csv). No Space Agency Partner
 data is used.
 
 ## 2. Literature
@@ -59,7 +59,7 @@ The literature is cited, not copied. No text or figure from these works is repro
 | Fonts: [Geist and Geist Mono](https://vercel.com/font), [Unbounded](https://fonts.google.com/specimen/Unbounded) | Google Fonts through `next/font` | SIL Open Font License 1.1 |
 | Icons | [Lucide](https://lucide.dev) (`lucide-react`) | ISC |
 
-Details per file: [MEDIA_CREDITS.md](MEDIA_CREDITS.md). No NASA logo, insignia, flag or mission
+Details per file: [MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md). No NASA logo, insignia, flag or mission
 identifier is used.
 
 ## 4. Software and tools
@@ -80,5 +80,5 @@ Each dependency keeps its own licence.
 
 ## 5. Licence of this repository
 
-Code and docs: [MIT](../LICENSE). NASA PSI data: CC0 1.0. Team brand assets are not covered by
+Code and docs: [MIT](LICENSE). NASA PSI data: CC0 1.0. Team brand assets are not covered by
 the MIT licence. FlameBridge is not affiliated with or endorsed by NASA.

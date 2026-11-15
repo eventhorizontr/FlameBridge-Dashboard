@@ -73,7 +73,7 @@ That is the validation need a new test would have to fill.
 | Cross-method check of the vision layer, 85 video files | The first flame found by segmentation lies a median of 1.6 s from the nearest scene-change boundary found independently by DINOv2 embeddings (within 5 s in 59 of 85) |
 | Data quality | 40 of the 129 tests carry at least one QA flag. Flags are shown, never hidden |
 
-Details: [METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md).
+Details: [METHODS_AND_VALIDATION.md](docs/METHODS_AND_VALIDATION.md).
 
 ## 5. What is not validated
 

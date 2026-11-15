@@ -28,7 +28,7 @@ near is it?**
 The evidence exists. BASS-II (NASA PSI-25) holds 129 burn tests from the ISS Microgravity Science
 Glovebox [1]. It is spread over 695 files, about 275 GB: an experimental table, test matrices, a
 ReadMe, operations documents, PDFs, ZIP archives and 296 MP4 videos
-([DATA_SOURCES.md](DATA_SOURCES.md), [data-manifest.csv](data-manifest.csv)).
+([DATA_SOURCES.md](docs/DATA_SOURCES.md), [data-manifest.csv](docs/data-manifest.csv)).
 
 Nothing in that archive answers "which tests are closest to mine". That is the gap FlameBridge
 bridges.
@@ -46,7 +46,7 @@ She opens **Explore** and picks run **B3**.
 | DOI chip | [10.60555/4qc4-de67](https://doi.org/10.60555/4qc4-de67) |
 
 The parsed value and the raw NASA cell sit side by side. Where a cell could not be read, the app
-shows a dash and the reason. Missing is never shown as zero ([DATA.md](DATA.md)).
+shows a dash and the reason. Missing is never shown as zero ([DATA.md](docs/DATA.md)).
 
 ## Scene 4 · Watching the flame, frame by frame
 
@@ -59,7 +59,7 @@ Under the video are measurements that the NASA tables do not contain. An offline
 pipeline measured 179 ISS video files. It outlines the flame by background subtraction and reads
 back the telemetry burned into the picture (duct airflow, fan voltage, radiometer, clock) with a
 small neural network that was trained without a single hand label
-([pipeline/vision/README.md](../pipeline/vision/README.md)).
+([pipeline/vision/README.md](pipeline/vision/README.md)).
 
 Two honest labels stay on screen:
 
@@ -77,7 +77,7 @@ She opens the **What-if Lab** and enters a 10 mm PMMA rod at 16 % oxygen and 8 c
 
 FlameBridge does not simulate a flame. It retrieves the closest **real** tests, a nearest-neighbour
 search [9] with a documented distance on oxygen, airflow and sample size
-([METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md)). For each match it shows what differs,
+([METHODS_AND_VALIDATION.md](docs/METHODS_AND_VALIDATION.md)). For each match it shows what differs,
 feature by feature.
 
 One of the nearby rods is **P8**: a 3/8 inch black rod (PMMA per the NASA ReadMe) at 16.4 % oxygen in opposed flow. Its

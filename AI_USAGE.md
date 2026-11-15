@@ -9,11 +9,11 @@ NASA Space Apps asks teams to state clearly where and how SI (AI) tools were use
 
 | Rule | Status in this project | Where it is marked |
 |---|---|---|
-| **Images and videos** made with SI must carry a visible watermark | The [demo video](https://youtu.be/5k1sTZwlpyk) contains SI-generated content. It carries a visible watermark and is acknowledged in the video description. Apart from that video, which is embedded on the landing page, and its two poster frames, the repository and the app contain no SI-generated image or video. Screen mockups made with SI were design references only and are not in the repository. The logo and brand assets were designed by the team by hand. Flame footage and stills are NASA PSI-25 recordings. Screenshots are captures of the running app. Flame outlines and overlays are drawn by deterministic code | Watermark in the video, video description, [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
-| **Audio** made with SI must be acknowledged in descriptive text and metadata | The repository contains no audio | [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
+| **Images and videos** made with SI must carry a visible watermark | The [demo video](https://youtu.be/5k1sTZwlpyk) contains SI-generated content. It carries a visible watermark and is acknowledged in the video description. Apart from that video, which is embedded on the landing page, and its two poster frames, the repository and the app contain no SI-generated image or video. Screen mockups made with SI were design references only and are not in the repository. The logo and brand assets were designed by the team by hand. Flame footage and stills are NASA PSI-25 recordings. Screenshots are captures of the running app. Flame outlines and overlays are drawn by deterministic code | Watermark in the video, video description, [MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md) |
+| **Audio** made with SI must be acknowledged in descriptive text and metadata | The repository contains no audio | [MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md) |
 | **Code** made with SI must be acknowledged in descriptive text and metadata | The code and documentation were written with SI coding agents under human direction | Text: this file and the README. Metadata: commits made by the agents carry an `Agent:` line and a `Co-authored-by` line naming the model |
 | **Data** made with SI must be acknowledged in descriptive text and metadata | Image-derived data in `public/data/*/vision/` uses two models: overlay telemetry is read by a CNN, and frame similarity uses DINOv2. NASA table values are parsed by rule-based code, with no SI | Text: this file and the vision README. Metadata: each per-video analysis file (`<id>.json`) and `index.json` record the pipeline name and version, `frame-index.json` names the DINOv2 model, and the UI labels these values "image-derived" |
-| **Generated content may not use NASA branding** | No NASA logo, insignia, flag or mission identifier is used anywhere | [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
+| **Generated content may not use NASA branding** | No NASA logo, insignia, flag or mission identifier is used anywhere | [MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md) |
 
 All data, sources and tools are listed in [RESOURCES.md](RESOURCES.md).
 
@@ -26,7 +26,7 @@ All data, sources and tools are listed in [RESOURCES.md](RESOURCES.md).
 | Find frames that look alike, mark image phases | DINOv2 ViT-S/14, pretrained (Oquab et al. 2024, arXiv:2304.07193), through `timm` | Offline pipeline | Visual similarity only. The UI states it is not physical equivalence |
 | Write code and documentation | Claude Code, OpenAI Codex, Antigravity (until 2026-11-15) | This repository | Human owner sets scope and decides every merge. Lint, typecheck, tests and build must pass |
 | SI-generated content in the demo video | Marked with a visible watermark | [Demo video](https://youtu.be/5k1sTZwlpyk) | Acknowledged in the video description. Uses no NASA logo, insignia, flag or mission identifier |
-| Screen mockups used as design references | OpenAI Codex | Design process ([UX.md](UX.md)) | The shipped UI is code, not generated images |
+| Screen mockups used as design references | OpenAI Codex | Design process ([UX.md](docs/UX.md)) | The shipped UI is code, not generated images |
 | Literature search and drafting of the submission text | Claude | Project submission | Every cited claim was checked against its opened source (AI-assisted, reviewed by the team) |
 
 ## 2. What AI does not do
@@ -41,7 +41,7 @@ All data, sources and tools are listed in [RESOURCES.md](RESOURCES.md).
   (`pipeline/vision/segment.py`), not a learned model.
 - **No AI-generated media beyond the demo video.** Apart from the demo video (embedded on the
   landing page, with two poster stills in the repository), the repository and the app contain no
-  AI-generated images, video, voice-over or music ([MEDIA_CREDITS.md](MEDIA_CREDITS.md)).
+  AI-generated images, video, voice-over or music ([MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md)).
   Mockups were design references only.
 
 ## 3. The research assistant in detail (`src/lib/ai/`, `/api/ai`)
@@ -81,7 +81,7 @@ There is no mock mode: the app never shows canned text as if it were an analysis
 ## 5. How the repository was built
 
 The code and documentation were written by AI coding agents under the direction of the human
-owner and team (see [AGENTS.md](../AGENTS.md)).
+owner and team (see [AGENTS.md](AGENTS.md)).
 
 | Agent | Role |
 |---|---|
@@ -90,8 +90,8 @@ owner and team (see [AGENTS.md](../AGENTS.md)).
 | Antigravity | UI work until 2026-11-15 (ADR-016) |
 
 Commits made by the agents carry an `Agent:` line. Work runs through GitHub issues and pull requests. Decisions
-are logged in [DECISIONS.md](DECISIONS.md), and the hand-offs between agents are kept in
-[docs/coordination/](coordination/PROTOCOL.md).
+are logged in [DECISIONS.md](docs/DECISIONS.md), and the hand-offs between agents are kept in
+[docs/coordination/](docs/coordination/PROTOCOL.md).
 
 ## 6. Human control
 
@@ -103,7 +103,7 @@ are logged in [DECISIONS.md](DECISIONS.md), and the hand-offs between agents are
 
 ## 7. Evaluation, and what is still missing
 
-What runs today is listed in [METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md): tool
+What runs today is listed in [METHODS_AND_VALIDATION.md](docs/METHODS_AND_VALIDATION.md): tool
 semantics, action validation against known ids, error handling, rate limiting and the question
 quota are tested in `src/lib/ai/ai.test.ts` and `src/lib/ai/quota.test.ts`.
 

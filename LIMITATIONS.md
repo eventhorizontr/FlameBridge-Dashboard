@@ -39,5 +39,5 @@ design tool or a safety certification, and it does not replace physical testing.
   judgement.
 - Learn Academy drawings are illustrations, not simulations.
 
-Details: [METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md), [DATA.md](DATA.md),
+Details: [METHODS_AND_VALIDATION.md](docs/METHODS_AND_VALIDATION.md), [DATA.md](docs/DATA.md),
 [AI_USAGE.md](AI_USAGE.md).
