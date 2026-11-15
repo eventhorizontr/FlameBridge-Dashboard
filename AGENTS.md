@@ -1,4 +1,4 @@
-# AGENTS.md — Fire in Freefall · Shared Agent Constitution
+# AGENTS.md — FlameBridge · Shared Agent Constitution
 
 > Read this file completely before every task. It is the contract between the two AI
 > engineers on this repo — **Claude Code (lead)** and **OpenAI Codex** — and the human owner

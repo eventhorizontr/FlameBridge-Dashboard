@@ -3,11 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { SITE } from "@/config/site";
+
 import "./landing.css";
 
 const unbounded = Unbounded({ variable: "--font-unbounded", subsets: ["latin"], weight: ["700", "800"] });
 
-export const PRODUCT_NAME = "FlameBridge";
+export const PRODUCT_NAME = SITE.name;
 const TEAM_NAME = "EventHorizonTR";
 const DASHBOARD_ROUTE = "/overview";
 
@@ -139,6 +141,7 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
             <span>Built on NASA’s open ISS fire experiments</span>
           </div>
           <h1 className="nf-h1">Fire burns differently in space.</h1>
+          <p className="nf-slogan">{SITE.slogan}</p>
           <p className="nf-hero-lead">
             {PRODUCT_NAME} turns NASA’s real fire experiments on the International Space Station into a readable,
             testable and honest research tool for fire safety in weightless spacecraft.
@@ -455,7 +458,7 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
             <div className="nf-stack" style={{ gap: 10 }}>
               <Image src="/landing/team-wordmark.png" alt="Event Horizon" width={200} height={27} />
               <div style={{ fontSize: 14, color: "var(--nf-text-3)" }}>
-                {PRODUCT_NAME} is a project by team {TEAM_NAME}.
+                {PRODUCT_NAME} · {SITE.slogan}. A project by team {TEAM_NAME}.
               </div>
             </div>
             <div className="nf-note" style={{ maxWidth: "46ch" }}>

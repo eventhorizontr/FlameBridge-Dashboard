@@ -1,5 +1,28 @@
 # Architecture
 
+## Six layers
+
+| # | Layer | Paths | Produces |
+|---|---|---|---|
+| 1 | **NASA source** | psi.nasa.gov API, NASA S3 | original tables, documents, videos |
+| 2 | **Pipeline** | `pipeline/`, `pipeline/vision/` | verbatim copies (`data/raw/`), built JSON, image measurements |
+| 3 | **Contracts & loaders** | `src/types/`, `src/lib/data/`, `src/lib/vision/` | Zod-validated, typed data; invalid data fails the build/tests |
+| 4 | **Science** | `src/lib/science/` | documented calculations (matching, pressure) with formula, units, citation, tests |
+| 5 | **Store & UI** | `src/lib/store/`, `src/components/`, `src/app/` | every state change is a typed, undoable action |
+| 6 | **AI assistant** | `src/lib/ai/`, `/api/ai` | explanations and dashboard actions built only from layers 3–4 |
+
+**Information types stay separate:** source finding (layer 1–3), image measurement (layer 2,
+pixels, labelled image-derived), documented calculation (layer 4) and AI explanation (layer 6).
+There is no predictive model.
+
+**Decision vs. explanation.** Which runs match, whether a query is inside the measured
+envelope, and which values are missing are decided by deterministic code in layers 3–4. The AI
+only reads those results through tools and explains them; it cannot change a result, and the
+actions it proposes are validated on the server like any UI click.
+
+## Data flow
+
+
 ```
 ┌──────────────── NASA PSI (psi.nasa.gov) ────────────────┐
 │ metadata API  ·  file tree API  ·  presigned S3 (CORS *) │
@@ -40,16 +63,9 @@
 - App Router; server components load JSON at build/request time and pass typed data down.
 - **Store & action registry (`src/lib/store`)** — the backbone of "AI controls the UI":
   ```ts
-  type DashboardAction =
-    | { type: "setMode"; mode: "expert" | "learn" }
-    | { type: "setFilters"; filters: Partial<ExperimentFilters> }
-    | { type: "selectExperiments"; ids: string[] }
-    | { type: "openExperiment"; id: string }
-    | { type: "compare"; ids: string[] }
-    | { type: "seekVideo"; experimentId: string; videoId: string; timeS: number }
-    | { type: "setLabParams"; params: Partial<LabParams> }
-    | { type: "navigate"; route: string }
-    | { type: "highlight"; target: string };
+  type DashboardAction =               // contract: src/types/dashboard.ts
+    | setMode | setFilters | resetFilters | selectExperiments | openExperiment | compare
+    | seekVideo | setLabParams | navigate | highlight | setFlameOverlay;
   ```
   Each action has a Zod schema, a reducer, a human label ("Filtered to PMMA rods") and an
   inverse for undo. UI components and the AI dispatch the **same** actions.
@@ -57,7 +73,7 @@
 - Viz: D3 for scales/shapes, React renders SVG (≤ 2k marks) or Canvas (more). Flame/3D: R3F.
 
 ## 3. AI agent
-- Endpoint `POST /api/ai` (Node runtime, streaming SSE). **Two providers behind one
+- Endpoint `POST /api/ai` (Node runtime, streaming NDJSON). **Two providers behind one
   `AiProvider` interface (`src/lib/ai/providers/`), switchable per request (ADR-012):**
   - `claude` (optional) — `@anthropic-ai/sdk`, model `claude-opus-5-5`,
     `thinking: {type: "adaptive"}`, `effort: "medium"`, streaming manual tool loop, cached
@@ -67,21 +83,20 @@
   Both consume the same Zod tool definitions, system prompt and action validation; the agent
   loop is provider-agnostic. `GET /api/ai/providers` reports which providers have keys so the
   UI only offers working ones.
-- **Server tools** (execute on server, read-only over our data):
-  `search_experiments(filters)`, `get_experiment(id)`, `compare_experiments(ids)`,
-  `find_closest_experiments(params, k)`, `compute(metric, args)` (only functions in
-  `src/lib/science`), `list_sources(id)`, `get_publication(doi)`.
+- **Server tools** (execute on server, read-only over our data): `dataset_overview`,
+  `search_experiments`, `get_experiment`, `compare_experiments`, `find_closest_experiments`
+  (`src/lib/science/matching.ts`), `list_sources`, `get_flame_analysis`, `get_flame_at_time`,
+  `find_similar_frames`, `rank_flame_metrics` (vision layer), `get_learn_modules`.
 - **UI tool**: `dashboard_actions(actions: DashboardAction[])` is validated **on the server**
   (Zod + known run/video ids via the shared `checkReferences`) and streamed as an `actions`
   event; `useAssistant()` applies it with `dispatchMany(..., {source: "ai", groupId: turnId})`.
   No client-to-server round trip mid-turn (ADR-013).
 - Wire format: NDJSON `AiStreamEvent` (`src/types/ai.ts`): start, text, tool_call,
   tool_result (summary + evidence), actions, done, error. Max 8 tool steps per turn.
-- `find_closest_experiments` and `compute` are registered when #8 / `src/lib/science` land.
 - Grounding: the system prompt carries the dataset summary + integrity rules; answers must cite
   evidence ids returned by tools. No tool ⇒ no number.
 - Keys: `OPENAI_API_KEY` (and optional `ANTHROPIC_API_KEY`) in Vercel env only. Rate limiting
-  per IP on `/api/ai` since there is no login.
+  per client on `/api/ai` (20 requests / 5 min) since there is no login.
 
 ## 4. What-if Lab matching
 Feature vector per run: O₂ % (initial), representative flow (median of set-points), material,

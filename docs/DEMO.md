@@ -1,4 +1,23 @@
-# Demo Script — Fire in Freefall (Event Horizon)
+# Demo walkthrough — FlameBridge (Event Horizon)
+
+*Bridge the unknown.* NASA Space Apps Challenge 2026 · Fire in Freefall.
+
+## Guided example (one real scenario, ~1 min)
+
+Source → condition → reasoning → validation need. Every step uses real PSI-25 data.
+
+1. **Open the source.** `/explore` → open run **B12**. The conditions strip shows its O₂,
+   airflow and sample; the DOI chip opens the NASA PSI-25 record; the raw cell is one click away.
+2. **Change the condition.** Open the **What-if Lab** (`/lab`) and choose *exploration
+   atmosphere (34 % O₂ · 56.5 kPa, NASA/TP-2010-216134)* from the command palette (⌘K / Ctrl K).
+3. **See the reasoning.** The Lab lists the closest *real* runs with per-feature differences
+   (O₂, airflow, size, material, geometry) and plots the query on the measured O₂ × airflow map.
+4. **Find the validation need.** The query is outside the measured envelope: no run went that
+   high in O₂, and no PSI-25 run states a pressure. The Lab says so — this is the gap a new test
+   would have to close, not an answer.
+
+## Full demo script
+
 
 Target: **3 minutes**, live on the deployed site, one presenter driving, one narrating.
 Everything shown is real NASA PSI-25 (BASS-II) data or footage; say so once, early.
@@ -12,13 +31,13 @@ Everything shown is real NASA PSI-25 (BASS-II) data or footage; say so once, ear
 - [ ] Close the assistant, clear its conversation (trash icon), return to `/`.
 - [ ] Backup tab: same flow on `http://localhost:3000` (`pnpm build && pnpm start`).
 
-## 1 · The problem (0:00–0:25) — `/`
+## 1 · The problem (0:00–0:25) — `/` → `/overview`
 
 > "NASA flew 129 solid-fuel fires on the Space Station. The evidence sits in spreadsheets,
 > PDFs and about 300 videos. Engineers can't compare conditions and students can't see why
-> fire behaves differently in space. Fire in Freefall turns that archive into one instrument."
+> fire behaves differently in space. FlameBridge turns that archive into one instrument."
 
-Point at the live ISS footage and the stat strip (129 runs, 6 PIs, O₂ envelope, 123 with video).
+Start on the landing page, click **Go to dashboard**, then point at the live ISS footage and the stat strip on Home (129 runs, 6 PIs, O₂ envelope, 123 with video).
 Mention the DOI chip: *every number on screen traces to the NASA source.*
 
 ## 2 · Explore real experiments (0:25–1:05) — `/explore`
@@ -59,15 +78,15 @@ Ask: *"What would happen to a 10 mm PMMA rod at 16 % oxygen and 8 cm/s? Set up t
 Show the envelope map and the top matches (P8's operator note "would not stay lit" is real).
 Drag O₂ to 30 % → the **outside measured envelope** warning appears.
 
-## 5 · Explore & Learn (2:35–2:55) — `/learn`
+## 5 · Guided mode (2:35–2:55) — `/learn`
 
-Switch to **Explore & Learn**. Show chapter 1 with the B3 footage and one quiz answer.
+Switch to **Guided**. The Learn Academy opens; show mission 1 and one quiz answer.
 > "Same data, explained for students — every claim cites a peer-reviewed paper or the run itself."
 
 ## 6 · Close (2:55–3:00)
 
 > "Real NASA data end to end, an AI that operates the instrument instead of making things up,
-> and a pipeline that already ingests a second investigation (PSI-20). Built by Event Horizon."
+> and a pipeline that already ingests a second investigation (PSI-20). FlameBridge — bridge the unknown."
 
 ## If something fails
 

@@ -43,7 +43,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <footer className="border-t border-[var(--line)] bg-[var(--surface-1)]/60">
             <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[0.75rem] text-[var(--text-2)]">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <span className="font-medium text-[var(--text-1)]">{SITE.challenge}</span>
+                <span className="font-medium text-[var(--text-1)]">{SITE.name} · {SITE.slogan}</span>
+                <span aria-hidden="true" className="text-[var(--text-3)]">·</span>
+                <span>{SITE.challenge}</span>
                 <span aria-hidden="true" className="text-[var(--text-3)]">·</span>
                 <span>
                   Team <strong className="font-medium text-[var(--text-1)]">{SITE.team.name}</strong>:{" "}
