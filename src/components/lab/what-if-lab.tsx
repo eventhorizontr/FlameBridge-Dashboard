@@ -39,7 +39,7 @@ const MATERIALS: FuelMaterial[] = ["PMMA", "SIBAL", "Nomex", "Japan wax"];
 const GEOMETRIES: FuelGeometry[] = ["film", "slab", "rod", "spherical-section", "fabric", "candle"];
 
 function formatSigned(delta: number | null, unit: string, precision = 1): string {
-  if (delta === null || !Number.isFinite(delta)) return "n/a";
+  if (delta === null || !Number.isFinite(delta)) return "—";
   if (Math.abs(delta) < 1e-6) return `exact (0 ${unit})`;
   const sign = delta > 0 ? "+" : "";
   return `${sign}${delta.toFixed(precision)} ${unit}`;
@@ -172,36 +172,6 @@ function CoverageSlider({
   );
 }
 
-function physicsNarration(params: typeof DEFAULT_LAB_PARAMS, insideEnvelope: boolean): {
-  headline: string;
-  body: string;
-} {
-  const oxygenNote =
-    params.o2Pct < 15.5
-      ? "Below ~16 % O₂, radiative heat loss from the flame grows comparable to chemical heat release, shrinking the reaction zone toward quenching extinction."
-      : params.o2Pct > 21.5
-        ? "Elevated oxygen (~22 % vol) raises flame temperature and laminar reaction speed, broadening the steady-burning flammability envelope in microgravity."
-        : "Near-cabin oxygen (16–21 % vol) places the flame near intermediate orbital-habitat fire-safety conditions.";
-
-  const flowNote =
-    params.airflowCmS <= 1.5
-      ? "At quiescent or ultra-low airflow (≤1.5 cm/s), buoyancy is absent and oxidizer reaches the flame primarily by slow molecular diffusion—oxygen starvation limits steady burning."
-      : params.airflowCmS >= 25
-        ? "High convective velocity (≥25 cm/s) intensifies oxygen transport at first, but excessive residence-time shortening cools the flame tip toward blow-off extinction."
-        : "Gentle forced flow (2–20 cm/s) replaces the missing buoyant draft on the ISS, sharpening blue soot-free edges in thin/clear polymers and accelerating opposing spread.";
-
-  const envNote = insideEnvelope
-    ? "Because NASA flew complete BASS-II tests sharing this fuel family inside this exact O₂ × flow hull, retrieved neighbors reflect observed ISS flame behavior."
-    : "Warning: this combination sits outside NASA PSI-25's measured test matrix, so no extrapolated visuals are rendered; treat the top matches strictly as distant reference analogs.";
-
-  return {
-    headline: insideEnvelope
-      ? `${params.material} ${params.geometry} in ${params.o2Pct.toFixed(1)}% O₂ @ ${params.airflowCmS} cm/s`
-      : `Unmeasured Regime · ${params.material} ${params.geometry} (${params.o2Pct.toFixed(1)}% O₂ @ ${params.airflowCmS} cm/s)`,
-    body: `${oxygenNote} ${flowNote} ${envNote}`,
-  };
-}
-
 export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const labParams = useDashboard((s) => s.labParams);
   const mode = useDashboard((s) => s.mode);
@@ -230,7 +200,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   );
 
   const activePreview =
-    (selectedPreviewId ? lookupExperiment(selectedPreviewId, dataset.experiments) : null) ??
+    matchedDetails.find(({ experiment }) => experiment.id === selectedPreviewId)?.experiment ??
     matchedDetails.find((m) => m.experiment.videos.length > 0)?.experiment ??
     matchedDetails[0]?.experiment ??
     null;
@@ -272,8 +242,13 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const plotW = svgW - pad.l - pad.r;
   const plotH = svgH - pad.t - pad.b;
 
-  const xScale = scaleLinear().domain([0, 65]).range([0, plotW]).nice();
-  const yScale = scaleLinear().domain([10, 32]).range([plotH, 0]).nice();
+  const airflowMax = Math.max(40, labParams.airflowCmS, ...allAir);
+  const o2Min = Math.min(10, labParams.o2Pct, ...allO2);
+  const o2Max = Math.max(25, labParams.o2Pct, ...allO2);
+  const sizeQuery = labParams.characteristicSizeMm ?? DEFAULT_LAB_PARAMS.characteristicSizeMm ?? 0;
+  const sizeMax = Math.max(15, sizeQuery, ...allSizes);
+  const xScale = scaleLinear().domain([0, airflowMax]).range([0, plotW]).nice();
+  const yScale = scaleLinear().domain([o2Min, o2Max]).range([plotH, 0]).nice();
 
   const [grpAirMin, grpAirMax] = extent(groupAir);
   const [grpO2Min, grpO2Max] = extent(groupO2);
@@ -283,7 +258,12 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
     grpO2Min !== undefined &&
     grpO2Max !== undefined;
 
-  const narration = physicsNarration(labParams, result.insideEnvelope);
+  const narration = {
+    headline: `${labParams.material} ${labParams.geometry} · ${labParams.o2Pct.toFixed(1)}% O₂ · ${labParams.airflowCmS} cm/s`,
+    body: result.insideEnvelope
+      ? "The catalog contains similar test conditions for this material and geometry."
+      : "Open the closest measured runs to inspect how their test conditions differ from this query.",
+  };
 
   const materialCounts = useMemo(() => {
     const map = new Map<FuelMaterial, number>();
@@ -320,14 +300,14 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
           <p className="text-[0.875rem] text-[var(--text-2)] max-w-3xl">
             {mode === "learn"
               ? "Adjust oxygen concentration, airflow speed, and fuel shape to find the closest real Space Station burns—and immediately see where NASA’s data ends."
-              : "Distance-ranked k-nearest-neighbor retrieval over 129 PSI-25 runs with slider density tracks and strict hull guardrails."}
+              : `Ranks measured neighbors from ${dataset.count} PSI-25 runs using oxygen, median airflow, and specimen properties.`}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <EvidenceChip
             id={`doi:${dataset.doi}`}
-            label="PSI-25 Measured Hull"
+            label="PSI-25 Matching Method"
             kind="dataset"
             href={`https://doi.org/${dataset.doi}`}
             detail={result.method}
@@ -375,8 +355,8 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
             </div>
             <p className="text-[0.8125rem] text-[var(--text-2)]">
               {result.insideEnvelope
-                ? "A same-material, same-geometry ISS experiment exists within normalized distance ≤ 0.25 and your query lies inside the measured min–max hull."
-                : "Your dialed conditions fall outside NASA BASS-II's measured envelope for this fuel family. Synthetic flames are never fabricated—only nearest measured analog runs and exact parameter deltas are listed."}
+                ? "A nearby run with the selected material and geometry has all requested measurements. The query values fall within the recorded ranges for that group."
+                : "The query is outside the measured envelope for this material and geometry. The results show the closest available runs and how their inputs differ."}
             </p>
           </div>
         </div>
@@ -395,8 +375,8 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
               label="Initial Oxygen Concentration (O₂)"
               unit="% vol"
               value={labParams.o2Pct}
-              min={10}
-              max={32}
+              min={o2Min}
+              max={o2Max}
               step={0.1}
               allValues={allO2}
               groupValues={groupO2}
@@ -409,7 +389,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
               unit="cm/s"
               value={labParams.airflowCmS}
               min={0}
-              max={65}
+              max={airflowMax}
               step={0.5}
               allValues={allAir}
               groupValues={groupAir}
@@ -421,9 +401,9 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 id="lab-size-slider"
                 label="Characteristic Fuel Dimension (thickness or Ø)"
                 unit="mm"
-                value={labParams.characteristicSizeMm ?? 6.35}
+                value={sizeQuery}
                 min={0.05}
-                max={15}
+                max={sizeMax}
                 step={0.05}
                 allValues={allSizes}
                 groupValues={groupSizes}
@@ -546,7 +526,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 title="Query Position vs. PSI-25 Nearest Neighbors"
                 actions={
                   <SegmentedControl<"map" | "table">
-                    ariaLabel="What-if hull visualization mode"
+                    ariaLabel="What-if visualization mode"
                     size="sm"
                     value={viewMode}
                     onChange={setViewMode}
@@ -578,7 +558,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-2)]" />
-                  <span>Same {labParams.material} {labParams.geometry} hull</span>
+                  <span>{labParams.material} {labParams.geometry} recorded ranges</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-1)]" />
@@ -752,7 +732,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                             {match.distance.toFixed(3)}
                           </td>
                           <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
-                            {formatSigned(match.deltas.o2Pct, "%")}
+                            {formatSigned(match.deltas.o2Pct, "pp")}
                           </td>
                           <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
                             {formatSigned(match.deltas.airflowCmS, "cm/s")}
@@ -832,17 +812,18 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                     {/* Signed Deltas */}
                     <div className="flex flex-wrap gap-1.5 text-[0.6875rem]">
                       <Badge>
-                        ΔO₂: {formatSigned(match.deltas.o2Pct, "%")} (
+                        ΔO₂: {formatSigned(match.deltas.o2Pct, "pp")} (
                         {formatMetricValue(experiment.conditions.o2InitialPct, { unit: "%" }).text})
                       </Badge>
                       <Badge>
                         ΔFlow: {formatSigned(match.deltas.airflowCmS, "cm/s")} (
                         {formatMetricValue(repAir, { unit: "cm/s" }).text})
                       </Badge>
-                      {match.deltas.characteristicSizeMm !== null && (
+                      {labParams.characteristicSizeMm !== null && (
                         <Badge>
-                          ΔSize: {formatSigned(match.deltas.characteristicSizeMm, "mm", 2)} (
-                          {sizeMm ?? "—"} mm)
+                          {match.deltas.characteristicSizeMm === null
+                            ? `ΔSize: — ${match.categoricalMismatches.includes("geometry") ? "different geometry" : "size unavailable"}`
+                            : `ΔSize: ${formatSigned(match.deltas.characteristicSizeMm, "mm", 2)} (${sizeMm} mm)`}
                         </Badge>
                       )}
                     </div>
@@ -899,7 +880,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
               titleOverride={
                 result.insideEnvelope
                   ? `Closest Measured Match Preview — Run ${activePreview.testId}`
-                  : `Nearest Analog Reference ONLY — Run ${activePreview.testId} (Query Outside Hull)`
+                  : `Nearest Analog Reference ONLY — Run ${activePreview.testId} (Query Outside Envelope)`
               }
             />
           )}

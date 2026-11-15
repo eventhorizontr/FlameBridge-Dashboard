@@ -34,6 +34,8 @@ import { useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentDataset, ExperimentVideo, VideoKind } from "@/types/experiment";
 
 import { CatalogHydrator } from "./catalog-hydrator";
+import { measurementReason, missingValue } from "./measurement-notes";
+import { localVideoPoster } from "./video-presentation";
 import { characteristicSizeMm, lookupExperiment, representativeAirflow } from "./dataset-queries";
 import { FlowSparkline } from "./flow-sparkline";
 
@@ -156,7 +158,7 @@ function CompareVideoTile({
           <span className="num text-[0.75rem] text-[var(--text-3)]">
             {experiment.conditions.o2InitialPct !== null
               ? `${experiment.conditions.o2InitialPct}% O₂`
-              : "O₂ —"}
+              : `O₂ ${missingValue(measurementReason(experiment, "o2InitialPct"))}`}
           </span>
         </div>
       </div>
@@ -186,6 +188,7 @@ function CompareVideoTile({
             registerVideo(experiment.id, el);
           }}
           src={activeVid.href}
+          poster={localVideoPoster(activeVid.fallbackHref)}
           crossOrigin="anonymous"
           playsInline
           muted
@@ -210,10 +213,6 @@ function CompareVideoTile({
     </div>
   );
 }
-
-type ConditionsWithBound = Experiment["conditions"] & {
-  coFinalLowerBoundPpm?: number | null;
-};
 
 interface DiffField {
   label: string;
@@ -323,8 +322,8 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
 
   // Diff matrix rows
   const diffRows: DiffField[] = useMemo(() => {
-    const fmt = (val: number | string | null | undefined, unit?: string, prec?: number) =>
-      formatMetricValue(val, { unit, mode, precision: prec }).text;
+    const fmt = (val: number | null, unit: string, prec: number, reason: string) =>
+      val === null ? missingValue(reason) : formatMetricValue(val, { unit, mode, precision: prec }).text;
 
     const specs: Array<{
       label: string;
@@ -333,30 +332,34 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
     }> = [
       { label: "Principal Investigator", get: (e) => e.principalInvestigator },
       { label: "Sample ID", get: (e) => e.sampleId },
-      { label: "Test Date (GMT Day)", get: (e) => `${e.date ?? "—"} (${e.gmtDay ?? "—"})` },
-      { label: "Fuel Raw Text", get: (e) => e.fuel.raw },
-      { label: "Fuel Material", get: (e) => e.fuel.material ?? "—" },
-      { label: "Fuel Geometry", get: (e) => e.fuel.geometry ?? "—" },
+      { label: "Test Date (GMT Day)", get: (e) => `${e.date ?? missingValue("Date unavailable")} (${e.gmtDay ?? missingValue("GMT day unavailable")})` },
+      { label: "Fuel Raw Text", get: (e) => e.fuel.raw || missingValue("Fuel cell empty") },
+      {
+        label: "Inferred Fuel Fields",
+        get: (e) => e.fuel.inferred.join("; ") || "No inferences in the catalog",
+      },
+      { label: "Fuel Material", get: (e) => e.fuel.material ?? missingValue("Material unavailable") },
+      { label: "Fuel Geometry", get: (e) => e.fuel.geometry ?? missingValue("Geometry unavailable") },
       {
         label: "Characteristic Size",
-        get: (e) => fmt(characteristicSizeMm(e.fuel), "mm", 2),
+        get: (e) => fmt(characteristicSizeMm(e.fuel), "mm", 2, "No comparable thickness or diameter"),
       },
-      { label: "Flow Direction", get: (e) => e.flowConfiguration ?? "unlabeled" },
+      { label: "Flow Direction", get: (e) => e.flowConfiguration ?? missingValue("Flow direction unavailable") },
       {
         label: "Flow Restrictor",
-        get: (e) => (e.conditions.flowRestrictor !== null ? String(e.conditions.flowRestrictor) : "—"),
+        get: (e) => (e.conditions.flowRestrictor !== null ? String(e.conditions.flowRestrictor) : missingValue("Restrictor position unavailable")),
       },
-      { label: "Initial O₂", get: (e) => fmt(e.conditions.o2InitialPct, "%", 1) },
-      { label: "Final O₂", get: (e) => fmt(e.conditions.o2FinalPct, "%", 1) },
-      { label: "Initial CO₂", get: (e) => fmt(e.conditions.co2InitialPct, "%", 2) },
-      { label: "Final CO₂", get: (e) => fmt(e.conditions.co2FinalPct, "%", 2) },
-      { label: "Initial CO", get: (e) => fmt(e.conditions.coInitialPpm, "ppm") },
+      { label: "Initial O₂", get: (e) => fmt(e.conditions.o2InitialPct, "%", 1, measurementReason(e, "o2InitialPct")) },
+      { label: "Final O₂", get: (e) => fmt(e.conditions.o2FinalPct, "%", 1, measurementReason(e, "o2FinalPct")) },
+      { label: "Initial CO₂", get: (e) => fmt(e.conditions.co2InitialPct, "%", 2, measurementReason(e, "co2InitialPct")) },
+      { label: "Final CO₂", get: (e) => fmt(e.conditions.co2FinalPct, "%", 2, measurementReason(e, "co2FinalPct")) },
+      { label: "Initial CO", get: (e) => fmt(e.conditions.coInitialPpm, "ppm", 0, measurementReason(e, "coInitialPpm")) },
       {
         label: "Final CO",
         get: (e) => {
-          const c = e.conditions as ConditionsWithBound;
+          const c = e.conditions;
           if (c.coFinalLowerBoundPpm != null) return `>${c.coFinalLowerBoundPpm} ppm`;
-          return fmt(c.coFinalPpm, "ppm");
+          return fmt(c.coFinalPpm, "ppm", 0, measurementReason(e, "coFinalPpm"));
         },
       },
       {
@@ -364,23 +367,23 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
         get: (e) =>
           e.conditions.airflowSetpointsCmS.length > 0
             ? `${e.conditions.airflowSetpointsCmS.join(" → ")} cm/s`
-            : "—",
+            : missingValue(measurementReason(e, "airflow")),
         renderCell: (e) => (
           <div className="flex items-center gap-2">
             <FlowSparkline setpoints={e.conditions.airflowSetpointsCmS} />
             <span className="num text-[0.75rem]">
               {e.conditions.airflowSetpointsCmS.length > 0
                 ? `${e.conditions.airflowSetpointsCmS.join(" → ")} cm/s`
-                : "—"}
+                : missingValue(measurementReason(e, "airflow"))}
             </span>
           </div>
         ),
       },
       {
         label: "Representative Airflow",
-        get: (e) => fmt(representativeAirflow(e), "cm/s", 1),
+        get: (e) => fmt(representativeAirflow(e), "cm/s", 1, measurementReason(e, "airflow")),
       },
-      { label: "Total Frames Shot", get: (e) => fmt(e.totalFramesShot) },
+      { label: "Total Frames Shot", get: (e) => fmt(e.totalFramesShot, "", 0, "Frame count unavailable") },
       {
         label: "Operator Hints",
         get: (e) => (e.outcomeHints.length ? e.outcomeHints.join(", ") : "None"),
@@ -856,13 +859,13 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
                         <tr key={r.id}>
                           <td className="py-2 px-3 num font-medium text-[var(--text-1)]">{r.testId}</td>
                           <td className="py-2 px-3 num text-[var(--text-2)]">
-                            {r.conditions.airflowSetpointsCmS.join(" → ") || "—"}
+                            {r.conditions.airflowSetpointsCmS.join(" → ") || missingValue(measurementReason(r, "airflow"))}
                           </td>
                           <td className="py-2 px-3 num text-right text-[var(--text-1)]">
-                            {r.conditions.o2InitialPct ?? "—"}
+                            {r.conditions.o2InitialPct ?? missingValue(measurementReason(r, "o2InitialPct"))}
                           </td>
                           <td className="py-2 px-3 num text-right text-[var(--text-1)]">
-                            {r.conditions.o2FinalPct ?? "—"}
+                            {r.conditions.o2FinalPct ?? missingValue(measurementReason(r, "o2FinalPct"))}
                           </td>
                         </tr>
                       ))}

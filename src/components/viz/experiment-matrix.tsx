@@ -264,7 +264,10 @@ export function ExperimentMatrix({ experiments }: ExperimentMatrixProps) {
                       </td>
                       <td className="py-1.5 px-2.5 whitespace-nowrap">
                         {exp.fuel.material ? (
-                          <Badge>{exp.fuel.material}</Badge>
+                          <Badge title={exp.fuel.inferred.join("; ") || undefined}>
+                            {exp.fuel.material}
+                            {exp.fuel.inferred.some((note) => note.startsWith("material=")) && " (inferred)"}
+                          </Badge>
                         ) : (
                           <Tooltip content={formatNullWithReason("Material could not be parsed cleanly from raw fuel cell")}>
                             <span className="text-[var(--text-3)]">—</span>
@@ -272,7 +275,7 @@ export function ExperimentMatrix({ experiments }: ExperimentMatrixProps) {
                         )}
                       </td>
                       <td className="py-1.5 px-2.5 text-[var(--text-2)] whitespace-nowrap capitalize">
-                        {exp.fuel.geometry ?? "—"}
+                        {exp.fuel.geometry ?? "— Geometry unavailable"}
                       </td>
                       <td className="py-1.5 px-2.5 num text-right text-[var(--text-2)] whitespace-nowrap">
                         {sizeFmt.missing ? (

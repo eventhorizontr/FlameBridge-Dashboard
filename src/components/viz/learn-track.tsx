@@ -567,7 +567,7 @@ function InteractiveBadgeIcon({ chapter }: { chapter: LearnChapter }) {
 
 export function LearnTrack({ dataset }: LearnTrackProps) {
   const mode = useDashboard((s) => s.mode);
-  const labParams = useDashboard((s) => s.labParams);
+  const dispatchMany = useDashboard((s) => s.dispatchMany);
   const dispatch = useDispatch();
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -622,8 +622,10 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
   }
 
   function handleOpenLabWithO2(o2Pct: number) {
-    dispatch({ type: "setLabParams", params: { ...labParams, o2Pct } });
-    window.setTimeout(() => dispatch({ type: "navigate", route: "/lab" }), 80);
+    dispatchMany([
+      { type: "setLabParams", params: { o2Pct } },
+      { type: "navigate", route: "/lab" },
+    ]);
   }
 
   const selectedQuizIdx = quizSelections[chapter.id];
