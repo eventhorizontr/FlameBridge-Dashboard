@@ -21,7 +21,8 @@ by NASA, and no NASA logo or insignia is used.
 ## Presentation and video
 
 The presentation video is produced outside this repository. It contains SI-generated visual
-scenes, which carry a visible watermark, and SI-generated audio. Both are acknowledged in the
+scenes and SI-generated audio. Both are labelled with YouTube's altered or synthetic content label
+and acknowledged in the
 video's own description. The demo video is at https://youtu.be/5k1sTZwlpyk;
 its poster frames (`public/landing/demo-poster.webp`, `docs/media/demo-video.jpg`) are taken from
 that video. On the landing page it loads from youtube-nocookie.com only after the viewer presses play. No other file
