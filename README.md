@@ -26,6 +26,17 @@ needed. It does not replace physical testing or certification.
 
 ![FlameBridge Home: mission overview of the PSI-25 BASS-II dataset](docs/media/home.png)
 
+## For judges
+
+| Read | What it is |
+|---|---|
+| **[Where to look](JUDGES.md)** | Judging criteria mapped to evidence, with steps to try and commands to verify |
+| **[The FlameBridge story](STORY.md)** | One scenario, from a habitat question to the edge of the measured evidence, with sources |
+| **[The science](SCIENCE.md)** | What the literature shows, the method, a concrete result and how it was checked |
+| **[Challenge fit](CHALLENGE.md)** | Each thing the challenge asks for, and where FlameBridge does it |
+| **[AI (SI) usage](AI_USAGE.md)** | Where and how SI tools were used, rule by rule: code, data, images, video, audio |
+| **[Resources and references](RESOURCES.md)** | Every dataset, paper, visual and tool used, with links and licences |
+
 ## Problem and users
 
 NASA flew 129 solid-fuel fires on the International Space Station in the BASS-II campaign. The
@@ -45,10 +56,11 @@ and a student cannot see why a flame behaves differently in weightlessness.
 | Explore 129 PSI-25 runs: table, O₂ × airflow map, gallery, QA flags, raw cells | Fixed evaluation set for AI answers |
 | Run pages with NASA ISS footage streamed frame by frame | Hand-labelled ground truth for flame segmentation |
 | Computer-vision measurements of every usable video (pixels, labelled image-derived) | PSI-20 (ACME BRE) in the main views — built, not yet shown |
-| Compare 2–4 runs side by side with synced footage | Public deployment link (Vercel) |
+| Compare 2–4 runs side by side with synced footage | |
 | What-if Lab: closest *real* runs, per-feature differences, measured-envelope and pressure-gap warnings | |
 | AI assistant (OpenAI or Claude) that answers from tool results and drives the dashboard, every step undoable | |
 | Guided mode: Learn Academy (5 missions, quizzes, progress) | |
+| Public deployment on Vercel, no login | |
 
 ## A real example
 
@@ -58,6 +70,7 @@ and a student cannot see why a flame behaves differently in weightlessness.
 4. It reports the query as outside the measured envelope — no run reached that O₂, and no run
    states a pressure. That gap is the next validation need.
 
+The same example told as a story, with sources: [STORY.md](STORY.md).
 Full walkthrough and the 3-minute demo script: [docs/DEMO.md](docs/DEMO.md).
 
 ## How it works
@@ -122,7 +135,7 @@ flowchart LR
   There is no predictive model.
 - **Deterministic code decides, the AI explains.** Matching, envelope and missing-value checks
   are plain code. The AI reads their results through tools and cannot change them.
-- **Computer vision, offline.** `pipeline/vision/` measures every ISS video once: flame area,
+- **Computer vision, offline.** `pipeline/vision/` measures every usable ISS video once (179 of 296 files): flame area,
   burn time, overlay telemetry (air, fan, radiometer) and frame similarity, stored as pixels of
   the 720×480 frame and never converted to millimetres.
 - **Videos are not re-hosted.** `/api/psi/file/{acc}/{id}` redirects to a fresh presigned NASA
@@ -151,8 +164,8 @@ and [docs/data-manifest.csv](docs/data-manifest.csv). Field contract: [docs/DATA
 ## Methods, evaluation and limitations
 
 - [Methods and validation](docs/METHODS_AND_VALIDATION.md) — what each method does, which checks
-  actually run (142 TypeScript tests, 27 pipeline tests, CI on every PR) and what is not validated.
-- [Limitations](docs/LIMITATIONS.md) — one campaign, narrow O₂/airflow range, no pressure data,
+  actually run (150 TypeScript tests in 18 files, 27 pipeline tests) and what is not validated.
+- [Limitations](LIMITATIONS.md) — one campaign, narrow O₂/airflow range, no pressure data,
   uncalibrated sensors, pixels only. FlameBridge is not a simulator or a certification tool.
 
 ## Run it locally
@@ -181,7 +194,7 @@ pnpm dev                     # http://localhost:3000
 **Without a key** everything except the assistant works; the panel says which provider is off
 and why. There is no mock AI mode.
 
-Checks (the same as CI):
+Checks (the same commands the CI workflow is configured to run):
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
@@ -193,8 +206,13 @@ Rebuild the data from NASA PSI (network): `pnpm data:psi25`. Vision layer:
 
 ## AI, media, licence and team
 
-- **AI disclosure** — the assistant's models, tools, limits and evaluation, the vision models,
-  and the AI coding agents that built the repo: [docs/AI_USAGE.md](docs/AI_USAGE.md).
+- **AI disclosure** — what we used AI for, job by job: the assistant's models, tools and limits,
+  the vision models, and the AI coding agents that built the repo: [AI_USAGE.md](AI_USAGE.md).
+- **SI statement** — the code and docs in this repository were written with SI coding agents
+  (Claude Code, OpenAI Codex, Antigravity until 2026-11-15) under human direction. The [demo video](https://youtu.be/5k1sTZwlpyk)
+  contains SI-generated visual scenes, marked with a visible watermark, and SI-generated audio. Apart from that video and its
+  two poster frames, the repository and the app contain no SI-generated image, video or audio.
+- **Resources** — all data, literature, visuals and tools: [RESOURCES.md](RESOURCES.md).
 - **Media credits** — NASA footage, team brand assets, fonts: [docs/MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md).
 - **Licence** — code and docs: [MIT](LICENSE). NASA PSI data is CC0 1.0. Third-party data,
   media, brand assets and dependencies keep their own terms.
