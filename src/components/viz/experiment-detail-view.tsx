@@ -25,6 +25,8 @@ import type { Experiment } from "@/types/experiment";
 
 import { CatalogHydrator } from "./catalog-hydrator";
 import { characteristicSizeMm, representativeAirflow } from "./dataset-queries";
+import { FlameAnalytics } from "@/components/vision/flame-analytics";
+
 import { FlameViewer } from "./flame-viewer";
 import { FlowSparkline } from "./flow-sparkline";
 
@@ -162,6 +164,8 @@ export function ExperimentDetailView({
 
       {/* Signature Flame Viewer */}
       <FlameViewer experiment={experiment} allExperiments={allExperiments} />
+
+      <FlameAnalytics experiment={experiment} />
 
       {/* Gas Telemetry KPI Strip */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">

@@ -31,10 +31,12 @@ dispatch({ type: "openExperiment", id: "PSI-25:O13a" });         // also navigat
 | `labParams` | What-if Lab query (`DEFAULT_LAB_PARAMS` = centre of the measured envelope) |
 | `route` | current pathname (synced automatically) |
 | `highlight` | `{target, seq}` — flash/pulse the element whose `data-highlight="<target>"` matches |
+| `flameOverlay` | `{mode: off·box·outline·isolate, follow}` — vision layer drawn over the flame viewer (ADR-017) |
 
 ## Actions
 `setMode · setFilters (merge) · resetFilters · selectExperiments · openExperiment · compare ·
-seekVideo · setLabParams (merge) · navigate · highlight` — shapes in `@/types/dashboard`.
+seekVideo · setLabParams (merge) · navigate · highlight · setFlameOverlay (merge)` — shapes in
+`@/types/dashboard`.
 
 - `dispatch` validates (Zod + known ids/videos) and returns `{ok:true, entry} | {ok:false, error}`.
 - `openExperiment`, `compare`, `navigate` change the route; `<DashboardRuntime/>` (mounted in

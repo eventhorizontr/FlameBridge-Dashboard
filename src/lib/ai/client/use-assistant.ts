@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect } from "react";
 import { useStore } from "zustand";
+import { playbackStore } from "@/lib/vision/playback";
 
 import { dashboardStore } from "@/lib/store/store";
 import { preferencesStore } from "@/lib/store/preferences";
@@ -15,6 +16,8 @@ const newId = () => crypto.randomUUID();
 
 function snapshotContext(): AiClientContext {
   const s = dashboardStore.getState();
+  const p = playbackStore.getState();
+  const onVideo = p.videoId && p.experimentId && s.route.startsWith("/experiments/");
   return {
     mode: s.mode,
     route: s.route,
@@ -23,6 +26,9 @@ function snapshotContext(): AiClientContext {
     openExperimentId: s.openExperimentId,
     compareIds: s.compareIds,
     labParams: s.labParams,
+    video: onVideo
+      ? { experimentId: p.experimentId!, videoId: p.videoId!, timeS: Math.round(p.timeS * 100) / 100, overlay: s.flameOverlay.mode }
+      : null,
   };
 }
 

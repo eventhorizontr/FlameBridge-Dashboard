@@ -10,6 +10,8 @@
  */
 import { z } from "zod";
 
+import { FLAME_OVERLAY_MODES } from "./vision";
+
 import type {
   DashboardAction,
   ExperimentFilters,
@@ -275,6 +277,10 @@ export const DashboardActionSchema = z.discriminatedUnion("type", [
   z.strictObject({ type: z.literal("setLabParams"), params: LabParamsSchema.partial() }),
   z.strictObject({ type: z.literal("navigate"), route: RouteSchema }),
   z.strictObject({ type: z.literal("highlight"), target: z.string().min(1).max(120) }),
+  z.strictObject({
+    type: z.literal("setFlameOverlay"),
+    overlay: z.strictObject({ mode: z.enum(FLAME_OVERLAY_MODES), follow: z.boolean() }).partial(),
+  }),
 ]);
 
 export const DashboardActionListSchema = z.array(DashboardActionSchema).min(1).max(12);

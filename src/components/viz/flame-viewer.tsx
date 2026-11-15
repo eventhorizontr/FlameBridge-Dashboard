@@ -3,6 +3,7 @@
 import {
   AlertTriangle,
   Columns2,
+  Crosshair,
   Download,
   Film,
   GitCompareArrows,
@@ -27,8 +28,12 @@ import {
   SegmentedControl,
   useHighlightPulse,
 } from "@/components/ui";
+import { FlameScrubStrip } from "@/components/vision/flame-scrub-strip";
+import { FlameStage } from "@/components/vision/flame-stage";
+import { useVisionContours, useVisionVideo } from "@/components/vision/use-vision";
 import { useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentVideo, VideoKind } from "@/types/experiment";
+import type { FlameOverlayMode } from "@/types/vision";
 
 const PLAYBACK_RATES = [0.25, 0.5, 1, 1.5, 2] as const;
 
@@ -85,6 +90,7 @@ export function FlameViewer({
 }: FlameViewerProps) {
   const dispatch = useDispatch();
   const videoCursor = useDashboard((s) => s.videoCursor);
+  const flameOverlay = useDashboard((s) => s.flameOverlay);
   const timelinePulse = useHighlightPulse("video-timeline");
 
   const videos = experiment.videos as VideoWithOptionalMeta[];
@@ -130,6 +136,14 @@ export function FlameViewer({
     activeVideo && useFallback && activeVideo.fallbackHref
       ? activeVideo.fallbackHref
       : activeVideo?.href;
+
+  const visionLoad = useVisionVideo(experiment.investigation, activeVideo?.id);
+  const vision = visionLoad.status === "ready" && visionLoad.data.status === "ok" ? visionLoad.data : null;
+  const visionNote =
+    visionLoad.status === "ready" && visionLoad.data.status !== "ok" ? visionLoad.data.reason ?? visionLoad.data.status : null;
+  const needsContours = Boolean(vision) && (flameOverlay.mode === "outline" || flameOverlay.mode === "isolate");
+  const contoursLoad = useVisionContours(experiment.investigation, activeVideo?.id, needsContours);
+  const contours = contoursLoad.status === "ready" ? contoursLoad.data : null;
 
   const companionExp =
     allExperiments.find((e) => e.id === companionId) ??
@@ -411,6 +425,16 @@ export function FlameViewer({
                   </span>
                 </div>
 
+                <VisionToolbar
+                  available={Boolean(vision)}
+                  loading={visionLoad.status === "loading"}
+                  note={visionNote}
+                  mode={flameOverlay.mode}
+                  follow={flameOverlay.follow}
+                  onMode={(mode) => dispatch({ type: "setFlameOverlay", overlay: { mode } })}
+                  onFollow={(follow) => dispatch({ type: "setFlameOverlay", overlay: { follow } })}
+                />
+
                 {loadState === "error" ? (
                   <div className="aspect-video flex flex-col items-center justify-center p-5 text-center space-y-3">
                     <AlertTriangle className="size-6 text-[var(--warning)]" aria-hidden="true" />
@@ -447,20 +471,30 @@ export function FlameViewer({
                     </div>
                   </div>
                 ) : (
-                  <video
-                    key={`${activeVideo.id}-${useFallback ? "fb" : "pri"}-${retryNonce}`}
-                    ref={videoRef}
-                    src={streamSrc}
-                    crossOrigin="anonymous"
-                    playsInline
-                    muted={muted}
-                    loop={loop}
-                    preload="metadata"
-                    onError={handleVideoError}
-                    className={`w-full bg-[var(--bg)] object-contain ${
-                      compact ? "max-h-[280px]" : "max-h-[460px]"
-                    } aspect-video`}
-                  />
+                  <FlameStage
+                    videoRef={videoRef}
+                    videoId={activeVideo.id}
+                    experimentId={experiment.id}
+                    captureName={`${experiment.investigation}_${experiment.testId}`}
+                    analysis={vision}
+                    contours={contours}
+                    overlay={flameOverlay}
+                  >
+                    <video
+                      key={`${activeVideo.id}-${useFallback ? "fb" : "pri"}-${retryNonce}`}
+                      ref={videoRef}
+                      src={streamSrc}
+                      crossOrigin="anonymous"
+                      playsInline
+                      muted={muted}
+                      loop={loop}
+                      preload="metadata"
+                      onError={handleVideoError}
+                      className={`w-full bg-[var(--bg)] object-contain ${
+                        compact ? "max-h-[280px]" : "max-h-[460px]"
+                      } aspect-video`}
+                    />
+                  </FlameStage>
                 )}
               </div>
 
@@ -552,9 +586,18 @@ export function FlameViewer({
                   <span className="ml-2 text-[var(--accent)]">
                     f{presentedFrames ?? frameNumber}
                   </span>
-                  <span className="ml-1 text-[var(--text-3)]">@{fps}fps</span>
+                  <span className="ml-1 text-[var(--text-3)]">@{Number(fps.toFixed(2))} fps</span>
                 </div>
               </div>
+
+              {vision && (
+                <FlameScrubStrip
+                  analysis={vision}
+                  currentTime={currentTime}
+                  duration={duration}
+                  onSeek={(t) => seekTo(t, true)}
+                />
+              )}
 
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -666,7 +709,7 @@ export function FlameViewer({
                 ))}
 
                 {experiment.conditions.airflowSetpointsCmS.length > 0 && (
-                  <Badge>
+                  <Badge className="h-auto max-w-full whitespace-normal">
                     Airflow set-points ({experiment.conditions.airflowSetpointsCmS.join(" → ")} cm/s · ~1 min duct lag)
                   </Badge>
                 )}
@@ -689,5 +732,64 @@ export function FlameViewer({
         )}
       </PanelBody>
     </Panel>
+  );
+}
+
+const OVERLAY_OPTIONS: { value: FlameOverlayMode; label: string }[] = [
+  { value: "off", label: "Off" },
+  { value: "box", label: "Frame" },
+  { value: "outline", label: "Outline" },
+  { value: "isolate", label: "Flame only" },
+];
+
+function VisionToolbar({
+  available,
+  loading,
+  note,
+  mode,
+  follow,
+  onMode,
+  onFollow,
+}: {
+  available: boolean;
+  loading: boolean;
+  note: string | null;
+  mode: FlameOverlayMode;
+  follow: boolean;
+  onMode: (mode: FlameOverlayMode) => void;
+  onFollow: (follow: boolean) => void;
+}) {
+  return (
+    <div
+      data-highlight="flame-overlay"
+      className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-1.5 border-b border-[var(--line)] bg-[var(--surface-1)] text-[0.75rem]"
+    >
+      <span className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">Flame vision</span>
+      {available ? (
+        <>
+          <SegmentedControl<FlameOverlayMode>
+            ariaLabel="Flame overlay mode"
+            size="sm"
+            value={mode}
+            onChange={onMode}
+            options={OVERLAY_OPTIONS}
+          />
+          <Button
+            size="sm"
+            variant={follow ? "accent-soft" : "ghost"}
+            aria-pressed={follow}
+            onClick={() => onFollow(!follow)}
+            title="Crop to the flame and follow it"
+          >
+            <Crosshair className="size-3.5" aria-hidden="true" />
+            <span>Follow flame</span>
+          </Button>
+        </>
+      ) : (
+        <span className="text-[var(--text-3)] min-w-0 truncate">
+          {loading ? "Loading analysis…" : note ?? "No vision analysis for this view"}
+        </span>
+      )}
+    </div>
   );
 }

@@ -14,6 +14,9 @@ import type { DashboardAction } from "@/types/dashboard";
 import type { Experiment } from "@/types/experiment";
 import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema, LabParamsSchema } from "@/types/schemas";
 
+import { digestVideo, frameAt } from "@/lib/vision/digest";
+import { getVisionIndex, getVisionVideo, RANK_METRICS, visionEntriesFor, type RankMetric } from "@/lib/vision/server";
+
 import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
 
 export interface ToolOutcome {
@@ -267,6 +270,112 @@ export const TOOLS: AgentTool[] = [
         summary: `Applied ${actions.length} dashboard action${actions.length === 1 ? "" : "s"}`,
         evidence: [],
         actions,
+      };
+    },
+  }),
+
+  defineTool({
+    name: "get_flame_analysis",
+    description:
+      "Computer-vision measurements of a run's ISS footage (pipeline/vision): when the flame was visible, its area and bounding frame in pixels, brightness, motion, frame-to-frame similarity (SSIM, mask IoU, DINOv2 contextual similarity and scene segments), QA flags, and the telemetry read from the camera overlay (AIR duct flow cm/s, FAN volts, uncalibrated RAD radiometer) with an OCR date audit. Pass an experiment id (uses its analysed primary footage) or a videoId. points > 0 adds thinned time series. Call this before stating any image-derived number.",
+    input: z.strictObject({
+      id: ExperimentRef.optional(),
+      videoId: z.string().regex(/^[0-9a-f]{24}$/i).optional().describe("A specific video (from get_experiment)"),
+      points: z.number().int().min(0).max(120).default(0).describe("Samples per time series to include (0 = summary only)"),
+    }),
+    execute: ({ id, videoId, points }) => {
+      if (!getVisionIndex()) {
+        return { ok: false, content: { error: "The vision layer has not been built for this dataset." }, summary: "No vision layer", evidence: [] };
+      }
+      let e: Experiment | undefined;
+      let targetVideo = videoId;
+      if (id) {
+        e = getExperiment(id);
+        if (!e) return notFound(id);
+        if (!targetVideo) {
+          const entries = visionEntriesFor(e.id);
+          const best = entries.find((x) => x.status === "ok") ?? entries[0];
+          if (!best) {
+            return { ok: false, content: { error: `Run ${e.testId} has no analysed video.` }, summary: `No vision data for ${e.testId}`, evidence: [experimentEvidence(e)] };
+          }
+          targetVideo = best.videoId;
+        }
+      }
+      if (!targetVideo) return { ok: false, content: { error: "Pass id or videoId." }, summary: "Missing id", evidence: [] };
+      const v = getVisionVideo(targetVideo);
+      if (!v) return { ok: false, content: { error: `No vision analysis for video ${targetVideo}.` }, summary: "No vision data", evidence: [] };
+      e = e ?? getExperiment(v.experimentId);
+      const others = visionEntriesFor(v.experimentId)
+        .filter((x) => x.videoId !== v.videoId)
+        .map((x) => ({ videoId: x.videoId, kind: x.kind, status: x.status }));
+      return {
+        ok: true,
+        content: { ...digestVideo(v, points), otherVideosOfRun: others },
+        summary: `Read flame vision for ${e?.testId ?? v.experimentId}${v.status === "ok" ? "" : ` (${v.status})`}`,
+        evidence: [
+          ...(e ? [experimentEvidence(e)] : []),
+          { id: `vision:${v.videoId}`, label: `Vision ${e?.testId ?? ""} ${v.kind ?? ""}`.trim(), kind: "file", href: `/api/vision/${v.videoId}` },
+        ],
+      };
+    },
+  }),
+
+  defineTool({
+    name: "get_flame_at_time",
+    description:
+      "What the vision layer measured at one moment of a video: flame visible or not, area, luminous core and bounding frame (px), centroid, motion, similarity to the previous frame, overlay telemetry (AIR, FAN, RAD) at that second, QA flags and the DINOv2 image phase. Use dashboard_state.video (videoId + timeS) for questions about 'now' / 'this frame'.",
+    input: z.strictObject({
+      videoId: z.string().regex(/^[0-9a-f]{24}$/i),
+      timeS: z.number().finite().nonnegative().describe("Seconds from the start of the video"),
+    }),
+    execute: ({ videoId, timeS }) => {
+      const v = getVisionVideo(videoId);
+      if (!v) return { ok: false, content: { error: `No vision analysis for video ${videoId}.` }, summary: "No vision data", evidence: [] };
+      const e = getExperiment(v.experimentId);
+      const at = frameAt(v, timeS);
+      return {
+        ok: true,
+        content: at,
+        summary: `Read the flame at ${timeS.toFixed(1)} s in ${e?.testId ?? v.experimentId}`,
+        evidence: e ? [experimentEvidence(e)] : [],
+      };
+    },
+  }),
+
+  defineTool({
+    name: "rank_flame_metrics",
+    description:
+      "Rank analysed videos across the dataset by an image-derived metric (flame-visible time, peak/mean flame area, bounding-frame size, brightness, optical-flow motion, shape stability, dominant area oscillation, peak radiometer signal, first-flame time). Optional filters by principal investigator or run ids. Returns run ids with values and units — use it for 'which runs had the largest/longest/most stable flame' questions.",
+    input: z.strictObject({
+      metric: z.enum(Object.keys(RANK_METRICS) as [RankMetric, ...RankMetric[]]),
+      order: z.enum(["desc", "asc"]).default("desc"),
+      limit: z.number().int().min(1).max(30).default(10),
+      principalInvestigator: z.string().optional().describe("Exact PI surname, e.g. Olson"),
+      ids: z.array(ExperimentRef).max(40).optional().describe("Restrict to these runs"),
+    }),
+    execute: ({ metric, order, limit, principalInvestigator, ids }) => {
+      const index = getVisionIndex();
+      if (!index) return { ok: false, content: { error: "The vision layer has not been built for this dataset." }, summary: "No vision layer", evidence: [] };
+      const spec = RANK_METRICS[metric];
+      const allowed = ids?.map((x) => getExperiment(x)?.id).filter((x): x is string => Boolean(x));
+      const rows = index.videos
+        .filter((v) => v.status === "ok" && v.kind === "primary")
+        .map((v) => ({ v, e: getExperiment(v.experimentId), value: spec.get(v) }))
+        .filter((r) => r.e && r.value != null)
+        .filter((r) => !principalInvestigator || r.e!.principalInvestigator.toLowerCase() === principalInvestigator.toLowerCase())
+        .filter((r) => !allowed || allowed.includes(r.e!.id))
+        .sort((a, b) => (order === "desc" ? (b.value as number) - (a.value as number) : (a.value as number) - (b.value as number)))
+        .slice(0, limit);
+      return {
+        ok: true,
+        content: {
+          metric: spec.label,
+          unit: spec.unit,
+          note: "Image-derived from the primary ISS camera view; pixels of the 720×480 frame, not physical lengths. Camera gain differs between tests, so brightness and radiometer values compare only loosely across runs.",
+          rows: rows.map((r) => ({ id: r.e!.id, testId: r.e!.testId, principalInvestigator: r.e!.principalInvestigator, videoId: r.v.videoId, value: r.value })),
+        },
+        summary: `Ranked ${rows.length} runs by ${spec.label.toLowerCase()}`,
+        evidence: rows.map((r) => experimentEvidence(r.e!)),
       };
     },
   }),

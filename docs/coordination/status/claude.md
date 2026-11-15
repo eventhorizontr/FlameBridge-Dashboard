@@ -3,17 +3,26 @@
 _Updated: 2026-11-15 (+03:00)_
 
 ## Now
-- Phase 2 lead lane complete; reviewing Codex PRs (#45 audit, #48 polish) as they land.
+- ADR-017 flame vision layer (branch `claude/vision-flame-analytics`). The full build v1.1.0 is running over all 296 PSI-25 files. After it finishes:
+  - DINOv2 pass
+  - `validate.py`
+  - one PR containing the data
 
 ## Done
-- #49 shell responsiveness + AI navigation race + assistant tables (PR #53) — live E2E with gpt-6.1-sol
-- #46 review: Codex PR #52 merged (DOIs verified on Crossref) + follow-up #54
-- #19 part 1: WCAG 2.1 AA clean on all routes (PR #55); perf measured; demo script `docs/DEMO.md`
-- Earlier: data stack (#42), OpenAI (#43), UI stack (#44), team restructure (#50), secret guard (#51)
+- Flame vision:
+  - pipeline: segmentation, overlay OCR CNN, similarity, DINOv2, keyframes, QA sheets, validation
+  - contract `src/types/vision.ts`, `/api/vision`
+  - AI tools `get_flame_analysis` / `rank_flame_metrics`, `setFlameOverlay`
+  - viewer overlay (frame / outline / flame only / follow), flame scrub strip, save frame, analytics panel
+- #49 shell responsiveness + AI navigation race + assistant tables (PR #53)
+- #46 review of Codex PR #52 + follow-up #54
+- #19 part 1: WCAG 2.1 AA (PR #55)
+- Demo script `docs/DEMO.md`, now with flame vision steps
 
 ## Next
-- #11 Vercel once the owner imports the repo; production smoke test with docs/DEMO.md
-- Next phase (owner): legendary UI redesign
+- Merge the vision PR. Then Codex picks up #57: explorer metrics, Learn "flame only" chapter, visual QA sweep.
+- #11 Vercel once the owner imports the repo.
+- Next phase (owner): legendary UI redesign.
 
 ## Blockers / needs
 - #10 (human): Vercel import + OPENAI_API_KEY in Vercel env; Actions billing

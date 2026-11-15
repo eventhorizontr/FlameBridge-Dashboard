@@ -43,6 +43,13 @@ const fmtTime = (s: number): string => {
   return `${m}:${rest}`;
 };
 
+const OVERLAY_LABELS = {
+  off: "off",
+  box: "bounding frame",
+  outline: "flame outline",
+  isolate: "flame only",
+} as const;
+
 const isExperimentRoute = (route: string) => route.startsWith("/experiments/");
 
 export const routeForExperiment = (id: string) => `/experiments/${encodeURIComponent(id)}` as const;
@@ -156,6 +163,17 @@ export const ACTIONS: Registry = {
     undoable: false,
     reduce: (_s, a, seq) => ({ highlight: { target: a.target, seq } }),
     label: (a) => `Highlighted ${a.target}`,
+  },
+  setFlameOverlay: {
+    touches: ["flameOverlay"],
+    undoable: true,
+    reduce: (s, a) => ({ flameOverlay: { ...s.flameOverlay, ...a.overlay } }),
+    label: (a) => {
+      const parts: string[] = [];
+      if (a.overlay.mode) parts.push(OVERLAY_LABELS[a.overlay.mode]);
+      if (a.overlay.follow !== undefined) parts.push(a.overlay.follow ? "follow flame on" : "follow flame off");
+      return `Flame overlay: ${parts.join(", ") || "unchanged"}`;
+    },
   },
 };
 

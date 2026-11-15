@@ -101,3 +101,20 @@ decision. Its UI stack (#33, #35–#41) was reviewed and merged in #44. The UI l
 owns data-heavy views and science copy (`src/components/{viz,lab}`, `src/app/(dashboard)`,
 `src/app/(learn)`). Visual QA moves to headless-browser screenshots at 390/768/1440 px attached
 to every UI PR. `GEMINI.md`, `.agent/` and the Antigravity kickoff are removed.
+
+**ADR-017 · 2026-11-15 · accepted** (contract) — **Flame vision layer.** Owner request: frame
+the flame in the footage, measure inside it, chart it, show "flame only", extract frames and
+compute frame-to-frame similarity, for PSI-25 and future datasets, usable by the AI.
+Decisions: (1) *Classical, documented segmentation* (background percentile + noise-scaled
+hysteresis + halo/grouping rules) instead of a trained segmentation net — there is no ground
+truth to train or validate a net against, and every threshold here is inspectable and testable.
+(2) *Learning where labels exist for free*: the overlay OCR is a CNN trained only on labels the
+data provides (test-matrix dates, clock continuity), validated on held-out videos. (3) *DINOv2*
+(self-supervised, no fine-tuning) for contextual similarity; loaded via `timm` (weights only, no
+remote code). (4) Units are pixels / 8-bit counts / overlay display units — never millimetres
+(no visible scale). (5) Per-frame QA flags instead of silent filtering; "2nd view" monitor
+recordings are skipped with a reason. (6) Output = `public/data/<acc>/vision/` (index, per-video
+series at 5 Hz, lazily loaded contours, keyframe sprites); contract `src/types/vision.ts`;
+access via `src/lib/vision`, `/api/vision`, AI tools `get_flame_analysis` / `rank_flame_metrics`
+and the `setFlameOverlay` action. Ownership: `pipeline/vision/**`, `src/lib/vision/**`,
+`src/components/vision/**`, `src/app/api/vision/**` and `public/data/*/vision/**` → Claude.

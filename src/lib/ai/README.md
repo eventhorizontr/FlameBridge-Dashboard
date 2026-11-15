@@ -37,3 +37,13 @@ const {
 
 Dashboard actions from the AI are already applied to the store (source `"ai"`, grouped per
 reply) by the hook — the panel only visualises them.
+
+## Flame vision tools (ADR-017)
+- `get_flame_analysis {id | videoId, points}` — digest of the computer-vision analysis of a run's
+  footage (`src/lib/vision/digest.ts`): flame events, area/frame in px, values at the peak, QA flag
+  counts, OCR'd overlay telemetry (AIR cm/s, FAN V, RAD uncalibrated) with read rates and a date
+  audit, DINOv2 image phases; `points > 0` adds thinned series.
+- `rank_flame_metrics {metric, order, limit, principalInvestigator?, ids?}` — ranks primary videos
+  across the dataset (`RANK_METRICS` in `src/lib/vision/server.ts`).
+- The model shows results with `setFlameOverlay` + `seekVideo`. The system prompt forbids
+  converting pixels to millimetres and requires naming QA flags. Same data over HTTP: `/api/vision`.

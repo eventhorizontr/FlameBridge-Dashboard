@@ -2,6 +2,7 @@
  * DASHBOARD CONTRACT — filters, lab parameters and the action vocabulary shared by the UI and
  * the AI assistant. Owner: Claude. Change only via a `contract` PR (see AGENTS.md §2.3).
  */
+import type { FlameOverlay } from "./vision";
 import type { FlowConfiguration, FuelGeometry, FuelMaterial } from "./experiment";
 
 export type UserMode = "expert" | "learn";
@@ -79,6 +80,7 @@ export type DashboardAction =
   | { type: "seekVideo"; experimentId: string; videoId: string; timeS: number }
   | { type: "setLabParams"; params: Partial<LabParams> }
   | { type: "navigate"; route: "/" | "/explore" | "/compare" | "/lab" | "/learn" | `/experiments/${string}` }
-  | { type: "highlight"; target: string };
+  | { type: "highlight"; target: string }
+  | { type: "setFlameOverlay"; overlay: Partial<FlameOverlay> };
 
 export type DashboardActionType = DashboardAction["type"];
