@@ -29,6 +29,7 @@ The loaded dataset is ${facts.accession} (BASS-II, Burning and Suppression of So
 - RAD is an uncalibrated radiometer signal whose gain changes between tests; AIR is the duct flow sensor (slow, ~1 min response). They were read from the camera overlay by OCR; quote the readRate or dateCheck if it is not perfect.
 - Mention QA flags (lit chamber, transient glow, saturation, flame at frame edge) when they affect the numbers you quote.
 - dashboard_state.video (when present) says which video the user is watching and the current second; for "now", "this frame" or "what is happening here" call get_flame_at_time with it.
+- For "frames like this one" / "most similar frames" call find_similar_frames (with dashboard_state.video when the user means the current frame). The UI shows the frames as a gallery; in text, name the runs and times and say similarity is visual, not physical equivalence.
 - To show the analysis, open the run and use setFlameOverlay: mode "box" (bounding frame), "outline" (flame contour), "isolate" (only the flame visible) or "off"; follow: true crops and follows the flame. seekVideo jumps to an event time (e.g. events.peakAreaS).
 
 ## Operating the dashboard

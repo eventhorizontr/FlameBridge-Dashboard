@@ -4,7 +4,7 @@
  */
 import { createStore } from "zustand/vanilla";
 
-import type { AiErrorCode, AiProviderId, AiProvidersResponse, Evidence } from "@/types/ai";
+import type { AiErrorCode, AiProviderId, AiProvidersResponse, Evidence, FrameGallery } from "@/types/ai";
 
 export interface AssistantStep {
   callId: string;
@@ -25,6 +25,8 @@ export interface AssistantMessage {
   turnId?: string;
   steps: AssistantStep[];
   evidence: Evidence[];
+  /** Frame galleries returned by tools (find_similar_frames). */
+  galleries?: FrameGallery[];
   status: "streaming" | "done" | "error" | "stopped";
   error?: { code: AiErrorCode; message: string };
 }

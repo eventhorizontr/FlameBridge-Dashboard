@@ -60,6 +60,26 @@ export interface Evidence {
   href?: string;
 }
 
+/** One frame of the similarity index, with its thumbnail tile. */
+export interface FrameMatch {
+  experimentId: string;
+  testId: string;
+  videoId: string;
+  kind: string | null;
+  timeS: number;
+  /** Cosine similarity of DINOv2 embeddings (1 = identical). */
+  similarity: number;
+  thumb: { sheet: string; index: number; cols: number; rows: number; tileW: number; tileH: number };
+}
+
+/** A set of frames to show as a gallery (e.g. "frames most like this one"). */
+export interface FrameGallery {
+  title: string;
+  method: string;
+  query: FrameMatch;
+  frames: FrameMatch[];
+}
+
 /**
  * `/api/ai` response: `application/x-ndjson`, one event per line, in order.
  * `actions` events carry server-validated dashboard actions — the client applies them via
@@ -76,6 +96,8 @@ export type AiStreamEvent =
       ok: boolean;
       summary: string;
       evidence: Evidence[];
+      /** Frames the tool found (find_similar_frames) — rendered as a clickable gallery. */
+      gallery?: FrameGallery;
     }
   | { type: "actions"; callId: string; actions: DashboardAction[] }
   | { type: "done"; stopReason: "end" | "max_steps" | "refusal" | "max_tokens" | "aborted" }

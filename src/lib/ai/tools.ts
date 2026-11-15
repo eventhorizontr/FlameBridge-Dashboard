@@ -9,13 +9,14 @@ import { z } from "zod";
 import { representativeAirflow } from "@/lib/data";
 import { findClosestExperiments } from "@/lib/science/matching";
 import { checkReferences } from "@/lib/store/references";
-import type { Evidence } from "@/types/ai";
+import type { Evidence, FrameGallery } from "@/types/ai";
 import type { DashboardAction } from "@/types/dashboard";
 import type { Experiment } from "@/types/experiment";
 import { DashboardActionListSchema, DashboardActionSchema, ExperimentFiltersSchema, LabParamsSchema } from "@/types/schemas";
 
 import { digestVideo, frameAt } from "@/lib/vision/digest";
 import { getVisionIndex, getVisionVideo, RANK_METRICS, visionEntriesFor, type RankMetric } from "@/lib/vision/server";
+import { similarFrames } from "@/lib/vision/similar";
 
 import { catalogIndex, datasetFacts, filterExperiments, getExperiment, loadDataset, loadExperiments } from "./catalog";
 
@@ -28,6 +29,8 @@ export interface ToolOutcome {
   evidence: Evidence[];
   /** Validated actions for the client to apply (dashboard_actions only). */
   actions?: DashboardAction[];
+  /** Frames to show as a gallery in the assistant message. */
+  gallery?: FrameGallery;
 }
 
 export interface AgentTool<S extends z.ZodType = z.ZodType> {
@@ -338,6 +341,35 @@ export const TOOLS: AgentTool[] = [
         content: at,
         summary: `Read the flame at ${timeS.toFixed(1)} s in ${e?.testId ?? v.experimentId}`,
         evidence: e ? [experimentEvidence(e)] : [],
+      };
+    },
+  }),
+
+  defineTool({
+    name: "find_similar_frames",
+    description:
+      "Contextual frame search: the frames across all ISS videos whose DINOv2 embedding is most similar to a given moment (videoId + timeS), e.g. 'show me frames that look like this one'. Returns runs, times and similarity, and the client shows them as a clickable thumbnail gallery. scope 'other-runs' (default) excludes the query's own run. Use dashboard_state.video for 'this frame'. Similarity is visual likeness, not a physical equivalence — say so.",
+    input: z.strictObject({
+      videoId: z.string().regex(/^[0-9a-f]{24}$/i),
+      timeS: z.number().finite().nonnegative(),
+      k: z.number().int().min(1).max(24).default(12),
+      scope: z.enum(["other-runs", "all"]).default("other-runs"),
+    }),
+    execute: ({ videoId, timeS, k, scope }) => {
+      const testIds = new Map(loadExperiments().map((e) => [e.id, e.testId]));
+      const result = similarFrames(videoId, timeS, { k, scope }, "PSI-25", testIds);
+      if ("error" in result) return { ok: false, content: { error: result.error }, summary: "No similar frames", evidence: [] };
+      const runs = [...new Set(result.frames.map((f) => f.experimentId))];
+      return {
+        ok: true,
+        content: {
+          query: { testId: result.query.testId, timeS: result.query.timeS },
+          method: result.method,
+          frames: result.frames.map((f) => ({ testId: f.testId, experimentId: f.experimentId, videoId: f.videoId, timeS: f.timeS, similarity: f.similarity })),
+        },
+        summary: `Found ${result.frames.length} similar frames in ${runs.length} runs`,
+        evidence: runs.map((id) => getExperiment(id)).filter((e): e is Experiment => Boolean(e)).map(experimentEvidence),
+        gallery: result,
       };
     },
   }),

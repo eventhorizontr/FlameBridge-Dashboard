@@ -8,6 +8,7 @@ import { useDispatch } from "@/lib/store";
 import type { Experiment } from "@/types/experiment";
 import type { VisionVideo } from "@/types/vision";
 
+import { SimilarFrames } from "./similar-frames";
 import { formatTime, smooth, TimeChart, useWidth, type Band } from "./time-chart";
 import { keyframeUrl, usePlayback, useVisionVideo } from "./use-vision";
 
@@ -252,6 +253,8 @@ function Analytics({
       </div>
 
       {emb && <Recurrence a={a} playheadS={playheadS} onSeek={onSeek} />}
+
+      <SimilarFrames videoId={a.videoId} timeS={playheadS ?? ev.peakAreaS ?? ev.firstFlameS ?? 0} />
 
       <div className="flex flex-wrap items-center gap-2 text-[0.6875rem] text-[var(--text-3)]">
         <span className="inline-flex items-center gap-1.5">

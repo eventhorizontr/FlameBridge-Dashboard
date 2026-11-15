@@ -114,7 +114,15 @@ export function runAgentTurn(req: AiRequest, signal: AbortSignal, provider?: AiP
           runTool: (callId, name, input) => {
             emit({ type: "tool_call", callId, name, input });
             const outcome = executeTool(name, input);
-            emit({ type: "tool_result", callId, name, ok: outcome.ok, summary: outcome.summary, evidence: outcome.evidence });
+            emit({
+              type: "tool_result",
+              callId,
+              name,
+              ok: outcome.ok,
+              summary: outcome.summary,
+              evidence: outcome.evidence,
+              ...(outcome.gallery ? { gallery: outcome.gallery } : {}),
+            });
             if (outcome.ok && outcome.actions?.length) emit({ type: "actions", callId, actions: outcome.actions });
             return outcome;
           },
