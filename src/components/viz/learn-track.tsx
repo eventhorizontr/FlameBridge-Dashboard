@@ -14,7 +14,6 @@ import {
   GitCompareArrows,
   Layers,
   ShieldAlert,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -566,7 +565,6 @@ function InteractiveBadgeIcon({ chapter }: { chapter: LearnChapter }) {
 }
 
 export function LearnTrack({ dataset }: LearnTrackProps) {
-  const mode = useDashboard((s) => s.mode);
   const labParams = useDashboard((s) => s.labParams);
   const dispatch = useDispatch();
 
@@ -637,36 +635,19 @@ export function LearnTrack({ dataset }: LearnTrackProps) {
       {/* Header + Progress Summary */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
         <div className="space-y-1 min-w-0">
-          <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-            {dataset.accession} · BASS-II · GUIDED CURRICULUM · {LEARN_CHAPTERS.length} CHAPTERS
-          </p>
-          <h1 className="text-[1.5rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">
-            Explore &amp; Learn: Fire in Freefall
-          </h1>
-          <p className="text-[0.875rem] text-[var(--text-2)] max-w-3xl">
-            Explore gas transport, airflow, and recorded oxygen conditions using ISS footage and measurements from NASA&apos;s {dataset.count}-run PSI-25 archive.
+          <h1 className="text-[1.75rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">Learn</h1>
+          <p className="text-[0.9375rem] text-[var(--text-2)] max-w-3xl">
+            Five short chapters on why flames behave differently in orbit, each on a real ISS burn.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <Badge variant="neutral">
-            <span className="num">{visitedCount}/5</span> Chapters Viewed
+            <span className="num">{visitedCount}/{LEARN_CHAPTERS.length}</span> chapters
           </Badge>
           <Badge variant={solvedCount === LEARN_CHAPTERS.length ? "good" : "accent"}>
-            <span className="num">{solvedCount}/5</span> Quizzes Solved
+            <span className="num">{solvedCount}/{LEARN_CHAPTERS.length}</span> quizzes
           </Badge>
-          {mode !== "learn" ? (
-            <Button
-              size="sm"
-              variant="accent-soft"
-              onClick={() => dispatch({ type: "setMode", mode: "learn" })}
-            >
-              <Sparkles className="size-3.5" aria-hidden="true" />
-              Switch UI to Explore &amp; Learn Mode
-            </Button>
-          ) : (
-            <Badge variant="good">Explore &amp; Learn Display Mode Active</Badge>
-          )}
         </div>
       </div>
 
