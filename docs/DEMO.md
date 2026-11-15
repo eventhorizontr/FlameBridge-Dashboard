@@ -29,6 +29,12 @@ Mention the DOI chip: *every number on screen traces to the NASA source.*
    > is one click away."
 3. Double-click **O13a** → the flame viewer. Press **→** a few times: frame-by-frame NASA footage
    with the recorded airflow sequence 5 → 2 → 0 cm/s underneath.
+4. **Flame vision** (toolbar above the video): *Frame* → *Outline* → *Flame only* → *Follow flame*.
+   > "Every one of the ~300 ISS videos was analysed by computer vision: the flame is framed,
+   > measured in pixels, and the telemetry burned into the picture — duct airflow, fan, radiometer —
+   > was read back by a small neural network trained only on labels the data itself provides."
+   Point at the flame strip under the timeline, then scroll to **Flame Geometry, Telemetry & Frame
+   Similarity**: area, RAD and AIR in sync with the playhead, the DINOv2 similarity map and its phases.
 
 ## 3 · The AI drives the dashboard (1:05–1:55) — assistant panel
 
@@ -37,6 +43,8 @@ Open **Research AI** (⌘K → "Ask AI" also works). Type, in this order:
 1. *"Filter the explorer to PMMA rods below 17% oxygen that have video."*
    → watch the filters, URL and count change by themselves; the timeline shows each step.
 2. *"Compare B3 and O13a side by side."* → it opens `/compare` with synchronized footage.
+   *(Alternative, 20 s)* *"When was the flame in M2 largest and what did the radiometer read? Show only
+   the flame."* → `get_flame_analysis` + open run, seek to the peak, *Flame only* overlay.
 3. Click **Undo turn** → the dashboard rewinds. > "Every AI action is visible and reversible."
 
 Point at the evidence chips: answers cite the exact runs; the model badge shows `gpt-6.1-sol`.
@@ -74,7 +82,7 @@ Switch to **Explore & Learn**. Show chapter 1 with the B3 footage and one quiz a
 | Criterion | Evidence in the demo |
 |---|---|
 | Impact & clarity | Step 1 problem statement, Learn mode |
-| Scientific rigour | QA chips, raw cells, envelope warning, citations with DOIs |
+| Scientific rigour | QA chips, raw cells, envelope warning, citations with DOIs; vision QA flags, OCR audit (AIR vs. test-matrix set-points), pixels never shown as mm |
 | Design excellence | Orbital Instrument UI, responsive, WCAG 2.1 AA (axe: 0 violations) |
 | Working AI agent operating the UI | Step 3: filters, navigation, compare, undo, What-if setup |
 | Real NASA data end to end | PSI API → pipeline → validated JSON → live S3 footage |
