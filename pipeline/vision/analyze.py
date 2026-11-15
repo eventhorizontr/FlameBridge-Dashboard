@@ -174,6 +174,16 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
     params = profile.segmentation
     reader = OsdReader(profile.osd) if profile.osd else None
     registration = register_video(cap, frames, reader) if reader else None
+    if reader is not None and registration is None:
+        if video.get("kind") == "still-sequence":
+            reader = None  # Nikon still-camera slideshow: no overlay, but the flame is measurable
+        else:
+            cap.release()
+            return {**base, "status": "not-instrument-footage",
+                    "reason": "No BASS camera overlay found: this file is not instrument-camera footage "
+                              "(crew/lab camera or loss-of-signal recording).",
+                    "source": {"fps": round(fps, 5), "frameCount": frames, "durationS": round(frames / fps, 3),
+                               "width": width, "height": height}}
     box = osd_box(registration, reader, width)
     exclude_work = seg.overlay_exclusion((height, width), box, params)
     exclude_full = cv2.resize(exclude_work.astype(np.uint8), (width, height),
@@ -324,7 +334,7 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
 
     # ---- overlay telemetry
     osd_out = None
-    if reader is not None:
+    if reader is not None and registration is not None:
         fields = {}
         for f in reader.layout.fields:
             cleaned = clean_osd([r["osd"].get(f.key) if r["valid"] else None for r in rows])
