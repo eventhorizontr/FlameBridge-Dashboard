@@ -17,7 +17,9 @@ by NASA, and no NASA logo or insignia is used.
 ## Presentation and video
 
 The presentation video is produced outside this repository. Any generated scenes, voice-over or
-music in it are credited in the video's own description. Nothing in this repository is
+music in it are credited in the video's own description. The demo video is at https://youtu.be/5k1sTZwlpyk;
+its poster frames (`public/landing/demo-poster.webp`, `docs/media/demo-video.jpg`) are taken from
+that video. On the landing page it loads from youtube-nocookie.com only after the viewer presses play. Nothing in this repository is
 AI-generated media.
 
 ## Third-party code
