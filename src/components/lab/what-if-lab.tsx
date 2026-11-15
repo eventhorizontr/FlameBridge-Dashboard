@@ -32,6 +32,7 @@ import {
   representativeAirflow,
 } from "@/components/viz/dataset-queries";
 import { FlameViewer } from "@/components/viz/flame-viewer";
+import { runPressureKpa } from "@/lib/science/pressure";
 
 import { Envelope3D } from "./envelope-3d";
 import { DEFAULT_LAB_PARAMS, useDashboard, useDispatch } from "@/lib/store";
@@ -266,6 +267,10 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const groupSizes = sameGroupRuns
     .map((e) => characteristicSizeMm(e.fuel))
     .filter((v): v is number => v !== null);
+  // stated run pressures (ADR-021); empty for PSI-25, so the pressure track shows no measured ticks
+  const recordedPressures = dataset.experiments
+    .map(runPressureKpa)
+    .filter((v): v is number => v !== null);
 
   // D3 Envelope plot setup
   const svgW = 640;
@@ -380,6 +385,21 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 ? "A same-material, same-geometry ISS experiment exists within normalized distance ≤ 0.25 and your query lies inside the measured min–max hull."
                 : "Your dialed conditions fall outside NASA BASS-II's measured envelope for this fuel family. Synthetic flames are never fabricated—only nearest measured analog runs and exact parameter deltas are listed."}
             </p>
+            {result.pressure.status !== "not-queried" && (
+              <p className="text-[0.8125rem] text-[var(--text-2)]" data-testid="lab-pressure-coverage">
+                <span className="font-medium text-[var(--text-1)]">Pressure: </span>
+                {result.pressure.note}
+                {result.pressure.queryO2PartialPressureKpa !== null &&
+                  ` Query O₂ partial pressure: ${result.pressure.queryO2PartialPressureKpa.toFixed(1)} kPa.`}
+                {result.pressure.sources.map((s) =>
+                  s.quote ? (
+                    <span key={s.accession} className="block text-[0.75rem] text-[var(--text-3)]">
+                      {s.accession}: &ldquo;{s.quote}&rdquo; ({s.file.split("/").pop()})
+                    </span>
+                  ) : null,
+                )}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -452,6 +472,43 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 />
                 <span>Ignore characteristic dimension (useful for fabrics without thickness)</span>
               </label>
+            </div>
+
+            {/* Total pressure (ADR-021): no PSI-25 run states one, so the track has no measured ticks */}
+            <div className="space-y-2 pt-2 border-t border-[var(--line)]">
+              <CoverageSlider
+                id="lab-pressure-slider"
+                label="Total Pressure"
+                unit="kPa"
+                value={labParams.pressureKpa ?? 56.5}
+                min={20}
+                max={110}
+                step={0.5}
+                allValues={recordedPressures}
+                groupValues={recordedPressures}
+                disabled={labParams.pressureKpa === null}
+                onChange={(pressureKpa) => dispatch({ type: "setLabParams", params: { pressureKpa } })}
+              />
+              <label className="inline-flex items-center gap-2 text-[0.75rem] text-[var(--text-2)] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={labParams.pressureKpa === null}
+                  onChange={(e) =>
+                    dispatch({ type: "setLabParams", params: { pressureKpa: e.target.checked ? null : 56.5 } })
+                  }
+                  className="size-3.5 accent-[var(--accent)]"
+                />
+                <span>Ignore pressure (no BASS-II run records one)</span>
+              </label>
+              <div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => dispatch({ type: "setLabParams", params: { o2Pct: 34, pressureKpa: 56.5 } })}
+                >
+                  Exploration atmosphere: 34 % O₂ · 56.5 kPa (NASA/TP-2010-216134)
+                </Button>
+              </div>
             </div>
 
             {/* Fuel Material */}
@@ -851,6 +908,9 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                         ΔFlow: {formatSigned(match.deltas.airflowCmS, "cm/s")} (
                         {formatMetricValue(repAir, { unit: "cm/s" }).text})
                       </Badge>
+                      {match.deltas.pressureKpa !== null && (
+                        <Badge>ΔPressure: {formatSigned(match.deltas.pressureKpa, "kPa")}</Badge>
+                      )}
                       {match.deltas.characteristicSizeMm !== null && (
                         <Badge>
                           ΔSize: {formatSigned(match.deltas.characteristicSizeMm, "mm", 2)} (
