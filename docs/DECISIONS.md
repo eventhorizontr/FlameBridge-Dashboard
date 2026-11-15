@@ -146,3 +146,15 @@ Pixels are linearised from sRGB, masked to the measured flame (main flame only; 
 dropped); values are relative emission and clipped pixels are reported. "Auto" picks the valid model
 per sample; the studio drives the viewer video so the reconstruction follows playback. Deps:
 @react-three/postprocessing, postprocessing (bloom).
+
+**ADR-020 · 2026-11-15 · accepted** — **"Orbital Glass" UI and a find → read → compare
+information architecture** (full IA in [UX.md](UX.md)). The left rail and context bar are replaced
+by a sticky glass top navigation (Atlas · Compare · Lab · Learn, ⌘K run search, Ask AI) and a
+phone tab bar. The overview page becomes a landing page whose every figure is computed from the
+published data (`src/lib/vision/landing.ts`) over drifting real flame posters (OSD blanked).
+`/explore` becomes the **Atlas**: one facet set feeding three lenses (Gallery default, Map, Table;
+`?view=`). The run page keeps the viewer on screen and moves analysis into tabs (Signals · 3D
+Studio · Conditions & source) instead of one long scroll. Tokens: deeper `--bg` (#04060b),
+translucent surfaces with backdrop blur, flame/plasma gradients; chart palettes stay valid because
+the composited `--surface-2` (≈ #101623) is within 1 step of the validated #0f1520. Motion respects
+`prefers-reduced-motion`. No dependency added.

@@ -13,12 +13,13 @@ export interface PanelProps extends HTMLAttributes<HTMLDivElement> {
   padded?: boolean;
 }
 
+const GLASS = "backdrop-blur-xl backdrop-saturate-150 shadow-[inset_0_1px_0_var(--glow-line)]";
+
 const SURFACE_CLASSES: Record<PanelSurface, string> = {
-  "surface-1": "bg-[var(--surface-1)] border border-[var(--line)]",
-  "surface-2": "bg-[var(--surface-2)] border border-[var(--line)]",
-  "surface-3": "bg-[var(--surface-3)] border border-[var(--line-strong)]",
-  glass:
-    "bg-[rgb(11_16_25/0.72)] backdrop-blur-md border border-[var(--line-strong)]",
+  "surface-1": `bg-[var(--surface-1)] border border-[var(--line)] ${GLASS}`,
+  "surface-2": `bg-[var(--surface-2)] border border-[var(--line)] ${GLASS}`,
+  "surface-3": `bg-[var(--surface-3)] border border-[var(--line-strong)] ${GLASS}`,
+  glass: `bg-[var(--surface-1)] border border-[var(--line-strong)] ${GLASS} shadow-[var(--shadow-float)]`,
 };
 
 /**
@@ -40,7 +41,7 @@ export function Panel({
       {...highlightProps}
       {...props}
       className={cn(
-        "rounded-[var(--radius-md)] text-[var(--text-1)]",
+        "rounded-[var(--radius-lg)] text-[var(--text-1)]",
         SURFACE_CLASSES[surface],
         padded && "p-4 sm:p-5",
         highlightClassName,

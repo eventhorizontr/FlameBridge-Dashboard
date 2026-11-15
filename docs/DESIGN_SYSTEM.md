@@ -1,4 +1,4 @@
-# Design System — "Orbital Instrument"
+# Design System — "Orbital Glass" (ADR-020; evolves "Orbital Instrument")
 
 **North star:** the calm precision of a flight-control console meeting the beauty of a blue
 microgravity flame. Dark, quiet, exact — with light and colour reserved for *data* and *fire*.
@@ -18,17 +18,20 @@ Tokens live in [`src/app/globals.css`](../src/app/globals.css). **Components use
 ## 2. Colour
 | Token | Value | Use |
 |---|---|---|
-| `--bg` | `#06090f` | app background (near-black, blue-tinted) |
-| `--surface-1` | `#0b1019` | panels |
-| `--surface-2` | `#0f1520` | raised panels, chart surface (palette validated on this) |
-| `--surface-3` | `#151c29` | hover, inputs |
-| `--line` | `rgb(148 163 184 / 0.12)` | hairline borders, grid |
-| `--line-strong` | `rgb(148 163 184 / 0.24)` | focused borders, axes |
-| `--text-1` | `#e8edf5` | primary text |
-| `--text-2` | `#a3adbd` | secondary |
-| `--text-3` | `#7f899b` | muted / captions — ≥ 4.5:1 on every surface (WCAG AA, axe-verified) |
-| `--accent` | `#5aa9ff` | "microgravity blue" — interactive, focus, selection |
-| `--accent-soft` | `rgb(90 169 255 / 0.14)` | selection fills |
+| `--bg` | `#04060b` | app background; layered radial glows + faint 64 px grid on `body` |
+| `--bg-raise` | `#080c16` | solid raised chrome (nav pills, inner buttons) |
+| `--surface-1` | `rgb(17 23 37 / 0.62)` | glass panels (with `backdrop-blur-xl`, inset top highlight) |
+| `--surface-2` | `rgb(23 31 49 / 0.62)` | raised glass, chart surface — composites to ≈ `#101623`, within one step of the validated `#0f1520` |
+| `--surface-3` | `rgb(33 43 66 / 0.66)` | hover, inputs, active pills |
+| `--line` | `rgb(165 185 225 / 0.1)` | hairline borders, grid |
+| `--line-strong` | `rgb(165 185 225 / 0.2)` | focused borders, axes |
+| `--text-1` | `#edf1f8` | primary text |
+| `--text-2` | `#a9b3c4` | secondary |
+| `--text-3` | `#8590a3` | muted / captions — ≥ 4.5:1 on every surface (WCAG AA) |
+| `--accent` | `#7cc4ff` | "microgravity blue" — interactive, focus, selection |
+| `--accent-soft` | `rgb(124 196 255 / 0.14)` | selection fills |
+| `--grad-flame` | `#ffcf6e → #ff8a3d → #ff4f7b` | primary CTAs and the headline accent only (`.text-flame`) |
+| `.glass` | translucent + blur 18 px | floating hero / stat cards |
 | `--flame-core` | `#9fd4ff` | flame visual only (blue μg flame core) |
 | `--flame-edge` | `#ff8a3d` | flame visual only (soot / luminous edge) |
 | `--ember` | `#ff6b2c` | rare emphasis: ignition / extinction events |

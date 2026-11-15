@@ -19,13 +19,13 @@ async function ExperimentDetailLoader({ params }: { params: Promise<{ id: string
         icon={<FileQuestion className="size-5" />}
         eyebrow="Unknown Experiment Record"
         title={`Run "${decodedId}" was not found in ${dataset.accession}`}
-        description="Verify the run identifier (e.g. PSI-25:O1, PSI-25:B3, PSI-25:M5) or return to the Experiment Explorer to browse all 129 runs."
+        description="Verify the run identifier (e.g. PSI-25:O1, PSI-25:B3, PSI-25:M5) or return to the Atlas to browse all 129 runs."
         actions={
           <Link
             href="/explore"
             className="inline-flex items-center gap-2 min-h-9 px-3.5 py-1.5 rounded-[var(--radius-sm)] bg-[var(--accent-soft)] border border-[var(--accent)]/50 text-[0.875rem] text-[var(--accent)] hover:bg-[var(--accent)]/20"
           >
-            Back to Experiment Explorer
+            Back to the Atlas
           </Link>
         }
       />

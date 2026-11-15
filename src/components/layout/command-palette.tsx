@@ -20,11 +20,12 @@ import { cn, Kbd } from "@/components/ui";
 import { useAssistant } from "@/lib/ai/client/use-assistant";
 import { useDispatch } from "@/lib/store";
 
+import { useRunDirectory } from "./run-directory";
 import { shellUiStore, useShellUi } from "./shell-state";
 
 interface PaletteCommand {
   id: string;
-  group: "Navigate" | "Mode" | "Quick Filters" | "Representative Runs" | "AI Assistant";
+  group: "Runs" | "Navigate" | "Mode" | "Quick Filters" | "Representative Runs" | "AI Assistant";
   label: string;
   hint: string;
   icon: ReactNode;
@@ -45,6 +46,7 @@ export function CommandPalette() {
   const open = useShellUi((s) => s.paletteOpen);
   const dispatch = useDispatch();
   const { send } = useAssistant();
+  const runs = useRunDirectory();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -89,7 +91,7 @@ export function CommandPalette() {
       {
         id: "nav-explore",
         group: "Navigate",
-        label: "Experiment Explorer (129 runs)",
+        label: "Atlas — find a run (129 runs)",
         hint: "/explore",
         icon: <Compass className="size-4 text-[var(--accent)]" />,
         run: () => {
@@ -187,6 +189,25 @@ export function CommandPalette() {
           close();
         },
       },
+      ...(query.trim()
+        ? runs
+            .filter((r) => {
+              const q = query.trim().toLowerCase();
+              return [r.testId, r.pi, r.fuel, r.id].some((f) => f.toLowerCase().includes(q));
+            })
+            .slice(0, 12)
+            .map((r) => ({
+              id: `find-${r.id}`,
+              group: "Runs" as const,
+              label: `${r.testId} — ${r.pi} · ${r.fuel}${r.o2 != null ? ` · ${r.o2}% O₂` : ""}`,
+              hint: r.video ? "footage" : "no video",
+              icon: <ArrowRight className="size-4 text-[var(--flame-edge)]" />,
+              run: () => {
+                dispatch({ type: "navigate", route: `/experiments/${encodeURIComponent(r.id)}` });
+                close();
+              },
+            }))
+        : []),
       ...FEATURED_RUNS.map((r) => ({
         id: `run-${r.id}`,
         group: "Representative Runs" as const,
@@ -218,11 +239,12 @@ export function CommandPalette() {
     return base.filter(
       (c) =>
         c.id === "ai-open" ||
+        c.group === "Runs" ||
         c.label.toLowerCase().includes(q) ||
         c.hint.toLowerCase().includes(q) ||
         c.group.toLowerCase().includes(q),
     );
-  }, [dispatch, query, send]);
+  }, [dispatch, query, send, runs]);
 
   if (!open) return null;
 
