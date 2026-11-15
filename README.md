@@ -41,7 +41,7 @@ needed. It does not replace physical testing or certification.
 ## Problem and users
 
 NASA flew 129 solid-fuel fires on the International Space Station in the BASS-II campaign. The
-evidence sits in spreadsheets, PDFs and about 300 videos. A spacecraft fire-safety engineer
+evidence sits in spreadsheets, PDFs and 296 videos. A spacecraft fire-safety engineer
 cannot quickly ask "which real runs are closest to my cabin conditions, and how far are they?",
 and a student cannot see why a flame behaves differently in weightlessness.
 
@@ -218,7 +218,7 @@ Rebuild the data from NASA PSI (network): `pnpm data:psi25`. Vision layer:
 - **Licence** — code and docs: [MIT](LICENSE). NASA PSI data is CC0 1.0. Third-party data,
   media, brand assets and dependencies keep their own terms.
 - **Team Event Horizon** — Adil Sevim · Hakan Celep · Ceren Akgün · Muhammed Ensar Aktaş.
-- Built with AI coding agents (Claude Code, OpenAI Codex, Antigravity) under human direction —
+- Built with AI coding agents (Claude Code, OpenAI Codex, Antigravity until 2026-11-15) under human direction —
   [AGENTS.md](AGENTS.md), [decisions](docs/DECISIONS.md), [coordination](docs/coordination/PROTOCOL.md).
 
 Data courtesy of NASA's Physical Sciences Informatics system, BASS-II investigation (PIs:

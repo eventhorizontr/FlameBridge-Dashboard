@@ -18,16 +18,17 @@ science behind it is in [SCIENCE.md](SCIENCE.md).
 ## Our journey
 
 We did not start with fire. Our first idea in early September was a different space science
-project. When NASA announced the 2026 challenges, we chose "Flame in Freefall" because it asked a
-real open question, and we rebuilt our plan around it. The idea was first called FlameShift and
-became FlameBridge. From then on the team met regularly, split the work into seven packages with
+project. When NASA announced the 2026 challenges, "Flame in Freefall" stood out because it asked a real
+open question. Our first idea for it, FlameShift, came on 27 September. We committed to the
+challenge on 6 October, rebuilt our plan around it, and the idea became FlameBridge. From then on the team met regularly, split the work into seven packages with
 clear owners, and brought in expert advice as the work matured, well ahead of the competition.
 
 ![Key steps from early September to the competition on 14 and 15 November 2026](docs/media/our-road-timeline.png)
 
 Before the competition we prepared the method, the literature and a first panel. The application
 in this repository was then built in one continuous 24-hour run at the competition
-([AGENTS.md](AGENTS.md)), on the data NASA released for the challenge.
+([AGENTS.md](AGENTS.md)), on the data NASA released for the challenge. The last code change was
+merged on 15 November at 19:58 (+03:00). Commits after that change documentation only.
 
 ## How we worked
 
@@ -68,6 +69,8 @@ questions. We explained the project in plain terms and asked for their view or a
 - **18 to 19 October.** We widened the circle to researchers in Türkiye and abroad, graduate
   researchers included. The list grew to about 30 people, and we asked several of them for short
   meetings.
+- **Throughout the preparation.** An image-processing advisor at Gebze Technical University
+  advised us on our flame segmentation pipeline.
 - **29 October.** A working session on uncertainty quantification with Istanbul Technical
   University.
 - **2 November.** A working session with our combustion advisor at MIT.
@@ -85,7 +88,8 @@ questions. We explained the project in plain terms and asked for their view or a
   NASA recorded them and adds no kinetic interpretation.
 - **Measuring the flame.** An expert told us that pretrained models transfer poorly to flame
   images. In the submitted project the flame is measured with classical image processing, not
-  with a learned model.
+  with a learned model. A pretrained model (DINOv2) is used only to find visually similar frames,
+  never to measure the flame.
 
 Some of the methods discussed in these sessions are not part of the submitted build. What the
 build contains, and what it does not, is listed in [LIMITATIONS.md](LIMITATIONS.md).

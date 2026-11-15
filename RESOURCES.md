@@ -56,6 +56,7 @@ The literature is cited, not copied. No text or figure from these works is repro
 | FlameBridge mark, team mark and wordmark, horizon glow | Team design, made by hand without SI | Team |
 | Demo video and its two poster frames | Team production. Contains SI-generated content, marked with a visible watermark | Team |
 | Screenshots in `docs/` | Captures of the running app | Team |
+| Our Road figures (`docs/media/our-road-*.png`) | Charts of the team's own timeline and numbers | Team |
 | Fonts: [Geist and Geist Mono](https://vercel.com/font), [Unbounded](https://fonts.google.com/specimen/Unbounded) | Google Fonts through `next/font` | SIL Open Font License 1.1 |
 | Icons | [Lucide](https://lucide.dev) (`lucide-react`) | ISC |
 
@@ -72,7 +73,7 @@ identifier is used.
 | AI services | [OpenAI API](https://platform.openai.com) (`gpt-6.1-sol`) through the `openai` SDK, [Anthropic Claude API](https://platform.claude.com/docs/en/home) (`claude-opus-5-5`) through `@anthropic-ai/sdk` |
 | AI coding agents | Claude Code, OpenAI Codex, Antigravity (until 2026-11-15) |
 | AI for text and research | Claude (literature search, drafting of the submission text), OpenAI Codex (screen mockups used as design references) |
-| Quality | [Vitest](https://vitest.dev), Python unittest, [ESLint](https://eslint.org) with `eslint-config-next`, [GitHub Actions](https://github.com/features/actions) workflow |
+| Quality | [Vitest](https://vitest.dev), Python unittest, [ESLint](https://eslint.org) with `eslint-config-next`, [GitHub Actions](https://github.com/features/actions) workflow (configured, the jobs do not start at present, checks are run locally) |
 | Hosting and data work | [Vercel](https://vercel.com), Upstash Redis through the Vercel Marketplace, GitHub (repository, issues, pull requests), YouTube (demo video), [Google Colab](https://colab.research.google.com) and a Jupyter notebook, Google Drive |
 
 Exact versions are in `package.json`, `pnpm-lock.yaml` and `pipeline/vision/requirements.txt`.
