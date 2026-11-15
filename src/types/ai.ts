@@ -22,6 +22,15 @@ export interface AiProviderInfo {
 export interface AiProvidersResponse {
   providers: AiProviderInfo[];
   default: AiProviderId | null;
+  /** This visitor's question allowance (ADR-028); absent when it cannot be read. */
+  quota?: AiQuota;
+}
+
+/** Questions one IP may send to the assistant (ADR-028). `resetsAt` null = a total that never resets. */
+export interface AiQuota {
+  limit: number;
+  remaining: number;
+  resetsAt: string | null;
 }
 
 /** Prior conversation, text only (tool traces are not replayed). */
@@ -107,6 +116,7 @@ export type AiErrorCode =
   | "bad_request"
   | "provider_unavailable"
   | "rate_limited"
+  | "quota_exceeded"
   | "upstream_error"
   | "internal";
 

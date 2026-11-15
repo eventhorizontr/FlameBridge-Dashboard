@@ -37,9 +37,13 @@ export function AssistantPanel() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages.length, lastContent]);
 
+  // per-visitor question allowance (ADR-028); null until the server reports it
+  const quota = providers?.quota ?? null;
+  const quotaLeft = quota?.remaining ?? null;
+
   const handleSubmit = () => {
     const trimmed = draft.trim();
-    if (!trimmed || busy) return;
+    if (!trimmed || busy || quotaLeft === 0) return;
     setDraft("");
     setTab("chat");
     void send(trimmed);
@@ -125,7 +129,7 @@ export function AssistantPanel() {
                 NASA evidence chips and drive the dashboard through undoable store actions.
               </p>
             </div>
-            <SuggestedPrompts onSelect={(prompt) => void send(prompt)} disabled={busy} />
+            <SuggestedPrompts onSelect={(prompt) => void send(prompt)} disabled={busy || quotaLeft === 0} />
           </div>
         ) : (
           <div className="space-y-3">
@@ -141,7 +145,7 @@ export function AssistantPanel() {
             ))}
             {!busy && (
               <div className="pt-2">
-                <SuggestedPrompts onSelect={(prompt) => void send(prompt)} disabled={busy} />
+                <SuggestedPrompts onSelect={(prompt) => void send(prompt)} disabled={busy || quotaLeft === 0} />
               </div>
             )}
           </div>
@@ -161,6 +165,8 @@ export function AssistantPanel() {
           <textarea
             rows={2}
             value={draft}
+            disabled={quotaLeft === 0}
+            aria-label="Question for the research assistant"
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -173,7 +179,17 @@ export function AssistantPanel() {
           />
           <div className="flex items-center justify-between gap-2">
             <span className="text-[0.6875rem] text-[var(--text-3)] flex items-center gap-1.5">
-              <Kbd>Enter</Kbd> send · <Kbd>⌘K</Kbd> commands
+              {quota ? (
+                <span className={cn("num", quota.remaining === 0 ? "text-[var(--warning)]" : "text-[var(--text-2)]")}>
+                  {quota.remaining === 0
+                    ? `All ${quota.limit} questions used`
+                    : `${quota.remaining} of ${quota.limit} questions left`}
+                </span>
+              ) : (
+                <>
+                  <Kbd>Enter</Kbd> send · <Kbd>⌘K</Kbd> commands
+                </>
+              )}
             </span>
             {busy ? (
               <button
@@ -187,10 +203,10 @@ export function AssistantPanel() {
             ) : (
               <button
                 type="submit"
-                disabled={!draft.trim()}
+                disabled={!draft.trim() || quotaLeft === 0}
                 className={cn(
                   "inline-flex items-center gap-1.5 min-h-7 px-3 rounded-[var(--radius-sm)] text-[0.75rem] font-medium cursor-pointer transition-all",
-                  draft.trim()
+                  draft.trim() && quotaLeft !== 0
                     ? "bg-[var(--accent)] text-[var(--bg)] hover:brightness-110"
                     : "bg-[var(--surface-3)] text-[var(--text-3)] cursor-not-allowed",
                 )}

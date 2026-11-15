@@ -32,6 +32,16 @@ function snapshotContext(): AiClientContext {
   };
 }
 
+/** Update "N of 10 questions left" from the X-AI-Quota-* headers of an /api/ai response (ADR-028). */
+function syncQuota(headers: Headers) {
+  const limit = Number(headers.get("x-ai-quota-limit"));
+  const remaining = Number(headers.get("x-ai-quota-remaining"));
+  if (!headers.has("x-ai-quota-limit") || !Number.isFinite(limit) || !Number.isFinite(remaining)) return;
+  assistantStore.setState((s) =>
+    s.providers ? { providers: { ...s.providers, quota: { limit, remaining, resetsAt: headers.get("x-ai-quota-reset") } } } : {},
+  );
+}
+
 async function loadProviders() {
   if (providersRequested) return;
   providersRequested = true;
@@ -115,6 +125,7 @@ async function send(text: string) {
       body: JSON.stringify({ provider, messages: [...history, { role: "user", content }], context: snapshotContext() }),
       signal: controller.signal,
     });
+    syncQuota(res.headers);
     if (!res.body) throw new Error("empty response");
     const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
     let buffer = "";
