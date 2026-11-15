@@ -77,9 +77,7 @@ export function Flame3D({ experiment }: { experiment: Experiment }) {
   const [autoRotate, setAutoRotate] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [pixels, setPixels] = useState<FramePixels | null>(null);
-  const [colors, setColors] = useState(() => readTokens());
-
-  useEffect(() => setColors(readTokens()), []);
+  const [colors] = useState(readTokens);
 
   const series = analysis?.series;
   const peakT = analysis?.events?.peakAreaS ?? null;
