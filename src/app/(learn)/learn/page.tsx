@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 
+import { LearnAcademy } from "@/components/learn/learn-academy";
+import { LearnGate } from "@/components/layout/learn-gate";
 import { Skeleton } from "@/components/ui";
 import { getDataset } from "@/lib/data";
-import { LearnTrack } from "@/components/viz/learn-track";
 
 export default function LearnPage() {
   const dataset = getDataset("PSI-25");
@@ -10,13 +11,15 @@ export default function LearnPage() {
     <Suspense
       fallback={
         <div className="space-y-4">
-          <Skeleton className="h-10 w-72" />
-          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-20 w-full" />
           <Skeleton className="h-96 w-full" />
         </div>
       }
     >
-      <LearnTrack dataset={dataset} />
+      <LearnGate>
+        <LearnAcademy dataset={dataset} />
+      </LearnGate>
     </Suspense>
   );
 }

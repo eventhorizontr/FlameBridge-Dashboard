@@ -25,6 +25,24 @@
   --flame-core: #9fd4ff;
   --flame-edge: #ff8a3d;
   --ember: #ff6b2c;
+  --ember-soft: rgb(255 107 44 / 0.14);
+  --ember-glow: rgb(255 107 44 / 0.45);
+
+  /* Explore & Learn "lab notebook" paper cards (contrast-checked: ink ≥ 4.5:1 on paper) */
+  --paper: #f3ecdf;
+  --paper-2: #e9e0cf;
+  --paper-ink: #1d1a16;
+  --paper-ink-2: #574e43;
+  --paper-line: rgb(29 26 22 / 0.14);
+  --paper-accent: #a63c0b;
+
+  /* Explore & Learn space scene (decorative planets) */
+  --planet-earth: #2f6fb8;
+  --planet-earth-2: #4fa36a;
+  --planet-mars: #c2532d;
+  --planet-mars-2: #94391c;
+  --planet-moon: #a9b0bc;
+  --planet-moon-2: #848b98;
 
   /* status (reserved; always with icon + label) */
   --good: #0ca30c;
@@ -127,6 +145,300 @@ body {
 
 ::selection {
   background: var(--accent-soft);
+}
+
+/* Explore & Learn motion — every class below is switched off under reduced motion. */
+@keyframes learn-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes learn-flicker {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px var(--ember), 0 0 14px 2px var(--ember-glow);
+  }
+  40% {
+    box-shadow: 0 0 0 2px var(--ember), 0 0 6px 0 var(--ember-glow);
+  }
+  65% {
+    box-shadow: 0 0 0 2px var(--flame-edge), 0 0 20px 4px var(--ember-glow);
+  }
+}
+
+@keyframes learn-ignite {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+    filter: brightness(2.2);
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    filter: none;
+  }
+}
+
+@keyframes learn-fuse {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.learn-float {
+  animation: learn-float 4.2s var(--ease-in-out) infinite;
+}
+
+.learn-flicker {
+  animation: learn-flicker 2.1s var(--ease-in-out) infinite;
+}
+
+.learn-ignite {
+  animation: learn-ignite 600ms var(--ease-out) both;
+}
+
+.learn-fuse {
+  animation: learn-fuse 1.4s linear infinite;
+}
+
+.learn-lift {
+  transition:
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out),
+    border-color var(--dur-1) var(--ease-out);
+}
+
+.learn-lift:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes learn-rise {
+  0% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-22px);
+    opacity: 0;
+  }
+}
+
+@keyframes learn-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes learn-drift {
+  0% {
+    transform: translateX(-6px);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(10px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes learn-flame {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  35% {
+    transform: scale(0.97, 1.04);
+  }
+  70% {
+    transform: scale(1.03, 0.97);
+  }
+}
+
+@keyframes learn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes learn-pulse {
+  0%,
+  100% {
+    r: 7;
+  }
+  50% {
+    r: 9;
+  }
+}
+
+@keyframes learn-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes learn-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0.6px var(--flame-edge));
+  }
+  50% {
+    filter: drop-shadow(0 0 1.8px var(--flame-edge));
+  }
+}
+
+@keyframes learn-hover {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.2px);
+  }
+}
+
+@keyframes learn-launch {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(28px, -90px) scale(0.6);
+    opacity: 0;
+  }
+}
+
+.learn-rise {
+  animation: learn-rise 2.4s linear infinite;
+}
+.learn-twinkle {
+  animation: learn-twinkle 3s var(--ease-in-out) infinite;
+}
+.learn-drift {
+  animation: learn-drift 1.6s linear infinite;
+}
+.learn-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: learn-flame 1.9s var(--ease-in-out) infinite;
+}
+.learn-spin {
+  animation: learn-spin 0.9s linear infinite;
+}
+.learn-pulse {
+  animation: learn-pulse 1.4s var(--ease-in-out) infinite;
+}
+.learn-orbit {
+  animation: learn-orbit 24s linear infinite;
+}
+.learn-glow {
+  animation: learn-glow 2.4s var(--ease-in-out) infinite;
+}
+.learn-hover {
+  animation: learn-hover 3s var(--ease-in-out) infinite;
+}
+.learn-launch {
+  animation: learn-launch 1.6s cubic-bezier(0.55, 0, 0.85, 0.3) forwards;
+}
+
+/* Explore & Learn kids' layer: rocket exhaust, Mars spin, bouncy stickers */
+@keyframes kid-puff {
+  0% {
+    transform: translateY(0) scale(0.7);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(5px) scale(1.4);
+    opacity: 0;
+  }
+}
+@keyframes kid-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes kid-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes kid-wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+.kid-puff {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: kid-puff 1s ease-out infinite;
+}
+.kid-mars-spin {
+  animation: kid-spin 60s linear infinite;
+}
+.kid-bounce {
+  animation: kid-bounce 2.4s var(--ease-in-out) infinite;
+}
+.kid-wiggle {
+  animation: kid-wiggle 2.8s var(--ease-in-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kid-puff,
+  .kid-mars-spin,
+  .kid-bounce,
+  .kid-wiggle {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learn-float,
+  .learn-flicker,
+  .learn-ignite,
+  .learn-fuse,
+  .learn-rise,
+  .learn-twinkle,
+  .learn-drift,
+  .learn-flame,
+  .learn-spin,
+  .learn-pulse,
+  .learn-orbit,
+  .learn-glow,
+  .learn-hover,
+  .learn-launch {
+    animation: none;
+  }
+
+  .learn-flicker {
+    box-shadow: 0 0 0 2px var(--ember);
+  }
+
+  .learn-lift:hover {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
