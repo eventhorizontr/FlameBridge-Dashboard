@@ -21,7 +21,8 @@ interface ActionSpec<T extends DashboardAction["type"]> {
 type Registry = { [T in DashboardAction["type"]]: ActionSpec<T> };
 
 const ROUTE_NAMES: Record<string, string> = {
-  "/": "Mission overview",
+  "/": "Landing page",
+  "/overview": "Mission overview",
   "/explore": "Experiment explorer",
   "/compare": "Compare",
   "/lab": "What-if Lab",

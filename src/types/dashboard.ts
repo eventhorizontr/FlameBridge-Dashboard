@@ -112,7 +112,7 @@ export type DashboardAction =
   | { type: "compare"; ids: string[] }
   | { type: "seekVideo"; experimentId: string; videoId: string; timeS: number }
   | { type: "setLabParams"; params: Partial<LabParams> }
-  | { type: "navigate"; route: "/" | "/explore" | "/compare" | "/lab" | "/learn" | `/experiments/${string}` }
+  | { type: "navigate"; route: "/" | "/overview" | "/explore" | "/compare" | "/lab" | "/learn" | `/experiments/${string}` }
   | { type: "highlight"; target: string }
   | { type: "setFlameOverlay"; overlay: Partial<FlameOverlay> };
 

@@ -7,8 +7,10 @@ import { Suspense } from "react";
 import { cn, Tooltip } from "@/components/ui";
 import { useDashboard, useDispatch } from "@/lib/store";
 
+import { useIsLearnMode } from "./learn-gate";
+
 export interface NavItem {
-  route: "/" | "/explore" | "/compare" | "/lab" | "/learn";
+  route: "/overview" | "/explore" | "/compare" | "/lab" | "/learn";
   label: string;
   shortLabel: string;
   description: string;
@@ -17,10 +19,10 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   {
-    route: "/",
+    route: "/overview",
     label: "Home",
     shortLabel: "Home",
-    description: "What this is, the numbers, and where to start",
+    description: "Mission overview: the apparatus, the data and where to start",
     Icon: House,
   },
   {
@@ -53,8 +55,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
 ] as const;
 
+/** Nav items for the current mode: the Learn track is shown only in Explore & Learn mode. */
+function useNavItems(): readonly NavItem[] {
+  const isLearn = useIsLearnMode();
+  return isLearn ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.route !== "/learn");
+}
+
 function isItemActive(pathname: string, route: NavItem["route"]) {
-  if (route === "/") return pathname === "/";
   if (route === "/explore") return pathname.startsWith("/explore") || pathname.startsWith("/experiments");
   return pathname.startsWith(route);
 }
@@ -63,10 +70,11 @@ function DesktopNavLinks() {
   const pathname = usePathname();
   const dispatch = useDispatch();
   const compareCount = useDashboard((s) => s.compareIds.length);
+  const navItems = useNavItems();
 
   return (
     <nav className="flex flex-col items-center gap-1.5 flex-1 w-full px-2">
-      {NAV_ITEMS.map(({ route, label, shortLabel, description, Icon }) => {
+      {navItems.map(({ route, label, shortLabel, description, Icon }) => {
         const active = isItemActive(pathname, route);
         return (
           <Tooltip
@@ -116,13 +124,14 @@ function DesktopNavLinks() {
 function MobileNavLinks() {
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const navItems = useNavItems();
 
   return (
     <nav
       aria-label="Mobile navigation"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--line-strong)] bg-[rgb(11_16_25/0.92)] backdrop-blur-md px-1 py-1 grid grid-cols-5 gap-0.5"
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--line-strong)] bg-[rgb(11_16_25/0.92)] backdrop-blur-md px-1 py-1 grid grid-flow-col auto-cols-fr gap-0.5"
     >
-      {NAV_ITEMS.map(({ route, label, shortLabel, Icon }) => {
+      {navItems.map(({ route, label, shortLabel, Icon }) => {
         const active = isItemActive(pathname, route);
         return (
           <button
@@ -158,7 +167,7 @@ export function LeftRail() {
         <button
           type="button"
           onClick={() => dispatch({ type: "navigate", route: "/" })}
-          aria-label="Fire in Freefall home"
+          aria-label="Fire in Freefall landing page"
           className="size-10 rounded-[var(--radius-sm)] flex items-center justify-center border border-[var(--line)] bg-[var(--surface-2)] hover:border-[var(--accent)]/60 transition-colors cursor-pointer mb-2"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

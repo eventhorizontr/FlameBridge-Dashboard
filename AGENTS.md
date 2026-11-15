@@ -79,6 +79,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 | Vision layer (ADR-017): `pipeline/vision/**`, `public/data/*/vision/**`, `src/lib/vision/**`, `src/components/vision/**`, `src/app/api/vision/**` | **Claude** | Codex may PR QA fixes |
 | `src/app/layout.tsx`, `src/app/globals.css` (tokens), `src/app/page.tsx` | **Claude** | Codex may PR token *additions* |
 | `src/components/layout/**`, `src/components/ui/**`, `src/components/ai/**` | **Claude** | — |
+| Learn Academy (ADR-024): `src/components/learn/**` | **Claude** | Codex may PR content fixes |
 | `pipeline/**`, `data/**`, `public/data/**`, `public/media/**` (fallback clips, ADR-014) | **Codex** | — |
 | `src/lib/data/**`, `src/lib/science/**`, `src/lib/psi/**`, `src/app/api/psi/**` | **Codex** | — |
 | `pipeline/tests/**`, tests for data/science | **Codex** | everyone runs |

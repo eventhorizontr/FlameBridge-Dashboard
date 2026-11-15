@@ -1,425 +1,447 @@
-"use client";
-
-import { ArrowRight, BookOpen, FlaskConical, GitCompareArrows, Menu, Rows3, Sparkles, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Unbounded } from "next/font/google";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { shellUiStore } from "@/components/layout/shell-state";
-import { EvidenceChip } from "@/components/ui";
-import { WindTunnelSchematic } from "@/components/viz/wind-tunnel-schematic";
-import type { FuelFamily } from "@/components/viz/dataset-queries";
-import { SITE } from "@/config/site";
-import { useDispatch } from "@/lib/store";
-import type { LandingBurn, LandingData } from "@/lib/vision/landing";
+import "./landing.css";
 
-const POSTER = (file: string) => `/data/psi-25/vision/frames/${file}`;
-const FAMILY: Record<FuelFamily, { label: string; color: string }> = {
-  "film-slab": { label: "Film / Slab", color: "var(--series-1)" },
-  "rod-sphere": { label: "Rod / Sphere", color: "var(--series-2)" },
-  "fabric-other": { label: "Fabric / Candle", color: "var(--series-3)" },
-};
-const NAV = [
-  { href: "/explore", label: "Runs" },
-  { href: "/compare", label: "Compare" },
-  { href: "/lab", label: "Lab" },
-  { href: "/learn", label: "Learn" },
-] as const;
+const unbounded = Unbounded({ variable: "--font-unbounded", subsets: ["latin"], weight: ["700", "800"] });
 
-const fmt = (v: number, d = 1) => (Number.isInteger(v) ? String(v) : v.toFixed(d));
-const caption = (b: LandingBurn) =>
-  [`Run ${b.testId}`, b.principalInvestigator, b.fuelRaw, b.o2Pct != null ? `${b.o2Pct} % O₂` : null, b.airflowCmS != null ? `${b.airflowCmS} cm/s` : null]
-    .filter(Boolean)
-    .join(" · ");
+export const PRODUCT_NAME = "FlameBridge";
+const TEAM_NAME = "EventHorizonTR";
+const DASHBOARD_ROUTE = "/overview";
 
-function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  const reduce = useReducedMotion();
+/** Every figure on the landing page, computed from the built PSI-25 data by the route. */
+export interface LandingFacts {
+  /** Runs in public/data/PSI-25/experiments.json. */
+  runCount: number;
+  /** Videos with status "ok" in the vision index (computer-vision measured). */
+  measuredVideoCount: number | null;
+  /** Runs that state a total pressure (lib/science/pressure.ts). */
+  runsWithPressure: number;
+  /** The run shown in the frame-by-frame sequence. */
+  sequenceRun: { testId: string; thicknessMm: number | null; airflowCmS: number | null } | null;
+}
+
+/** Number of stills in public/landing/b12-still-sequence.jpg (640 × 256 px each). */
+const SEQUENCE_FRAMES = 61;
+
+function Arrow({ size = 16 }: { size?: number }) {
   return (
-    <motion.div
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="nf-arrow-icon"
     >
-      {children}
-    </motion.div>
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
   );
 }
 
-function Section({ id, title, action, children }: { id: string; title: string; action?: ReactNode; children: ReactNode }) {
+function DashboardCta({ large = false }: { large?: boolean }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="mx-auto w-full max-w-[1240px] px-4 sm:px-6">
-      <Reveal>
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-          <h2 id={`${id}-title`} className="text-[1.5rem] sm:text-[1.75rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">
-            {title}
-          </h2>
-          {action}
-        </div>
-        {children}
-      </Reveal>
-    </section>
-  );
-}
-
-/** Real ISS flame posters (OSD blanked), cross-fading; static under reduced motion. */
-function HeroFootage({ burns }: { burns: LandingBurn[] }) {
-  const reduce = useReducedMotion();
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduce || burns.length < 2) return;
-    const id = window.setInterval(() => setI((n) => (n + 1) % burns.length), 4500);
-    return () => window.clearInterval(id);
-  }, [burns.length, reduce]);
-  const b = burns[i];
-  if (!b) return null;
-  return (
-    <figure className="space-y-3">
-      <Link
-        href={`/experiments/${encodeURIComponent(b.experimentId)}`}
-        className="relative block aspect-[3/2] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-strong)] bg-black shadow-[0_30px_80px_-30px_rgb(90_169_255/0.35)]"
-        aria-label={`Open ${caption(b)}`}
-      >
-        <AnimatePresence mode="sync">
-          <motion.img
-            key={b.experimentId}
-            src={POSTER(b.poster!.file)}
-            alt={`Peak flame of run ${b.testId} on the ISS`}
-            className="absolute inset-0 size-full object-cover"
-            initial={reduce ? false : { opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.9 }}
-          />
-        </AnimatePresence>
-        <span className="num absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[rgb(6_9_15/0.75)] px-2 py-0.5 text-[0.6875rem] text-[var(--text-2)]">
-          {b.pick} · peak frame
-        </span>
-      </Link>
-      <figcaption className="flex flex-wrap items-center justify-between gap-2">
-        <span className="num text-[0.8125rem] text-[var(--text-2)]">{caption(b)}</span>
-        <span className="flex gap-1.5" role="tablist" aria-label="Featured burns">
-          {burns.map((x, n) => (
-            <button
-              key={x.experimentId}
-              type="button"
-              role="tab"
-              aria-selected={n === i}
-              aria-label={`Show run ${x.testId}`}
-              onClick={() => setI(n)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${n === i ? "w-5 bg-[var(--accent)]" : "w-2 bg-[var(--line-strong)] hover:bg-[var(--text-3)]"}`}
-            />
-          ))}
-        </span>
-      </figcaption>
-    </figure>
-  );
-}
-
-function Numbers({ d }: { d: LandingData }) {
-  const items = [
-    { v: String(d.runs), l: "burns", src: "PSI-25 test table" },
-    { v: String(d.teams), l: "research teams", src: "PSI-25 test table" },
-    { v: d.o2Range ? `${fmt(d.o2Range[0])}–${fmt(d.o2Range[1])}` : "—", l: "% O₂ initial", src: "PSI-25 test table" },
-    { v: d.airflowRange ? `${fmt(d.airflowRange[0], 0)}–${fmt(d.airflowRange[1], 0)}` : "—", l: "cm/s airflow", src: "set-points" },
-    { v: String(d.videos), l: `videos · ${d.videoGb.toFixed(1)} GB`, src: "PSI-25 archive" },
-    { v: String(d.measured), l: "runs measured by computer vision", src: "vision layer" },
-  ];
-  return (
-    <dl className="grid grid-cols-2 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] sm:grid-cols-3 lg:grid-cols-6">
-      {items.map((it) => (
-        <div key={it.l} className="flex flex-col border-b border-r border-[var(--line)] px-4 py-4 [&:nth-child(2n)]:border-r-0 sm:[&:nth-child(2n)]:border-r sm:[&:nth-child(3n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(3n)]:border-r lg:last:border-r-0">
-          <dt className="order-2 mt-1.5 text-[0.8125rem] text-[var(--text-2)]">{it.l}</dt>
-          <dd className="order-1 num text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-[var(--text-1)]">{it.v}</dd>
-          <dd className="order-3 num mt-2 text-[0.6875rem] text-[var(--text-3)]">src: {it.src}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-/** Every burn with initial O₂ and airflow, coloured by fuel family. Static, click a point to open it. */
-function BurnMap({ d }: { d: LandingData }) {
-  const reduce = useReducedMotion();
-  const W = 760;
-  const H = 360;
-  const M = { t: 16, r: 16, b: 44, l: 52 };
-  const xs = d.points.map((p) => p.air);
-  const ys = d.points.map((p) => p.o2);
-  const xMax = Math.ceil((Math.max(...xs, 1) + 2) / 5) * 5;
-  const yMin = Math.floor(Math.min(...ys, 14) - 0.5);
-  const yMax = Math.ceil(Math.max(...ys, 22) + 0.5);
-  const x = (v: number) => M.l + (v / xMax) * (W - M.l - M.r);
-  const y = (v: number) => H - M.b - ((v - yMin) / (yMax - yMin)) * (H - M.t - M.b);
-  const xt = Array.from({ length: xMax / 5 + 1 }, (_, i) => i * 5);
-  const yt = Array.from({ length: yMax - yMin + 1 }, (_, i) => yMin + i).filter((v) => v % 2 === 0);
-  const dispatch = useDispatch();
-  return (
-    <div className="grid gap-5 rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] p-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:p-6">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`Scatter of ${d.points.length} burns: initial oxygen against airflow, coloured by fuel family`}>
-        {yt.map((v) => (
-          <g key={`y${v}`}>
-            <line x1={M.l} x2={W - M.r} y1={y(v)} y2={y(v)} stroke="var(--line)" />
-            <text x={M.l - 8} y={y(v) + 4} textAnchor="end" fontSize="12" fill="var(--text-3)" className="num">
-              {v}
-            </text>
-          </g>
-        ))}
-        {xt.map((v) => (
-          <g key={`x${v}`}>
-            <line x1={x(v)} x2={x(v)} y1={M.t} y2={H - M.b} stroke="var(--line)" />
-            <text x={x(v)} y={H - M.b + 18} textAnchor="middle" fontSize="12" fill="var(--text-3)" className="num">
-              {v}
-            </text>
-          </g>
-        ))}
-        <text x={(W + M.l) / 2} y={H - 6} textAnchor="middle" fontSize="12" fill="var(--text-2)">
-          Airflow (cm/s, median set-point)
-        </text>
-        <text transform={`translate(14,${(H - M.b + M.t) / 2}) rotate(-90)`} textAnchor="middle" fontSize="12" fill="var(--text-2)">
-          Initial O₂ (% vol)
-        </text>
-        {d.points.map((p, n) => (
-          <motion.circle
-            key={p.id}
-            cx={x(p.air)}
-            cy={y(p.o2)}
-            r={5}
-            fill={FAMILY[p.family].color}
-            stroke="var(--surface-1)"
-            strokeWidth={2}
-            initial={reduce ? false : { opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 0.9, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: reduce ? 0 : 0.004 * n }}
-            className="cursor-pointer"
-            onClick={() => dispatch({ type: "openExperiment", id: p.id })}
-          >
-            <title>{`Run ${p.testId} · ${p.o2} % O₂ · ${p.air} cm/s`}</title>
-          </motion.circle>
-        ))}
-      </svg>
-      <div className="flex flex-col justify-between gap-4">
-        <ul className="space-y-2 text-[0.875rem] text-[var(--text-2)]">
-          {(Object.keys(FAMILY) as FuelFamily[]).map((f) => (
-            <li key={f} className="flex items-center gap-2">
-              <span className="size-2.5 rounded-full" style={{ backgroundColor: FAMILY[f].color }} aria-hidden="true" />
-              {FAMILY[f].label}
-              <span className="num ml-auto text-[var(--text-3)]">{d.points.filter((p) => p.family === f).length}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="text-[0.75rem] text-[var(--text-3)]">
-          {d.points.length} burns plotted · {d.unplotted} without O₂ or airflow are not drawn.
-        </p>
-        <Link href="/explore?view=map" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-[var(--accent)] px-4 text-[0.875rem] font-medium text-[var(--accent)] hover:bg-[var(--accent-soft)]">
-          Open the map <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function BurnCard({ b }: { b: LandingBurn }) {
-  return (
-    <Link
-      href={`/experiments/${encodeURIComponent(b.experimentId)}`}
-      className="group block overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] transition-colors hover:border-[var(--flame-edge)]"
-    >
-      <span className="relative block aspect-[3/2] bg-black">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={POSTER(b.poster!.file)} alt="" loading="lazy" className="absolute inset-0 size-full object-cover transition-transform duration-[var(--dur-3)] group-hover:scale-[1.03]" />
-        <span className="absolute left-2 top-2 rounded-[var(--radius-sm)] bg-[rgb(6_9_15/0.78)] px-2 py-0.5 text-[0.6875rem] font-medium text-[var(--text-1)]">{b.pick}</span>
-        <span className="num absolute bottom-2 right-2 rounded-[var(--radius-sm)] bg-[rgb(6_9_15/0.78)] px-1.5 py-0.5 text-[0.6875rem] text-[var(--text-2)]">Run {b.testId}</span>
-      </span>
-      <span className="block space-y-1 p-3.5">
-        <span className="block truncate text-[0.9375rem] font-medium text-[var(--text-1)]">{b.fuelRaw}</span>
-        <span className="num block text-[0.75rem] text-[var(--text-2)]">
-          {b.principalInvestigator} · {b.o2Pct != null ? `${b.o2Pct} % O₂` : "O₂ —"} · {b.airflowCmS != null ? `${b.airflowCmS} cm/s` : "flow —"}
-        </span>
-        <span className="num block text-[0.75rem] text-[var(--text-3)]">
-          {b.visibleS.toFixed(0)} s visible · peak {b.peakAreaPx != null ? `${b.peakAreaPx.toLocaleString("en-US")} px` : "—"}
-        </span>
-      </span>
+    <Link href={DASHBOARD_ROUTE} className={large ? "nf-cta nf-cta-lg" : "nf-cta"}>
+      Go to dashboard
+      <Arrow size={large ? 18 : 16} />
     </Link>
   );
 }
 
-const TOOLS = [
-  { href: "/explore", Icon: Rows3, title: "Runs", body: "Filter all burns by fuel, oxygen, airflow and QA. Table, map or gallery." },
-  { href: "/compare", Icon: GitCompareArrows, title: "Compare", body: "Play up to four burns in sync and see exactly what differs." },
-  { href: "/lab", Icon: FlaskConical, title: "What-if Lab", body: "Set conditions and get the closest real burns — never a simulation." },
-  { href: "/learn", Icon: BookOpen, title: "Learn", body: "Five short chapters on why flames behave differently in orbit." },
-] as const;
+function SectionHead({ kicker, title, lead }: { kicker: string; title: string; lead: ReactNode }) {
+  return (
+    <div className="nf-head nf-rv">
+      <div>
+        <div className="nf-kicker">{kicker}</div>
+        <h2 className="nf-h2">{title}</h2>
+      </div>
+      <p className="nf-lead">{lead}</p>
+    </div>
+  );
+}
 
-export function LandingPage({ data }: { data: LandingData }) {
-  const dispatch = useDispatch();
-  const reduce = useReducedMotion();
-  const [menu, setMenu] = useState(false);
-  const askAi = () => {
-    dispatch({ type: "navigate", route: "/explore" });
-    shellUiStore.getState().setAssistantOpen(true);
-  };
+const fmt = (v: number | null, unit: string) => (v === null ? "—" : `${v} ${unit}`);
+
+export function LandingPage({ facts }: { facts: LandingFacts }) {
+  const { runCount, measuredVideoCount, runsWithPressure, sequenceRun } = facts;
+
+  const shifts = [
+    { label: "No weight", from: "1 g", to: "≈ 0 g", body: "On a station or a ship in transit nothing rises. The hot gas stays wrapped around the flame." },
+    { label: "More oxygen", from: "21 %", to: "34 %", body: "Cabin air for future crewed vehicles is planned richer in oxygen than the air on Earth." },
+    { label: "Lower pressure", from: "101.3", to: "56.5 kPa", body: "And the cabin is held well below the pressure we live in at sea level." },
+  ];
+
+  const steps = [
+    { title: "Reads NASA’s data", body: "The PSI test table, the flame photographs and the ISS experiment videos, streamed from NASA." },
+    {
+      title: "Takes its own measurements",
+      body: "Computer vision measures flame area and visible burn time in every usable video, labelled as image pixels and never converted to millimetres.",
+    },
+    { title: "Matches, never simulates", body: "Enter oxygen, airflow and fuel. The What-if Lab returns the real ISS runs closest to it." },
+    { title: "Applies it to your cabin", body: "Add a cabin pressure and see where your atmosphere stands against what was actually burned." },
+    {
+      title: "Adds an honest warning",
+      body: "“No run in this dataset states a pressure. Outside the tested range, this is a gap, not an answer.”",
+      accent: true,
+    },
+  ];
+
+  const ask = [
+    { title: "You ask", body: "“Which PMMA runs burned closest to 34 % oxygen at low airflow?”" },
+    { title: "The assistant reads the records", body: "It calls tools on the PSI dataset and the vision measurements before it writes a word." },
+    { title: "Numbers come from tool results", body: "It is instructed to state only values it retrieved, and every run it cites links back to that run’s record." },
+    { title: "It drives the dashboard, you keep control", body: "Filters, comparisons and navigation it applies show up as steps you can undo.", accent: true },
+  ];
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--text-1)]">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-[var(--radius-sm)] focus:bg-[var(--accent)] focus:px-3 focus:py-2 focus:text-[var(--bg)]">
-        Skip to main content
-      </a>
+    <div className={`nf-root ${unbounded.variable}`}>
+      <div className="nf-navwrap">
+        <nav aria-label="Primary" className="nf-wrap nf-nav">
+          <a href="#top" className="nf-brand">
+            <Image src="/landing/team-mark.png" alt={`${TEAM_NAME} logo`} width={68} height={40} priority />
+            <span className="nf-brand-name">{PRODUCT_NAME}</span>
+          </a>
+          <DashboardCta />
+        </nav>
+        <div className="nf-bar" aria-hidden="true" />
+      </div>
 
-      {/* Top navigation */}
-      <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[rgb(6_9_15/0.85)] backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-[1240px] items-center gap-6 px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5" aria-label={`${SITE.name} home`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/orbital-flame-mark.svg" alt="" className="size-8" />
-            <span className="text-[1rem] font-semibold tracking-[-0.02em]">{SITE.name}</span>
-          </Link>
-          <nav aria-label="Primary" className="mx-auto hidden items-center gap-1 md:flex">
-            {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="rounded-[var(--radius-sm)] px-3 py-2 text-[0.875rem] text-[var(--text-2)] hover:bg-[var(--surface-2)] hover:text-[var(--text-1)]">
-                {n.label}
-              </Link>
-            ))}
-          </nav>
-          <Link href="/explore" className="ml-auto hidden min-h-9 items-center rounded-[var(--radius-sm)] bg-[var(--accent)] px-4 text-[0.875rem] font-medium text-[var(--bg)] hover:brightness-110 md:inline-flex">
-            Open dashboard
-          </Link>
-          <button
-            type="button"
-            className="ml-auto flex size-10 items-center justify-center rounded-[var(--radius-sm)] text-[var(--text-2)] md:hidden cursor-pointer"
-            aria-expanded={menu}
-            aria-label={menu ? "Close menu" : "Open menu"}
-            onClick={() => setMenu((m) => !m)}
-          >
-            {menu ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+      <header id="top" className="nf-hero">
+        <div className="nf-fill nf-gridbg" aria-hidden="true" />
+        <div className="nf-par" aria-hidden="true">
+          <div className="nf-fill nf-stars" style={{ opacity: 0.7 }} />
         </div>
-        {menu && (
-          <nav aria-label="Mobile" className="border-t border-[var(--line)] px-4 pb-3 md:hidden">
-            {NAV.map((n) => (
-              <Link key={n.href} href={n.href} className="block min-h-11 py-3 text-[0.9375rem] text-[var(--text-1)]">
-                {n.label}
-              </Link>
-            ))}
-          </nav>
-        )}
+        <div className="nf-halo" aria-hidden="true" />
+
+        <div className="nf-hero-copy">
+          <div className="nf-live-row">
+            <span className="nf-live" aria-hidden="true" />
+            <span>Built on NASA’s open ISS fire experiments</span>
+          </div>
+          <h1 className="nf-h1">Fire burns differently in space.</h1>
+          <p className="nf-hero-lead">
+            {PRODUCT_NAME} turns NASA’s real fire experiments on the International Space Station into a readable,
+            testable and honest research tool for fire safety in weightless spacecraft.
+          </p>
+          <DashboardCta large />
+        </div>
+
+        <div className="nf-hero-figure">
+          <div className="nf-hero-frame">
+            <div className="nf-glow" aria-hidden="true" />
+            <div className="nf-seq">
+              <div
+                className="nf-sprite nf-hs"
+                role="img"
+                aria-label="NASA photograph of a flame in weightlessness on the Space Station: a dim blue dome with an orange core, spreading along a thin sample"
+              />
+            </div>
+            <div className="nf-pill nf-pill-light nf-float">Real flame, real station</div>
+            <div className="nf-pill nf-pill-dark nf-float-b">NASA BASS-II · test {sequenceRun?.testId ?? "B12"}</div>
+          </div>
+          <div className="nf-note" style={{ textAlign: "center" }}>
+            Scroll, and the flame spreads along the sample.
+          </div>
+        </div>
+
+        <div className="nf-wrap nf-stats">
+          <div className="nf-stat">
+            <div className="nf-display nf-stat-value">{runCount}</div>
+            <div className="nf-stat-label">ISS fire runs in NASA’s PSI-25 (BASS-II) table</div>
+          </div>
+          <div className="nf-stat">
+            <div className="nf-display nf-stat-value">{measuredVideoCount ?? "—"}</div>
+            <div className="nf-stat-label">
+              {measuredVideoCount === null
+                ? "ISS videos measured by computer vision (vision index not built)"
+                : "ISS videos measured frame by frame by computer vision"}
+            </div>
+          </div>
+          <div className="nf-stat">
+            <div className="nf-display nf-stat-value">{runsWithPressure}</div>
+            <div className="nf-stat-label">runs that state a cabin pressure. Shown as “—”, never assumed.</div>
+          </div>
+        </div>
       </header>
 
-      <main id="main-content" className="space-y-20 pb-16 sm:space-y-24">
-        {/* Hero */}
-        <section className="mx-auto grid w-full max-w-[1240px] items-center gap-10 px-4 pt-10 sm:px-6 sm:pt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:pt-20">
-          <div>
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="num text-[0.8125rem] text-[var(--text-2)]"
-            >
-              NASA PSI-25 data · ISS {data.years}
-            </motion.p>
-            <motion.h1
-              initial={reduce ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-3 text-balance text-[clamp(2.4rem,5.4vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.035em]"
-            >
-              What does fire do without gravity?
-            </motion.h1>
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.18 }}
-              className="mt-5 max-w-xl text-pretty text-[1.125rem] leading-relaxed text-[var(--text-2)]"
-            >
-              {data.runs} real solid-fuel burns aboard the International Space Station — watch them, compare them, and ask
-              questions of the data.
-            </motion.p>
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.28 }}
-              className="mt-8 flex flex-wrap items-center gap-3"
-            >
-              <Link href="/explore" className="inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] bg-[var(--accent)] px-5 text-[0.9375rem] font-semibold text-[var(--bg)] hover:brightness-110">
-                Explore the {data.runs} burns <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-              <Link href="/learn" className="inline-flex min-h-11 items-center rounded-[var(--radius-sm)] border border-[var(--line-strong)] px-5 text-[0.9375rem] font-medium text-[var(--text-1)] hover:border-[var(--text-3)]">
-                Take the guided tour
-              </Link>
-            </motion.div>
-            <button type="button" onClick={askAi} className="mt-4 inline-flex items-center gap-1.5 text-[0.9375rem] text-[var(--accent)] underline-offset-4 hover:underline cursor-pointer">
-              <Sparkles className="size-4" aria-hidden="true" /> Ask the research AI
-            </button>
+      <section id="problem" className="nf-wrap nf-stack" style={{ paddingTop: 72, paddingBottom: 80, gap: 48 }}>
+        <SectionHead
+          kicker="The problem"
+          title="In orbit, a flame has no up."
+          lead="Without weight, hot air doesn’t rise. The flame rounds off and spreads slowly and quietly, and sometimes a flame that would die on Earth keeps burning. Size a detector or a suppression system without knowing that, and you can size it wrong."
+        />
+        <div className="nf-grid-cards nf-stag" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))" }}>
+          {shifts.map((s) => (
+            <div key={s.label} className="nf-glass nf-shift">
+              <div className="nf-shift-label">{s.label}</div>
+              <div className="nf-display nf-shift-values">
+                <span className="nf-shift-from">{s.from}</span>
+                <span className="nf-arrow">
+                  <Arrow size={22} />
+                </span>
+                <span>{s.to}</span>
+              </div>
+              <div className="nf-card-body">{s.body}</div>
+            </div>
+          ))}
+        </div>
+        <div className="nf-note">
+          Oxygen and pressure shown are NASA’s recommended exploration atmosphere: 34 % O₂ at 56.5 kPa
+          (NASA/TP-2010-216134).
+        </div>
+      </section>
+
+      <div aria-hidden="true" style={{ overflow: "clip", paddingBottom: 72 }}>
+        <div className="nf-mq nf-outline">
+          {Array.from({ length: 3 }).flatMap((_, i) =>
+            ["Readable", "Testable", "Honest"].map((w) => <span key={`${w}-${i}`}>{w}</span>),
+          )}
+        </div>
+      </div>
+
+      <section id="data" className="nf-section nf-section-alt">
+        <div className="nf-wrap nf-pad nf-split">
+          <div className="nf-rv nf-stack" style={{ flex: "1 1 360px", minWidth: 0, gap: 20 }}>
+            <div className="nf-kicker">What we have</div>
+            <h2 className="nf-h2">NASA lit real fires in orbit. The data is open.</h2>
+            <p className="nf-lead">
+              For years NASA has run real fire experiments on the International Space Station and released the
+              results to the public.
+            </p>
+            <ol className="nf-stack" style={{ margin: 0, padding: 0, listStyle: "none" }}>
+              {[
+                `A table of ${runCount} BASS-II test runs`,
+                "Photographs of the flames",
+                "Videos of the experiments",
+                "Reports that summarise the results",
+              ].map((t, i) => (
+                <li key={t} className="nf-list-row">
+                  <span className="nf-num">{String(i + 1).padStart(2, "0")}</span>
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="nf-lead" style={{ fontSize: 17 }}>
+              But it is scattered, and it never answers the engineer’s question directly: what would happen in my
+              spacecraft?
+            </p>
           </div>
-          <motion.div initial={reduce ? false : { opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.15 }}>
-            <HeroFootage burns={data.hero} />
-          </motion.div>
+
+          <div className="nf-rv nf-shot-card nf-shot-scope" style={{ flex: "1.5 1 520px", minWidth: 0 }}>
+            <div
+              style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "8px 16px", padding: "0 4px" }}
+            >
+              <div className="nf-card-title" style={{ fontSize: 18 }}>
+                One of those tests, frame by frame
+              </div>
+              <div className="nf-live-row" style={{ letterSpacing: 0, textTransform: "none" }}>
+                frame&nbsp;<span className="nf-count" />&nbsp;/ {SEQUENCE_FRAMES}
+              </div>
+            </div>
+            <div className="nf-shot">
+              <div
+                className="nf-sprite nf-ds"
+                role="img"
+                aria-label={`Sequence of ${SEQUENCE_FRAMES} NASA photographs: an igniter wire lights a thin sample and a blue flame spreads along it`}
+              />
+            </div>
+            <dl className="nf-meta" style={{ margin: 0 }}>
+              <div>
+                <dt>Source</dt>
+                <dd>NASA PSI, BASS-II</dd>
+              </div>
+              <div>
+                <dt>Test</dt>
+                <dd>{sequenceRun?.testId ?? "—"}</dd>
+              </div>
+              <div>
+                <dt>Sample</dt>
+                <dd>{fmt(sequenceRun?.thicknessMm ?? null, "mm thick")}</dd>
+              </div>
+              <div>
+                <dt>Airflow</dt>
+                <dd>{fmt(sequenceRun?.airflowCmS ?? null, "cm/s")}</dd>
+              </div>
+              <div>
+                <dt>Stills</dt>
+                <dd>{SEQUENCE_FRAMES} frames</dd>
+              </div>
+            </dl>
+            <div className="nf-note" style={{ padding: "0 4px" }}>
+              Every frame was taken on the Space Station. Sample and airflow are read from NASA’s test table.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" className="nf-section">
+        <div className="nf-wrap nf-pad nf-stack" style={{ gap: 48 }}>
+          <SectionHead
+            kicker="What it does"
+            title="From scattered records to one answer."
+            lead={`${PRODUCT_NAME} gathers that scattered data into one dashboard and goes looking for the answer, in five steps.`}
+          />
+          <div className="nf-grid-cards nf-stag" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(210px, 100%), 1fr))" }}>
+            {steps.map((s, i) => (
+              <div key={s.title} className={`${s.accent ? "nf-glass-accent" : "nf-glass"} nf-stack`} style={{ padding: 24, gap: 12 }}>
+                <div className="nf-step-num" style={s.accent ? { color: "var(--nf-ink)", fontSize: 22 } : { fontSize: 22 }}>
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="nf-card-title">{s.title}</div>
+                <div className="nf-card-body" style={s.accent ? { color: "var(--nf-accent-ink)" } : undefined}>
+                  {s.body}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="who" className="nf-section nf-section-alt">
+        <div className="nf-wrap nf-pad" style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: "40px 56px" }}>
+          <div className="nf-rv nf-stack" style={{ flex: "1 1 340px", minWidth: 0, gap: 20 }}>
+            <div className="nf-kicker">Who it is for</div>
+            <h2 className="nf-h2">For the engineers who design the cabin.</h2>
+            <p className="nf-lead">
+              Researchers and engineers designing crewed spacecraft, stations and habitats, who have to decide how
+              fire is detected and put out before anything flies.
+            </p>
+          </div>
+          <div
+            className="nf-grid-cards nf-stag"
+            style={{ flex: "1.6 1 520px", minWidth: 0, gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))" }}
+          >
+            <div className="nf-glass nf-stack" style={{ padding: 32, gap: 14, borderRadius: 24 }}>
+              <div className="nf-card-title-lg" style={{ color: "var(--nf-ink)" }}>
+                What was actually burned
+              </div>
+              <div className="nf-card-body" style={{ fontSize: 16 }}>
+                Every run, with its oxygen, airflow, sample and ISS footage side by side, filterable and comparable.
+              </div>
+            </div>
+            <div className="nf-stack" style={{ padding: 32, gap: 14, borderRadius: 24, background: "var(--nf-accent-strong)", color: "var(--nf-ink)" }}>
+              <div className="nf-card-title-lg">What nobody has tested yet</div>
+              <div style={{ fontSize: 16, color: "var(--nf-accent-ink-2)" }}>
+                More important: see where the tested conditions end, so a design never leans on a run that was never
+                made.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ai" className="nf-section">
+        <div className="nf-wrap nf-pad" style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", gap: "48px 64px" }}>
+          <div className="nf-rv nf-stack" style={{ flex: "1 1 360px", minWidth: 0, gap: 20 }}>
+            <div className="nf-kicker">The role of AI</div>
+            <h2 className="nf-h2">Ask in your own words. Every answer points back to the data.</h2>
+            <p className="nf-lead">
+              You can put a question to the dashboard the way you would say it. The assistant answers from the
+              project’s records and says plainly when the data does not hold the answer.
+            </p>
+          </div>
+          <div className="nf-ask nf-stack" style={{ flex: "1.4 1 520px", minWidth: 0, gap: 12 }}>
+            {ask.map((a, i) => (
+              <div key={a.title} className={`nf-a nf-a${i + 1} nf-step ${a.accent ? "nf-glass-accent" : "nf-glass"}`}>
+                <div className="nf-step-num" style={a.accent ? { color: "var(--nf-ink)" } : undefined}>
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="nf-stack" style={{ gap: 6 }}>
+                  <div className="nf-card-title" style={{ fontSize: 19, letterSpacing: "-0.01em" }}>
+                    {a.title}
+                  </div>
+                  <div className="nf-card-body" style={{ fontSize: 16, color: a.accent ? "var(--nf-accent-ink)" : undefined }}>
+                    {a.body}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div style={{ padding: 16 }}>
+        <section id="stance" className="nf-sheet">
+          <div className="nf-pad nf-stack" style={{ maxWidth: 1208, margin: "0 auto", paddingLeft: "var(--nf-gutter)", paddingRight: "var(--nf-gutter)", gap: 48 }}>
+            <SectionHead
+              kicker="Scientific stance"
+              title="Shown right, not shown pretty."
+              lead="The aim is to show results correctly rather than attractively. What is missing stays visibly missing."
+            />
+            <div className="nf-grid-cards nf-stag" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))" }}>
+              <div className="nf-sheet-card">
+                <span className="nf-tag" style={{ background: "var(--nf-tag-blue)", color: "var(--nf-tag-blue-ink)" }}>
+                  Traced
+                </span>
+                <div className="nf-card-title-lg">Every number has a source</div>
+                <div className="nf-card-body">
+                  Values come from a NASA PSI file or a documented calculation. A value that was not recorded is shown
+                  as “—” with the reason, never as zero.
+                </div>
+              </div>
+              <div className="nf-sheet-card">
+                <span className="nf-tag" style={{ background: "var(--nf-sheet-ink)", color: "var(--nf-ink)" }}>
+                  Labelled
+                </span>
+                <div className="nf-card-title-lg">Pixels stay pixels</div>
+                <div className="nf-card-body">
+                  Flame sizes measured by computer vision are marked as image-derived. Without a visible scale they
+                  are never turned into millimetres.
+                </div>
+              </div>
+              <div className="nf-sheet-card">
+                <span className="nf-tag" style={{ background: "var(--nf-tag-ember)", color: "var(--nf-tag-ember-ink)" }}>
+                  Not simulated
+                </span>
+                <div className="nf-card-title-lg">Matches, not made-up results</div>
+                <div className="nf-card-body">
+                  The What-if Lab only ever returns runs NASA really burned. It never presents a simulation as a
+                  measurement.
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
+      </div>
 
-        <div className="mx-auto w-full max-w-[1240px] px-4 sm:px-6">
-          <Reveal>
-            <Numbers d={data} />
-          </Reveal>
+      <section style={{ position: "relative" }}>
+        <div className="nf-fill nf-stars" aria-hidden="true" style={{ opacity: 0.5 }} />
+        <div className="nf-hero-copy" style={{ paddingBottom: 96, animation: "none" }}>
+          <Image
+            className="nf-zoom"
+            src="/landing/horizon-glow.png"
+            alt=""
+            width={900}
+            height={640}
+            style={{ width: "100%", maxWidth: 440, height: "auto" }}
+          />
+          <h2 className="nf-h2-xl nf-rv">Know the fire before you build the cabin.</h2>
+          <p className="nf-lead" style={{ maxWidth: "60ch" }}>
+            {PRODUCT_NAME} turns the real fire experiments NASA ran in space into a readable, testable and honest
+            research tool for the fire safety of future spacecraft.
+          </p>
+          <DashboardCta large />
         </div>
-
-        <Section id="earth-vs-orbit" title="Earth vs orbit">
-          <WindTunnelSchematic />
-        </Section>
-
-        <Section id="map" title="The map of every burn">
-          <BurnMap d={data} />
-        </Section>
-
-        <Section
-          id="watch"
-          title={`${data.six.length} burns worth watching`}
-          action={
-            <Link href="/explore?view=gallery" className="inline-flex items-center gap-1.5 text-[0.875rem] text-[var(--accent)] hover:underline">
-              See all {data.measured} <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
-          }
-        >
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {data.six.map((b) => (
-              <BurnCard key={b.experimentId} b={b} />
-            ))}
+        <footer className="nf-footer">
+          <div className="nf-wrap nf-footer-inner">
+            <div className="nf-stack" style={{ gap: 10 }}>
+              <Image src="/landing/team-wordmark.png" alt="Event Horizon" width={200} height={27} />
+              <div style={{ fontSize: 14, color: "var(--nf-text-3)" }}>
+                {PRODUCT_NAME} is a project by team {TEAM_NAME}.
+              </div>
+            </div>
+            <div className="nf-note" style={{ maxWidth: "46ch" }}>
+              Uses data NASA has released to the public. Not affiliated with or endorsed by NASA.
+            </div>
           </div>
-          <p className="mt-3 text-[0.75rem] text-[var(--text-3)]">Each pick comes from a computed statistic. Areas are pixels of the 720×480 frame, not millimetres.</p>
-        </Section>
-
-        <Section id="tools" title="Four ways in">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {TOOLS.map(({ href, Icon, title, body }) => (
-              <Link key={href} href={href} className="group flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-5 transition-colors hover:border-[var(--accent)]">
-                <span className="flex size-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-soft)] text-[var(--accent)]">
-                  <Icon className="size-5" aria-hidden="true" />
-                </span>
-                <span className="text-[1.0625rem] font-semibold text-[var(--text-1)]">{title}</span>
-                <span className="text-[0.875rem] leading-relaxed text-[var(--text-2)]">{body}</span>
-                <span className="mt-auto inline-flex items-center gap-1 text-[0.8125rem] text-[var(--accent)]">
-                  Open <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </Section>
-      </main>
-
-      <footer className="border-t border-[var(--line)]">
-        <div className="mx-auto flex max-w-[1240px] flex-col gap-3 px-4 py-6 text-[0.8125rem] text-[var(--text-2)] sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span>
-            {SITE.challenge} · Team <strong className="font-medium text-[var(--text-1)]">{SITE.team.name}</strong>: {SITE.team.members.join(" · ")}
-          </span>
-          <span className="flex flex-wrap items-center gap-3">
-            <EvidenceChip id="doi:10.60555/4qc4-de67" label="DOI 10.60555/4qc4-de67 · CC0 1.0" kind="dataset" href="https://psi.nasa.gov/physci/repo/data/investigations/PSI-25" />
-            <a href={SITE.repository} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--accent)]">
-              GitHub
-            </a>
-          </span>
-        </div>
-      </footer>
+        </footer>
+      </section>
     </div>
   );
 }
