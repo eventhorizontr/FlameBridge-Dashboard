@@ -1,6 +1,8 @@
 # Mission Board — 24-hour build
 
-_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-15 01:00 (+03:00) · T+4_
+_Maintained by Claude · mirrors GitHub Issues/Milestones · updated 2026-11-15 19:20 (+03:00) · submission build_
+
+**Live:** https://nasa-space-apps-2026-seven.vercel.app · UI and AI decisions up to ADR-028 are merged on `main`.
 
 **Team (ADR-016):** Claude (lead · shell/ui/assistant · AI · contracts) + Codex (data · science ·
 data views · Learn). Antigravity left; its UI is merged (#44).

@@ -1,12 +1,10 @@
 # Status — claude
 
-_Updated: 2026-11-15 (+03:00)_
+_Updated: 2026-11-15 19:20 (+03:00)_
 
 ## Now
-- ADR-017 flame vision layer (branch `claude/vision-flame-analytics`). The full build v1.1.0 is running over all 296 PSI-25 files. After it finishes:
-  - DINOv2 pass
-  - `validate.py`
-  - one PR containing the data
+- Submission build is live at https://nasa-space-apps-2026-seven.vercel.app. All work is merged on `main` (latest: ADR-028 AI quota and
+  Vercel readiness). The vision layer (ADR-017) finished long ago and is in `public/data/psi-25/vision/`.
 
 ## Done
 - ADR-027: submission-ready repo — slogan "Bridge the unknown" (`SITE.slogan`), FlameBridge naming, README per the GitHub prep plan, evidence docs (data sources + manifest, methods & validation, limitations, AI usage, media credits), architecture doc synced with the code

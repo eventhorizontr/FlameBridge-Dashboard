@@ -19,7 +19,7 @@ design tool or a safety certification, and it does not replace physical testing.
 - Radiometer is uncalibrated; its gain differs by test. Use it for relative change only.
 - CO over range (> 1000 ppm) is recorded as `OR`.
 - Some table cells are ambiguous or implausible; they are `null` + flagged, not guessed
-  ([DATA.md](DATA.md#known-issues-seed-heuristic-v0-codex-to-resolve-against-the-test-matrix-xlsx)).
+  ([DATA.md](DATA.md#known-issues-in-the-source-table)).
 
 ## Image measurement limits
 

@@ -48,7 +48,7 @@ The vision layer is rebuilt with the commands in [pipeline/vision/README.md](../
 
 ## Known source issues
 
-Listed with their handling in [DATA.md → Known issues](DATA.md#known-issues-seed-heuristic-v0-codex-to-resolve-against-the-test-matrix-xlsx):
+Listed with their handling in [DATA.md → Known issues](DATA.md#known-issues-in-the-source-table):
 mixed fan/air cells, implausible final O₂ values, two runs dated outside the campaign year, a CO
 lower bound (`>500`), undocumented sample-id suffixes.
 

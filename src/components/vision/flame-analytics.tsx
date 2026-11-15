@@ -1,5 +1,6 @@
 "use client";
 
+import { visionStatusText } from "@/lib/vision/status-text";
 import { Images, ScanEye } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -88,9 +89,8 @@ export function FlameAnalytics({ experiment, section = "all" }: { experiment: Ex
         ) : load.data.status !== "ok" ? (
           <EmptyState
             icon={<ScanEye className="size-5" />}
-            eyebrow={`Status: ${load.data.status}`}
-            title="This video is not measured"
-            description={load.data.reason ?? "The footage could not be analysed."}
+            title={visionStatusText(load.data.status, load.data.reason).title}
+            description={visionStatusText(load.data.status, load.data.reason).body}
           />
         ) : (
           <Analytics analysis={load.data} playheadS={isPlaying ? playheadS : null} onSeek={seek} accession={experiment.investigation} section={section} />
@@ -475,7 +475,7 @@ export function FlameGlance({ experiment, onFindSimilar }: { experiment: Experim
       : load.status === "absent"
         ? "Footage not analysed."
         : load.status === "ready" && load.data.status !== "ok"
-          ? load.data.reason ?? "This video is not measured."
+          ? visionStatusText(load.data.status, load.data.reason).title
           : experiment.videos.length === 0
             ? "No ISS video for this run."
             : null;

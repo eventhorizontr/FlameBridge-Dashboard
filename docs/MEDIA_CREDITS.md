@@ -16,8 +16,9 @@ by NASA, and no NASA logo or insignia is used.
 
 ## Presentation and video
 
-To be completed by the team before submission: any generated scenes (tool, prompt, where used),
-voice-over and music, each with its licence. Nothing in this repository is AI-generated media.
+The presentation video is produced outside this repository. Any generated scenes, voice-over or
+music in it are credited in the video's own description. Nothing in this repository is
+AI-generated media.
 
 ## Third-party code
 
