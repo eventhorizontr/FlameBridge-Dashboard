@@ -18,7 +18,9 @@ import type {
   LabMatch,
   LabParams,
   LabResult,
+  PressureCoverage,
   Range,
+  SeriesPressureStatement,
   UserMode,
 } from "./dashboard";
 import type {
@@ -33,6 +35,7 @@ import type {
   FuelMaterial,
   InvestigationManifest,
   ManifestFileRef,
+  PressureBasis,
   PsiFileRef,
   QualityReport,
   VideoKind,
@@ -118,6 +121,8 @@ export const FuelSchema = z.strictObject({
   inferred: z.array(z.string()),
 });
 
+export const PressureBasisSchema = z.enum(["recorded", "stated-for-series", "not-stated"]);
+
 export const ConditionsSchema = z
   .strictObject({
     o2InitialPct: finiteOrNull,
@@ -132,6 +137,8 @@ export const ConditionsSchema = z
     airflowRaw: z.string(),
     fanDisplayRaw: z.string(),
     radiometerGainRaw: z.string(),
+    pressureKpa: z.number().finite().positive().optional(),
+    pressureBasis: PressureBasisSchema.optional(),
   })
   .refine((c) => c.coFinalLowerBoundPpm === undefined || c.coFinalPpm === null, {
     message: "a lower bound replaces the value: coFinalPpm must be null",
@@ -229,7 +236,28 @@ export const LabParamsSchema = z.strictObject({
   material: FuelMaterialSchema,
   geometry: FuelGeometrySchema,
   characteristicSizeMm: z.number().positive().max(1000).nullable(),
+  // optional on input so saved/AI params from before ADR-021 still parse; output is always number | null
+  pressureKpa: z.number().positive().max(1000).nullable().default(null),
   k: z.number().int().min(1).max(12),
+});
+
+export const SeriesPressureStatementSchema = z.strictObject({
+  accession: z.string(),
+  basis: PressureBasisSchema,
+  quote: z.string().nullable(),
+  file: z.string(),
+  note: z.string(),
+});
+
+export const PressureCoverageSchema = z.strictObject({
+  status: z.enum(["not-queried", "not-recorded", "matched", "near", "outside"]),
+  queryKpa: z.number().positive().nullable(),
+  runsWithPressure: z.number().int().nonnegative(),
+  recordedRangeKpa: z.tuple([z.number().positive(), z.number().positive()]).nullable(),
+  nearestRatio: z.number().min(1).nullable(),
+  queryO2PartialPressureKpa: z.number().nonnegative().nullable(),
+  sources: z.array(SeriesPressureStatementSchema),
+  note: z.string(),
 });
 
 export const LabMatchSchema = z.strictObject({
@@ -239,6 +267,7 @@ export const LabMatchSchema = z.strictObject({
     o2Pct: finiteOrNull,
     airflowCmS: finiteOrNull,
     characteristicSizeMm: finiteOrNull,
+    pressureKpa: finiteOrNull,
   }),
   categoricalMismatches: z.array(z.enum(["material", "geometry"])),
 });
@@ -248,6 +277,7 @@ export const LabResultSchema = z.strictObject({
   matches: z.array(LabMatchSchema),
   insideEnvelope: z.boolean(),
   method: z.string(),
+  pressure: PressureCoverageSchema,
 });
 
 const ExperimentIdSchema = z.string().regex(/^PSI-\d+:.+$/, "expected an experiment id like PSI-25:B1");
@@ -313,6 +343,9 @@ type _Contract = [
   Assert<Exact<z.infer<typeof LabParamsSchema>, LabParams>>,
   Assert<Exact<z.infer<typeof LabMatchSchema>, LabMatch>>,
   Assert<Exact<z.infer<typeof LabResultSchema>, LabResult>>,
+  Assert<Exact<z.infer<typeof PressureBasisSchema>, PressureBasis>>,
+  Assert<Exact<z.infer<typeof SeriesPressureStatementSchema>, SeriesPressureStatement>>,
+  Assert<Exact<z.infer<typeof PressureCoverageSchema>, PressureCoverage>>,
   Assert<Exact<z.infer<typeof DashboardActionSchema>, DashboardAction>>,
 ];
 /* eslint-enable @typescript-eslint/no-unused-vars */

@@ -49,6 +49,8 @@ export interface LabParams {
   geometry: FuelGeometry;
   /** Thickness (film/slab) or diameter (rod/sphere), mm. */
   characteristicSizeMm: number | null;
+  /** Total pressure in kPa; null = pressure not part of the query (ADR-021). */
+  pressureKpa: number | null;
   k: number;
 }
 
@@ -57,7 +59,7 @@ export interface LabMatch {
   /** Normalized distance, 0 = identical on all compared features. */
   distance: number;
   /** Per-feature (query − experiment) deltas in source units; null when not comparable. */
-  deltas: Record<"o2Pct" | "airflowCmS" | "characteristicSizeMm", number | null>;
+  deltas: Record<"o2Pct" | "airflowCmS" | "characteristicSizeMm" | "pressureKpa", number | null>;
   categoricalMismatches: ("material" | "geometry")[];
 }
 
@@ -67,6 +69,37 @@ export interface LabResult {
   /** False when the query lies outside the measured envelope — UI must warn, never extrapolate. */
   insideEnvelope: boolean;
   method: string;
+  /** Whether any measured run can speak to the queried pressure (ADR-021). */
+  pressure: PressureCoverage;
+}
+
+/** What the source says about pressure for one investigation (verbatim, with file). */
+export interface SeriesPressureStatement {
+  accession: string;
+  basis: "recorded" | "stated-for-series" | "not-stated";
+  /** Verbatim sentence from the PSI file, or null when the files are silent. */
+  quote: string | null;
+  file: string;
+  note: string;
+}
+
+/**
+ * Pressure coverage of a Lab query (ADR-021).
+ * - not-queried: pressureKpa is null.
+ * - not-recorded: no run states a pressure → the pressure dimension is untested here.
+ * - matched / near / outside: nearest stated pressure within ×1.10 / ×1.30 / beyond.
+ */
+export interface PressureCoverage {
+  status: "not-queried" | "not-recorded" | "matched" | "near" | "outside";
+  queryKpa: number | null;
+  runsWithPressure: number;
+  recordedRangeKpa: [number, number] | null;
+  /** max(query, run) / min(query, run) for the closest stated pressure; ≥ 1. */
+  nearestRatio: number | null;
+  /** O₂ partial pressure of the query, kPa = O₂ fraction × total pressure (Dalton). */
+  queryO2PartialPressureKpa: number | null;
+  sources: SeriesPressureStatement[];
+  note: string;
 }
 
 /** Every UI state change, from a click or from the AI, is one of these. */

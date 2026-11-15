@@ -6,7 +6,7 @@ import { LabResultSchema } from "@/types/schemas";
 
 import { findClosestExperiments } from "./matching";
 
-const exact: LabParams = { o2Pct: 22.2, airflowCmS: 5, material: "PMMA", geometry: "rod", characteristicSizeMm: 6.35, k: 3 };
+const exact: LabParams = { o2Pct: 22.2, airflowCmS: 5, material: "PMMA", geometry: "rod", characteristicSizeMm: 6.35, pressureKpa: null, k: 3 };
 
 describe("What-if Lab matching", () => {
   it("ranks the exact measured run first with zero source-unit deltas", () => {
@@ -17,7 +17,7 @@ describe("What-if Lab matching", () => {
     expect(result.matches[0]).toEqual({
       experimentId: "PSI-25:O1",
       distance: 0,
-      deltas: { o2Pct: 0, airflowCmS: 0, characteristicSizeMm: 0 },
+      deltas: { o2Pct: 0, airflowCmS: 0, characteristicSizeMm: 0, pressureKpa: null },
       categoricalMismatches: [],
     });
     expect(result.matches.every((match) => getExperiment(match.experimentId))).toBe(true);

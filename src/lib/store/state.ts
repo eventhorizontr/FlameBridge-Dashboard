@@ -47,6 +47,7 @@ export const DEFAULT_LAB_PARAMS: LabParams = {
   material: "PMMA",
   geometry: "rod",
   characteristicSizeMm: 6.35,
+  pressureKpa: null,
   k: 5,
 };
 

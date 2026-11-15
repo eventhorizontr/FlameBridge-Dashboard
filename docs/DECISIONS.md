@@ -158,3 +158,22 @@ Studio · Conditions & source) instead of one long scroll. Tokens: deeper `--bg`
 translucent surfaces with backdrop blur, flame/plasma gradients; chart palettes stay valid because
 the composited `--surface-2` (≈ #101623) is within 1 step of the validated #0f1520. Motion respects
 `prefers-reduced-motion`. No dependency added.
+
+**ADR-021 · 2026-11-15 · proposed** (contract) — **Pressure in the What-if Lab, without assumed values.**
+Owner request: add cabin pressure to the system. The data does not record it: the PSI-25 BASS-II
+test table and ReadMe give no pressure; the Ops procedure mentions only "adding GN2 to the WV to
+reduce the O2 partial pressure"; the PSI-20 ACME BRE table says "The chamber pressures were also
+varied but are not identified in this summary table." Decisions: (1) *Contract*:
+`Conditions.pressureKpa?: number` + `pressureBasis?: "recorded" | "stated-for-series" |
+"not-stated"` (absent = not stated); `LabParams.pressureKpa: number | null` (Zod default null, so
+older params still parse); `LabMatch.deltas.pressureKpa`; `LabResult.pressure: PressureCoverage`
+with the verbatim series statements. (2) *No assumed cabin pressure* for any run, ever; a pressure
+query on today's data is reported as `not-recorded` and the Lab and the assistant say the query is
+outside the envelope on pressure. (3) *Ratio scale*: pressures are compared by
+r = max/min; matched r ≤ 1.10, near r ≤ 1.30 (retrieval choices, mirroring the FlameBridge
+Katman 4 profiles). Pressure enters the distance only when at least one run states it
+(term (|ln r| / ln(p_max/p_min))², weight 1), so today's ranking is unchanged. (4) *Derived ppO₂*
+(Dalton) only for the query, or a run with both values stated. Code: `src/lib/science/pressure.ts`
+(shared by the server matcher and the client matcher), tests `pressure.test.ts`. Follow-ups
+(Codex): pipeline emits `pressureBasis: "not-stated"` explicitly; Lab pressure control design pass.
+

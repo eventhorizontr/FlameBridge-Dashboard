@@ -57,6 +57,9 @@ const LabQuery = z.strictObject({
   characteristicSizeMm: lab.characteristicSizeMm
     .default(null)
     .describe("Thickness (film/slab) or diameter (rod/spherical-section) in mm; null or omitted = size not compared"),
+  pressureKpa: lab.pressureKpa
+    .default(null)
+    .describe("Total pressure in kPa (e.g. 56.5 for the 34 % O₂ exploration atmosphere); null or omitted = pressure not compared. No measured run states a pressure today, so any value is reported as untested."),
   k: lab.k.default(5).describe("Number of measured runs to return"),
 });
 
@@ -214,12 +217,13 @@ export const TOOLS: AgentTool[] = [
           query: result.params,
           insideEnvelope: result.insideEnvelope,
           ...(result.insideEnvelope ? {} : { warning: OUTSIDE_ENVELOPE }),
+          pressure: result.pressure,
           method: result.method,
           deltaConvention:
-            "deltas = query − run in source units (O₂ percentage points, cm/s, mm); airflow is compared with the run's median set-point (comparedAirflowCmS); null = not comparable.",
+            "deltas = query − run in source units (O₂ percentage points, cm/s, mm, kPa); airflow is compared with the run's median set-point (comparedAirflowCmS); null = not comparable.",
           matches,
         },
-        summary: `Matched ${matches.length} measured ${runs} · ${result.insideEnvelope ? "inside" : "outside"} measured envelope`,
+        summary: `Matched ${matches.length} measured ${runs} · ${result.insideEnvelope ? "inside" : "outside"} measured envelope${result.pressure.status === "not-queried" ? "" : ` · pressure ${result.pressure.status}`}`,
         evidence: [DATASET_EVIDENCE(), ...hits.map(({ e }) => experimentEvidence(e))],
       };
     },

@@ -41,6 +41,12 @@ ReadMe — keep it `null` in data until confirmed.)
 ## Optional fields (ADR-014, backward compatible)
 All are **absent until measured** — never estimated, never `null`, never `0` as a placeholder.
 
+**`Conditions.pressureKpa?: number` / `pressureBasis?`** (ADR-021) — total pressure in
+kPa and how it is known (`recorded`, `stated-for-series`, `not-stated`; absent = not stated).
+PSI-25 and PSI-20 state no per-run pressure, so both stay absent; never fill them with an assumed
+ISS cabin pressure. The verbatim source statements live in `SERIES_PRESSURE`
+(`src/lib/science/pressure.ts`).
+
 **`Conditions.coFinalLowerBoundPpm?: number`** — exclusive lower bound, set only when the
 "Final CO (ppm)" cell literally states one: M5 `>500` → `coFinalPpm: null`,
 `coFinalLowerBoundPpm: 500` (true value > 500 ppm). Keep the existing QA flag. `OR` cells stay

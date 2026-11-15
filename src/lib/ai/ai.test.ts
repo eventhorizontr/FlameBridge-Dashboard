@@ -105,7 +105,7 @@ describe("tools over PSI-25", () => {
     expect(executeTool("dashboard_actions", { actions: [{ type: "launchRocket" }] }).ok).toBe(false);
   });
 
-  const exact: LabParams = { o2Pct: 22.2, airflowCmS: 5, material: "PMMA", geometry: "rod", characteristicSizeMm: 6.35, k: 3 };
+  const exact: LabParams = { o2Pct: 22.2, airflowCmS: 5, material: "PMMA", geometry: "rod", characteristicSizeMm: 6.35, pressureKpa: null, k: 3 };
   type ToolMatch = LabMatch & { comparedAirflowCmS: number | null; run: { id: string; testId: string } };
 
   it("find_closest_experiments returns the matching module's measured neighbours with evidence", () => {

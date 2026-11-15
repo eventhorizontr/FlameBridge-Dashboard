@@ -22,6 +22,9 @@ export type FuelGeometry =
 /** Flow direction relative to flame spread, when the source states it. */
 export type FlowConfiguration = "opposed" | "concurrent";
 
+/** Provenance of a run's pressure (ADR-021). */
+export type PressureBasis = "recorded" | "stated-for-series" | "not-stated";
+
 export type VideoKind = "primary" | "second-view" | "still-sequence";
 
 export interface PsiFileRef {
@@ -96,6 +99,13 @@ export interface Conditions {
   /** Fan voltage ×10 on the video overlay (max 122) and/or control-box pot settings (max 10). */
   fanDisplayRaw: string;
   radiometerGainRaw: string;
+  /**
+   * Total (ambient or chamber) pressure in kPa (ADR-021, ADR-014 optional-field rule). Absent = the
+   * source states no value for this run; it is never filled with an assumed cabin pressure.
+   */
+  pressureKpa?: number;
+  /** How `pressureKpa` is known; absent = "not-stated". */
+  pressureBasis?: PressureBasis;
 }
 
 export interface QualityReport {
