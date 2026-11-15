@@ -124,7 +124,8 @@ flowchart LR
 - **AI runs on the server only.** `/api/ai` runs one provider-agnostic agent loop with OpenAI
   (default) or Claude, over read-only tools on the same data the page shows. The system prompt
   requires every number to come from a tool result and a plain "not in the data" otherwise.
-  Replies stream as NDJSON and are rate-limited per client.
+  Replies stream as NDJSON. Each visitor IP gets 10 questions in total (ADR-028), counted in a
+  shared Redis store before the model runs; cross-site requests are refused.
 
 Layers and the decision/explanation boundary: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
@@ -161,6 +162,12 @@ pnpm dev                     # http://localhost:3000
 | `ANTHROPIC_API_KEY` | AI assistant with Claude (optional) | — |
 | `AI_DEFAULT_PROVIDER` | provider used first | `openai` |
 | `OPENAI_MODEL` / `CLAUDE_MODEL` | model override | `gpt-6.1-sol` / `claude-opus-5-5` |
+| `AI_QUOTA_LIMIT` | questions per visitor IP | `10` |
+| `AI_QUOTA_WINDOW_HOURS` | when the count resets (`0` = never) | `0` |
+| `AI_QUOTA_SALT` | secret used to hash IPs | built-in fallback |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | shared quota counter (Upstash Redis via Vercel Marketplace) | in-memory (dev only) |
+
+**Deploying to Vercel:** see [docs/DEPLOY.md](docs/DEPLOY.md).
 
 **Without a key** everything except the assistant works; the panel says which provider is off
 and why. There is no mock AI mode.

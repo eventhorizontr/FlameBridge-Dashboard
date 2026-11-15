@@ -291,3 +291,24 @@ architecture intact.
 - *Ownership:* two one-line edits in Codex-owned files at the owner's request
   (`src/components/viz/mission-overview.tsx` slogan line, a comment in
   `src/lib/science/pressure.ts`); handoff filed.
+
+
+**ADR-028 · 2026-11-15 · accepted** — **AI question quota, Vercel readiness.** Owner request: at most
+10 assistant questions per IP address in total, enforced robustly, and a deployment that works on
+Vercel without surprises.
+- *Quota:* `src/lib/ai/quota.ts`. One accepted `POST /api/ai` = one question. The counter is an
+  atomic Redis `INCR` (Upstash REST via the Vercel Marketplace: `KV_REST_API_URL` /
+  `KV_REST_API_TOKEN`, or the `UPSTASH_*` names) on a salted SHA-256 of the IP, taken before the
+  model runs, so parallel requests cannot overshoot. Configurable: `AI_QUOTA_LIMIT` (10),
+  `AI_QUOTA_WINDOW_HOURS` (0 = never resets), `AI_QUOTA_SALT`. Redis configured but failing →
+  refuse (fail closed). No Redis → in-memory per instance (development only; documented).
+- *Route guards (order):* same-site check, 512 KB body cap, existing burst limit, schema, then the
+  quota; invalid requests and deployments without a provider key do not use a question.
+- *Contract:* `AiErrorCode` gains `quota_exceeded`; `AiProvidersResponse.quota?` reports the
+  visitor's allowance; responses carry `X-AI-Quota-Limit/Remaining/Reset`. The composer shows "N of
+  10 questions left" and disables itself at 0.
+- *Vercel:* run pages (`/experiments/[id]`, rendered on request) now bundle `public/data` JSON like
+  the API routes do. Steps in `docs/DEPLOY.md`.
+- *CI:* jobs are not started by GitHub until the account's billing is fixed; documented, workflow
+  unchanged.
+- *Footer:* the challenge line reads "Flame in Freefall" at the owner's request.
