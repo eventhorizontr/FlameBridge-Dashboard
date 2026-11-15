@@ -483,6 +483,7 @@ export function FlameViewer({
                     <video
                       key={`${activeVideo.id}-${useFallback ? "fb" : "pri"}-${retryNonce}`}
                       ref={videoRef}
+                      data-video-id={activeVideo.id}
                       src={streamSrc}
                       crossOrigin="anonymous"
                       playsInline
