@@ -5,6 +5,7 @@ import { scaleLinear } from "d3-scale";
 import { line } from "d3-shape";
 import {
   AlertTriangle,
+  Crosshair,
   ExternalLink,
   Film,
   GitCompareArrows,
@@ -30,8 +31,11 @@ import {
   QABadge,
   SegmentedControl,
 } from "@/components/ui";
+import { FlameStage } from "@/components/vision/flame-stage";
+import { useVisionContours, useVisionVideo } from "@/components/vision/use-vision";
 import { useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentDataset, ExperimentVideo, VideoKind } from "@/types/experiment";
+import type { FlameOverlay, FlameOverlayMode } from "@/types/vision";
 
 import { CatalogHydrator } from "./catalog-hydrator";
 import { characteristicSizeMm, lookupExperiment, representativeAirflow } from "./dataset-queries";
@@ -112,6 +116,16 @@ function CompareVideoTile({
     streamable.find((v) => v.id === selectedId) ?? defaultVid;
 
   const tileRef = useRef<HTMLVideoElement | null>(null);
+  const globalOverlay = useDashboard((st) => st.flameOverlay);
+  const [localOverlay, setLocalOverlay] = useState<FlameOverlay | null>(null);
+  const overlay = localOverlay ?? globalOverlay;
+  const visionLoad = useVisionVideo(experiment.investigation, activeVid?.id);
+  const vision = visionLoad.status === "ready" && visionLoad.data.status === "ok" ? visionLoad.data : null;
+  const contoursLoad = useVisionContours(
+    experiment.investigation,
+    activeVid?.id,
+    Boolean(vision) && (overlay.mode === "outline" || overlay.mode === "isolate"),
+  );
 
   useEffect(() => {
     if (tileRef.current) tileRef.current.playbackRate = rate;
@@ -179,6 +193,15 @@ function CompareVideoTile({
           </Button>
         </div>
       ) : (
+        <FlameStage
+          videoRef={tileRef}
+          videoId={activeVid.id}
+          experimentId={experiment.id}
+          captureName={`${experiment.investigation}_${experiment.testId}`}
+          analysis={vision}
+          contours={contoursLoad.status === "ready" ? contoursLoad.data : null}
+          overlay={overlay}
+        >
         <video
           key={activeVid.id}
           ref={(el) => {
@@ -201,6 +224,43 @@ function CompareVideoTile({
           onError={() => setFailed(true)}
           className="w-full aspect-video bg-[var(--bg)] object-contain"
         />
+        </FlameStage>
+      )}
+
+      {vision && (
+        <div className="px-2 py-1 border-t border-[var(--line)] flex flex-wrap items-center gap-1.5 bg-[var(--surface-1)]">
+          <SegmentedControl<FlameOverlayMode>
+            ariaLabel={`Flame overlay for ${experiment.testId}`}
+            size="sm"
+            value={overlay.mode}
+            onChange={(mode) => setLocalOverlay({ ...overlay, mode })}
+            options={[
+              { value: "off", label: "Off" },
+              { value: "box", label: "Frame" },
+              { value: "outline", label: "Outline" },
+              { value: "isolate", label: "Only" },
+            ]}
+          />
+          <Button
+            size="sm"
+            variant={overlay.follow ? "accent-soft" : "ghost"}
+            aria-pressed={overlay.follow}
+            onClick={() => setLocalOverlay({ ...overlay, follow: !overlay.follow })}
+            title="Crop to the flame and follow it"
+          >
+            <Crosshair className="size-3.5" aria-hidden="true" />
+            <span>Follow</span>
+          </Button>
+          {localOverlay && (
+            <button
+              type="button"
+              onClick={() => setLocalOverlay(null)}
+              className="text-[0.6875rem] text-[var(--text-3)] hover:text-[var(--text-1)] cursor-pointer"
+            >
+              use global
+            </button>
+          )}
+        </div>
       )}
 
       <div className="px-3 py-1.5 border-t border-[var(--line)] flex items-center justify-between gap-2 text-[0.75rem] text-[var(--text-2)]">
@@ -223,6 +283,7 @@ interface DiffField {
 }
 
 export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
+  const flameOverlay = useDashboard((st) => st.flameOverlay);
   const compareIds = useDashboard((s) => s.compareIds);
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
@@ -580,6 +641,27 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
                 title={`Master Transport · ${comparedRuns.length} Streams`}
                 actions={
                   <div className="flex flex-wrap items-center gap-1.5">
+                    <SegmentedControl<FlameOverlayMode>
+                      ariaLabel="Flame overlay for all streams"
+                      size="sm"
+                      value={flameOverlay.mode}
+                      onChange={(mode) => dispatch({ type: "setFlameOverlay", overlay: { mode } })}
+                      options={[
+                        { value: "off", label: "Off" },
+                        { value: "box", label: "Frame" },
+                        { value: "outline", label: "Outline" },
+                        { value: "isolate", label: "Flame only" },
+                      ]}
+                    />
+                    <Button
+                      size="sm"
+                      variant={flameOverlay.follow ? "accent-soft" : "ghost"}
+                      aria-pressed={flameOverlay.follow}
+                      onClick={() => dispatch({ type: "setFlameOverlay", overlay: { follow: !flameOverlay.follow } })}
+                    >
+                      <Crosshair className="size-3.5" aria-hidden="true" />
+                      <span>Follow all</span>
+                    </Button>
                     <Button size="sm" variant="primary" onClick={togglePlayAll}>
                       {playingAll ? (
                         <Pause className="size-3.5" aria-hidden="true" />
