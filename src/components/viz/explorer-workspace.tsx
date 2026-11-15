@@ -98,7 +98,7 @@ export function ExplorerWorkspace({ dataset, library = [] }: { dataset: Experime
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
         {/* Filters: sidebar on desktop, collapsible on small screens */}
         <details className="group rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] lg:hidden">
           <summary className="flex min-h-11 cursor-pointer items-center gap-2 px-3.5 text-[0.875rem] text-[var(--text-1)]">
@@ -111,7 +111,7 @@ export function ExplorerWorkspace({ dataset, library = [] }: { dataset: Experime
 
         <div role="tabpanel" id={tabPanelId("runs", view)} aria-labelledby={tabId("runs", view)} className="min-w-0">
           {view === "table" && (
-            <div className="grid gap-4 min-[1400px]:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="grid grid-cols-[minmax(0,1fr)] gap-4 min-[1400px]:grid-cols-[minmax(0,1fr)_340px]">
               <ExperimentMatrix experiments={filtered} />
               <div className="hidden min-[1400px]:block">
                 <div className="sticky top-20">

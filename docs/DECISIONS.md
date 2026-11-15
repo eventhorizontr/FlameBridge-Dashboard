@@ -169,3 +169,19 @@ Katman 4 profiles). Pressure enters the distance only when at least one run stat
 (shared by the server matcher and the client matcher), tests `pressure.test.ts`. Follow-ups
 (Codex): pipeline emits `pressureBasis: "not-stated"` explicitly; Lab pressure control design pass.
 
+
+**ADR-022 · 2026-11-15 · accepted** — **Mockup-driven UI pass (supersedes ADR-020).** The owner
+rejected a Claude-only redesign and asked for this process: a planning agent audits the UI, Codex
+generates screen mockups, and Claude implements from them. The resulting information architecture
+is in [UX.md](UX.md).
+- *Shell:* rail is Home · Runs · Compare · Lab · Learn; the top bar shows a breadcrumb; the mode is
+  labelled Guided (`UserMode` unchanged).
+- *Footage:* every flame video opens on the measured steady-peak frame, so no viewer starts black.
+- *Run page:* conditions strip, a glance card and tabs.
+- *Runs:* filter sidebar with Table / Map / Gallery.
+- *Compare:* differences first, with image-derived rows; synced start at the latest first flame.
+- *Lab:* matches first and the map on the data range.
+- *Landing:* from scratch; all numbers and picks are computed.
+- *Ownership:* for this pass Claude edited Codex-owned `viz/`, `lab/`, `(dashboard)/` and
+  `(learn)/` files at the owner's request; Codex keeps ownership afterwards.
+- No contract or dependency change.

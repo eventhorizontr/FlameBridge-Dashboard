@@ -129,10 +129,10 @@ function Numbers({ d }: { d: LandingData }) {
   return (
     <dl className="grid grid-cols-2 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] sm:grid-cols-3 lg:grid-cols-6">
       {items.map((it) => (
-        <div key={it.l} className="border-b border-r border-[var(--line)] px-4 py-4 [&:nth-child(2n)]:border-r-0 sm:[&:nth-child(2n)]:border-r sm:[&:nth-child(3n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(3n)]:border-r lg:last:border-r-0">
-          <dd className="num text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-[var(--text-1)]">{it.v}</dd>
-          <dt className="mt-1.5 text-[0.8125rem] text-[var(--text-2)]">{it.l}</dt>
-          <p className="num mt-2 text-[0.6875rem] text-[var(--text-3)]">src: {it.src}</p>
+        <div key={it.l} className="flex flex-col border-b border-r border-[var(--line)] px-4 py-4 [&:nth-child(2n)]:border-r-0 sm:[&:nth-child(2n)]:border-r sm:[&:nth-child(3n)]:border-r-0 lg:border-b-0 lg:[&:nth-child(3n)]:border-r lg:last:border-r-0">
+          <dt className="order-2 mt-1.5 text-[0.8125rem] text-[var(--text-2)]">{it.l}</dt>
+          <dd className="order-1 num text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-[var(--text-1)]">{it.v}</dd>
+          <dd className="order-3 num mt-2 text-[0.6875rem] text-[var(--text-3)]">src: {it.src}</dd>
         </div>
       ))}
     </dl>
