@@ -4,6 +4,7 @@
  */
 export const SITE = {
   name: "FlameBridge",
+  slogan: "Bridge the unknown",
   tagline: "Microgravity combustion, from NASA's ISS archive to your screen",
   challenge: "NASA Space Apps Challenge 2026 · Fire in Freefall",
   team: {

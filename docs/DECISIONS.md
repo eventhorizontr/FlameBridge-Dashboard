@@ -163,7 +163,7 @@ with the verbatim series statements. (2) *No assumed cabin pressure* for any run
 query on today's data is reported as `not-recorded` and the Lab and the assistant say the query is
 outside the envelope on pressure. (3) *Ratio scale*: pressures are compared by
 r = max/min; matched r ≤ 1.10, near r ≤ 1.30 (retrieval choices, mirroring the FlameBridge
-Katman 4 profiles). Pressure enters the distance only when at least one run states it
+Layer 4 profiles). Pressure enters the distance only when at least one run states it
 (term (|ln r| / ln(p_max/p_min))², weight 1), so today's ranking is unchanged. (4) *Derived ppO₂*
 (Dalton) only for the query, or a run with both values stated. Code: `src/lib/science/pressure.ts`
 (shared by the server matcher and the client matcher), tests `pressure.test.ts`. Follow-ups
@@ -265,3 +265,29 @@ Compare and the Lab; Explore and Compare are separate places, as in the design b
 - "Runs" (ADR-022) is renamed back to **Explore** (Experiment explorer, compass icon) in the rail,
   breadcrumb, page title and AI prompt; Compare keeps its own page. Selecting 2–4 runs in Explore
   still sends them to Compare, as before #62.
+
+
+**ADR-027 · 2026-11-15 · accepted** — **Submission-ready repo: FlameBridge brand, slogan and
+evidence docs.** Owner request: follow the team's GitHub preparation plan, keep the whole repo in
+English, use the slogan **"Bridge the unknown"** in the repo and the dashboard, and keep the
+architecture intact.
+- *Slogan:* `SITE.slogan` (`src/config/site.ts`) is the single source. Shown under the landing
+  hero title, under the product name on Home, in the dashboard and landing footers, and in the
+  default page title. No contract or dependency change.
+- *Brand:* product name FlameBridge in `AGENTS.md`, `docs/PRODUCT.md`, `docs/DEMO.md` and the
+  package name (`flamebridge`). "Fire in Freefall" stays as the name of the challenge.
+- *Docs (existing tree kept, as the plan allows):* `README.md` follows the plan's ten sections
+  with a real screenshot (`docs/media/home.png`). New `docs/DATA_SOURCES.md`, `docs/data-manifest.csv`
+  (source, file, hash, transformation, check, limit per file; missing access dates stated, not
+  invented), `docs/METHODS_AND_VALIDATION.md` (only checks that run are listed as checks),
+  `docs/LIMITATIONS.md`, `docs/AI_USAGE.md`, `docs/MEDIA_CREDITS.md`. `docs/DEMO.md` gains a
+  one-scenario guided example. `docs/ARCHITECTURE.md` gains the six layers, the four kinds of
+  information and the decision/explanation boundary; its AI section is corrected to the code
+  (NDJSON, current tool list, rate limit).
+- *English-only:* the last Turkish word ("Katman" → "Layer") is replaced in `pressure.ts` and here.
+- *Licence:* the owner chose **MIT** for the repository's own code and docs (`LICENSE`, scope note
+  excludes NASA data, brand assets and dependencies).
+- *Open for the owner:* live app and slide-deck links, generated-media credits for the presentation video.
+- *Ownership:* two one-line edits in Codex-owned files at the owner's request
+  (`src/components/viz/mission-overview.tsx` slogan line, a comment in
+  `src/lib/science/pressure.ts`); handoff filed.

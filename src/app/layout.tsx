@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+import { SITE } from "@/config/site";
 import { DashboardRuntime } from "@/lib/store/dashboard-runtime";
 
 import "./globals.css";
@@ -10,8 +11,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "FlameBridge · Fire in Freefall", template: "%s · FlameBridge" },
-  applicationName: "FlameBridge",
+  title: { default: `${SITE.name} · ${SITE.slogan}`, template: `%s · ${SITE.name}` },
+  applicationName: SITE.name,
   description:
     "Explore NASA microgravity combustion experiments (PSI-25 BASS-II) with interactive visualizations, real ISS flame footage and an AI research assistant.",
 };

@@ -93,6 +93,9 @@ export function MissionOverview({
               <h1 className="text-[2rem] sm:text-[3rem] font-semibold tracking-[-0.02em] leading-[1.08] text-[var(--text-1)]">
                 {SITE.name}
               </h1>
+              <p className="text-[1.125rem] sm:text-[1.25rem] font-medium tracking-[-0.01em] text-[var(--accent)]">
+                {SITE.slogan}
+              </p>
 
               <p className="text-[1rem] text-[var(--text-2)] leading-relaxed max-w-2xl">
                 {mode === "learn"

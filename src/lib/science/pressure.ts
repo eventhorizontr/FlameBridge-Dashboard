@@ -11,7 +11,7 @@
  *   Pressures are compared on a ratio (log) scale: 43 ↔ 53.75 kPa and 101.3 ↔ 126.6 kPa are the
  *   same ×1.25 step. This is a retrieval choice, like the weights in `matching.ts`.
  * - Thresholds: matched r ≤ 1.10, near r ≤ 1.30. Retrieval choices, not physics; they mirror the
- *   FlameBridge Katman 4 profiles (tolerance ×1.10, analog tolerance ×1.30).
+ *   FlameBridge Layer 4 profiles (tolerance ×1.10, analog tolerance ×1.30).
  * - O₂ partial pressure  p_O2 [kPa] = (O₂ % by volume / 100) × p_total [kPa]  (Dalton's law),
  *   computed only when both values are stated.
  * - Distance term (only when ≥ 1 run states a pressure): w × (|ln r| / ln(p_max / p_min))² with
