@@ -53,7 +53,7 @@ extinction). Inside luminous regions, weak pixels are kept only within 28 px of 
 the chamber walls is dropped and reported as `haloPx`); nearby regions (< 40 px) are grouped and the
 brightest group is the flame — remote reflections are reported as `otherPx`. Frames with the cabin
 lights on are flagged, not measured. Known bias: the mask includes the ~2 px blurred fringe of bright
-edges, so compact flames read up to ~25 % large; every run is measured the same way.
+edges, so compact flames read up to ~15–20 % large; every run is measured the same way.
 
 **Per-frame QA flags** (bitmask in `series.flags`): 1 lit chamber · 2 transient (area > 3× the
 ±3 s median: igniter flash) · 4 other luminous regions · 8 > 25 % of the mask saturated · 16 flame

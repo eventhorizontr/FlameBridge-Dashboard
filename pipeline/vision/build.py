@@ -127,7 +127,8 @@ def build_index(data_dir: Path, out_dir: Path, accession: str) -> dict:
                 continue
             d = json.loads(path.read_text(encoding="utf8"))
             entry = {
-                "videoId": d["videoId"], "experimentId": d["experimentId"], "kind": d.get("kind"),
+                # a file can be filed under several tests: index it under each of them
+                "videoId": d["videoId"], "experimentId": experiment["id"], "kind": video.get("kind"),
                 "status": d.get("status"), "reason": d.get("reason"),
                 "durationS": (d.get("source") or {}).get("durationS"),
                 "hasContours": (out_dir / f"{video['id']}.contours.json").exists(),
@@ -170,7 +171,8 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--embed-cache", type=Path, default=None)
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 2))
-    parser.add_argument("--only", default="")
+    parser.add_argument("--only", default="", help="comma-separated test ids")
+    parser.add_argument("--videos", default="", help="comma-separated video ids (implies --force for them)")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--embed", action="store_true", help="run the GPU DINOv2 pass afterwards")
     parser.add_argument("--index-only", action="store_true")
@@ -190,8 +192,11 @@ def main() -> int:
         print(f"rekeyed {done.count('ok')} sprites", flush=True)
     elif not args.index_only:
         only = {x.strip() for x in args.only.split(",") if x.strip()} or None
+        wanted = {x.strip() for x in args.videos.split(",") if x.strip()}
         jobs = [(e, v) for e, v in jobs_for(args.data, only)
-                if args.force or not up_to_date(out_dir, v["id"], ALGORITHM_VERSION)]
+                if ((v["id"] in wanted) if wanted else (args.force or not up_to_date(out_dir, v["id"], ALGORITHM_VERSION)))]
+        seen: set[str] = set()
+        jobs = [j for j in jobs if not (j[1]["id"] in seen or seen.add(j[1]["id"]))]  # a file can serve several tests
         print(f"{len(jobs)} videos to analyse with {args.workers} workers -> {out_dir}", flush=True)
         started = time.time()
         with ProcessPoolExecutor(max_workers=args.workers) as pool:

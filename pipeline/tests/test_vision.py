@@ -76,8 +76,8 @@ class Segmentation(unittest.TestCase):
         self.assertTrue(270 <= x <= 285 and 225 <= y <= 235, m.bbox)
         self.assertTrue(155 <= w <= 175 and 55 <= h <= 70, m.bbox)
         # Documented bias: the mask includes the ~2 px blurred fringe of bright edges, so a compact
-        # 80x30 px flame reads ~20-25 % large. Comparisons between runs use the same method.
-        self.assertTrue(1.0 <= m.area_px / (np.pi * 80 * 30) <= 1.3, m.area_px)
+        # 80x30 px flame reads ~15-20 % large. Comparisons between runs use the same method.
+        self.assertTrue(1.0 <= m.area_px / (np.pi * 80 * 30) <= 1.22, m.area_px)
         self.assertGreater(m.core_px, 0.8 * m.area_px)
 
     def test_dim_blue_flame_is_kept(self):
@@ -126,6 +126,9 @@ class TimeSeries(unittest.TestCase):
         flagged = transient_frames(area, 10.0, 3.0, 60)
         self.assertTrue(flagged[60:63].all())
         self.assertFalse(flagged[:60].any())
+        # flicker of a small flame (300 -> 1500 px) is not a glow
+        flicker = [300] * 30 + [1500] * 2 + [300] * 30
+        self.assertFalse(transient_frames(flicker, 10.0, 3.0, 60).any())
 
     def test_novelty_finds_phase_boundary(self):
         from analyze import embedding_summary

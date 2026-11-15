@@ -274,7 +274,7 @@ function Analytics({
             {a.segmentation?.strongThreshold}) form the flame when they belong to a luminous core or a large dim region (the blue
             zone near extinction). Light thrown on chamber walls is dropped by a distance rule; frames with cabin lights on are
             not measured. Areas are pixels — the footage has no visible scale, so nothing is converted to millimetres. The mask
-            includes the ~2 px blurred fringe of bright edges, so compact flames read up to ~25 % large; every run is measured
+            includes the ~2 px blurred fringe of bright edges, so compact flames read up to ~15–20 % large; every run is measured
             the same way.
           </p>
           <p>

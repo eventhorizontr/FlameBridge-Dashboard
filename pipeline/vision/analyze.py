@@ -24,7 +24,7 @@ from profiles import VisionProfile
 import segment as seg
 import similarity as sim
 
-ALGORITHM_VERSION = "1.0.0"
+ALGORITHM_VERSION = "1.1.0"
 KEYFRAME_TILE = (192, 128)
 KEYFRAME_COUNT = 12
 EMBED_SIZE = (336, 224)  # multiples of the DINOv2 patch size (14)
@@ -36,6 +36,7 @@ class Registration:
     x0: int
     y0: int
     scale: float
+    yscale: float = 1.0
 
 
 def _round(value: float | None, digits: int = 0):
@@ -50,21 +51,35 @@ def _read_at(cap: cv2.VideoCapture, index: int) -> np.ndarray | None:
     return frame if ok else None
 
 
+SQUEEZE_YSCALES = (1.0, 0.95, 0.9, 0.85, 0.8, 0.75)
+
+
 def register_video(cap: cv2.VideoCapture, frames: int, reader: OsdReader, probes: int = 9) -> Registration | None:
-    """Most common overlay registration among a few probe frames (None if no overlay)."""
-    found: list[Registration] = []
+    """Most common overlay registration among a few probe frames (None if no overlay).
+
+    Nominal geometry first; if no probe matches well (< 0.9), vertically squeezed overlays are
+    tried too (some recordings put the 4:3 picture into a 16:9 frame) and the best wins.
+    """
+    greys = []
     for k in range(probes):
         frame = _read_at(cap, int(frames * (k + 0.5) / probes))
-        if frame is None:
-            continue
-        score, x0, y0, scale = reader.register(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
-        if score >= reader.layout.min_register_score:
-            found.append(Registration(score, x0, y0, scale))
-    if not found:
+        if frame is not None:
+            greys.append(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
+    best: list[Registration] = []
+    for yscale in SQUEEZE_YSCALES:
+        found = []
+        for grey in greys:
+            score, x0, y0, scale = reader.register(grey, yscale=yscale)
+            if score >= reader.layout.min_register_score:
+                found.append(Registration(score, x0, y0, scale, yscale))
+        if found and (not best or max(r.score for r in found) > max(r.score for r in best)):
+            best = found
+        if best and max(r.score for r in best) >= 0.9:
+            break
+    if not best:
         return None
-    key = Counter((r.x0, r.y0, r.scale) for r in found).most_common(1)[0][0]
-    best = max((r for r in found if (r.x0, r.y0, r.scale) == key), key=lambda r: r.score)
-    return best
+    key = Counter((r.x0, r.y0, r.scale, r.yscale) for r in best).most_common(1)[0][0]
+    return max((r for r in best if (r.x0, r.y0, r.scale, r.yscale) == key), key=lambda r: r.score)
 
 
 def osd_box(registration: Registration | None, reader: OsdReader | None, width: int) -> tuple[int, int, int, int] | None:
@@ -72,7 +87,7 @@ def osd_box(registration: Registration | None, reader: OsdReader | None, width: 
         return None
     layout = reader.layout
     top = registration.y0 - 8
-    bottom = registration.y0 + layout.date_row * layout.row_px + 13 + 8
+    bottom = registration.y0 + int((layout.date_row * layout.row_px + 13) * registration.yscale) + 8
     left = registration.x0 - 12
     return (max(0, left), max(0, top), width - max(0, left), bottom - max(0, top))
 
@@ -172,7 +187,8 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
             continue
         if registration is not None:
             grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            if reader.check_at(grey, registration.x0, registration.y0, registration.scale) < reader.layout.min_register_score:
+            if reader.check_at(grey, registration.x0, registration.y0, registration.scale,
+                               registration.yscale) < reader.layout.min_register_score:
                 continue
         samples.append(seg.prepare(frame, params))
     if len(samples) < 10:
@@ -213,14 +229,15 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
         osd_values: dict = {}
         clock = None
         if registration is not None:
-            score = reader.check_at(grey, registration.x0, registration.y0, registration.scale)
+            score = reader.check_at(grey, registration.x0, registration.y0, registration.scale, registration.yscale)
             valid = score >= reader.layout.min_register_score
             n_analysed = len(rows)
             # the overlay refreshes at 5 Hz and the clock at 1 Hz: read fields every other analysed
             # frame and the clock about once per second (gaps are forward-filled within 0.4 s)
             if valid and n_analysed % osd_every == 0:
                 with_clock = n_analysed % clock_every == 0
-                reading = reader.read(grey, registration.x0, registration.y0, score, registration.scale, with_clock)
+                band, bx, by = reader.canonical(grey, registration.x0, registration.y0, registration.yscale)
+                reading = reader.read(band, bx, by, score, registration.scale, with_clock)
                 osd_values, clock = reading.values, reading.clock
                 last_osd = (n_analysed, osd_values)
             elif valid and last_osd is not None and n_analysed - last_osd[0] < osd_every:
@@ -268,8 +285,11 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
     times = [r["t"] for r in rows]
     area = [r.get("area") for r in rows]
     visible = presence_runs(area, hz, params.present_min_area_px, params.present_min_run_s)
+    # gap closing must never mark an unmeasured frame (LOS, lit chamber) as "flame visible"
+    visible &= np.array([r.get("area") is not None for r in rows], dtype=bool)
     valid_mask = np.array([r["valid"] for r in rows], dtype=bool)
-    transient = transient_frames(area, hz, params.transient_factor, params.present_min_area_px)
+    transient = transient_frames(area, hz, params.transient_factor, params.present_min_area_px,
+                                 params.transient_min_area_px)
     for r, tr in zip(rows, transient):
         flags = 0
         if r.get("lit"):
@@ -324,7 +344,7 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
             "fields": [{"key": f.key, "label": f.label, "unit": f.unit, "meaning": f.meaning,
                         "displayScale": f.scale} for f in reader.layout.fields],
             "registration": {"score": round(registration.score, 3), "x0": registration.x0,
-                             "y0": registration.y0, "scale": registration.scale},
+                             "y0": registration.y0, "scale": registration.scale, "yscale": registration.yscale},
             "readRate": read_rates,
             "dateCheck": date_check([c for _, c in clocks], expected),
             "clock": start,
@@ -405,13 +425,16 @@ FLAG_SATURATED = 8  # > 25 % of the flame mask clipped at 255: brightness is a l
 FLAG_EDGE = 16  # flame region touches the frame edge: it may extend out of view
 
 
-def transient_frames(area: list[int | None], hz: float, factor: float, min_area: int) -> np.ndarray:
-    """Frames whose area exceeds ``factor`` x the median of the surrounding +-3 s (self excluded)."""
+def transient_frames(area: list[int | None], hz: float, factor: float, min_area: int,
+                     min_glow_px: int = 15000) -> np.ndarray:
+    """Large, short area spikes: area >= ``min_glow_px`` and > ``factor`` x the median of the
+    surrounding +-3 s (self excluded). The size floor keeps the natural flicker of small flames
+    from being mistaken for igniter flashes or scene lighting."""
     a = np.array([x or 0 for x in area], dtype=float)
     half = max(1, int(round(3 * hz)))
     out = np.zeros(len(a), dtype=bool)
     for i in range(len(a)):
-        if a[i] < 4 * min_area:
+        if a[i] < max(4 * min_area, min_glow_px):
             continue
         window = np.concatenate([a[max(0, i - half):i], a[i + 1:i + 1 + half]])
         if window.size and a[i] > factor * max(float(np.median(window)), min_area):
@@ -420,7 +443,7 @@ def transient_frames(area: list[int | None], hz: float, factor: float, min_area:
 
 
 def summarize(rows: list[dict], visible: np.ndarray, hz: float) -> dict:
-    vis = [r for r, v in zip(rows, visible) if v]
+    vis = [r for r, v in zip(rows, visible) if v and r.get("area") is not None]
     if not vis:
         return {"meanAreaPx": None, "maxAreaPx": None, "maxBBoxW": None, "maxBBoxH": None,
                 "meanBrightness": None, "saturatedFraction": None, "meanSsim": None, "meanIou": None,

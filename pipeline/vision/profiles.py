@@ -43,7 +43,7 @@ class OsdLayout:
 @dataclass(frozen=True)
 class SegmentationParams:
     work_scale: float = 0.5  # analyse at half resolution (interlaced NTSC has 240 lines per field)
-    blur_sigma: float = 1.0
+    blur_sigma: float = 0.7
     background_samples: int = 64
     background_percentile: float = 25.0
     low_sigma: float = 4.0  # weak threshold = max(low_floor, low_sigma * noise)
@@ -58,6 +58,7 @@ class SegmentationParams:
     merge_px: float = 20.0  # work-scale gap below which regions belong to one flame (40 full-res px)
     lit_threshold: float = 22.0  # scene median (8-bit) above which the chamber counts as lit
     transient_factor: float = 3.0  # area > factor x rolling median (+-3 s) => transient
+    transient_min_area_px: int = 15000  # ... and at least this large (~4 % of the frame): a glow, not flicker
     present_min_area_px: int = 60  # full-res px for a frame to count as "flame visible"
     present_min_run_s: float = 0.5
     contour_epsilon_px: float = 1.25

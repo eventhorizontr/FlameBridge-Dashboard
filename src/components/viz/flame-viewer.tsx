@@ -28,6 +28,7 @@ import {
   SegmentedControl,
   useHighlightPulse,
 } from "@/components/ui";
+import { FlameScrubStrip } from "@/components/vision/flame-scrub-strip";
 import { FlameStage } from "@/components/vision/flame-stage";
 import { useVisionContours, useVisionVideo } from "@/components/vision/use-vision";
 import { useDashboard, useDispatch } from "@/lib/store";
@@ -584,9 +585,18 @@ export function FlameViewer({
                   <span className="ml-2 text-[var(--accent)]">
                     f{presentedFrames ?? frameNumber}
                   </span>
-                  <span className="ml-1 text-[var(--text-3)]">@{fps}fps</span>
+                  <span className="ml-1 text-[var(--text-3)]">@{Number(fps.toFixed(2))} fps</span>
                 </div>
               </div>
+
+              {vision && (
+                <FlameScrubStrip
+                  analysis={vision}
+                  currentTime={currentTime}
+                  duration={duration}
+                  onSeek={(t) => seekTo(t, true)}
+                />
+              )}
 
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex flex-wrap items-center gap-1.5">

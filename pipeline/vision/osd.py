@@ -46,36 +46,50 @@ class OsdReader:
         if self.label is None:
             raise FileNotFoundError("OSD label template missing from pipeline/vision/assets")
         self.search_h = self.label.shape[0] + 160
-        self._templates = {1.0: self.label}
+        self._templates: dict[tuple[float, float], np.ndarray] = {(1.0, 1.0): self.label}
         model_path = ASSETS / model
         self.net = cv2.dnn.readNetFromONNX(str(model_path)) if model_path.exists() else None
         self.digits = [i for i, ch in enumerate(layout.glyph_chars) if ch.isdigit()]
 
     # ---------------------------------------------------------------- registration
-    def _template(self, scale: float) -> np.ndarray:
-        if scale not in self._templates:
-            self._templates[scale] = cv2.resize(self.label, None, fx=scale, fy=1.0, interpolation=cv2.INTER_LINEAR)
-        return self._templates[scale]
+    def _template(self, scale: float, yscale: float = 1.0) -> np.ndarray:
+        key = (scale, yscale)
+        if key not in self._templates:
+            self._templates[key] = cv2.resize(self.label, None, fx=scale, fy=yscale, interpolation=cv2.INTER_AREA)
+        return self._templates[key]
 
-    def register(self, gray: np.ndarray, scales: tuple[float, ...] | None = None) -> tuple[float, int, int, float]:
-        """Return (score, x0, y0, scale) of the first glyph cell of the label row."""
+    def register(self, gray: np.ndarray, scales: tuple[float, ...] | None = None,
+                 yscale: float = 1.0) -> tuple[float, int, int, float]:
+        """Return (score, x0, y0, scale) of the first glyph cell of the label row.
+
+        ``yscale`` < 1 handles recordings whose 4:3 picture was squeezed into a 16:9 frame.
+        """
         region = gray[: min(gray.shape[0], self.search_h)]
         best = (-1.0, 0, 0, 1.0)
         dx, dy = self.layout.template_offset
         for scale in scales or REGISTER_SCALES:
-            template = self._template(scale)
+            template = self._template(scale, yscale)
             if region.shape[0] < template.shape[0] or region.shape[1] < template.shape[1]:
                 continue
             _, score, _, loc = cv2.minMaxLoc(cv2.matchTemplate(region, template, cv2.TM_CCOEFF_NORMED))
             if score > best[0]:
-                best = (float(score), int(round(loc[0] + dx * scale)), loc[1] + dy, float(scale))
+                best = (float(score), int(round(loc[0] + dx * scale)), int(round(loc[1] + dy * yscale)), float(scale))
         return best
 
-    def check_at(self, gray: np.ndarray, x0: int, y0: int, scale: float = 1.0) -> float:
+    def canonical(self, gray: np.ndarray, x0: int, y0: int, yscale: float) -> tuple[np.ndarray, int, int]:
+        """Overlay band stretched back to the nominal row height when the picture was squeezed."""
+        if yscale == 1.0:
+            return gray, x0, y0
+        top = max(0, y0 - 12)
+        bottom = min(gray.shape[0], int(y0 + (self.layout.date_row * self.layout.row_px + CELL_H) * yscale + 12))
+        band = cv2.resize(gray[top:bottom], None, fx=1.0, fy=1.0 / yscale, interpolation=cv2.INTER_LINEAR)
+        return band, x0, int(round((y0 - top) / yscale))
+
+    def check_at(self, gray: np.ndarray, x0: int, y0: int, scale: float = 1.0, yscale: float = 1.0) -> float:
         """Presence score at a known registration (searches +-4 px; same scale as ``register``)."""
-        template = self._template(scale)
+        template = self._template(scale, yscale)
         dx, dy = self.layout.template_offset
-        x, y = int(round(x0 - dx * scale)), y0 - dy
+        x, y = int(round(x0 - dx * scale)), int(round(y0 - dy * yscale))
         pad = 4
         region = gray[max(0, y - pad):y + template.shape[0] + pad, max(0, x - pad):x + template.shape[1] + pad]
         if region.shape[0] < template.shape[0] or region.shape[1] < template.shape[1]:
