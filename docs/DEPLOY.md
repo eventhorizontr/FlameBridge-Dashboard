@@ -5,7 +5,7 @@ The app is a standard Next.js 16 project; Vercel detects it, installs with pnpm
 
 ## 1. Import the project
 
-1. vercel.com → **Add New… → Project** → import `eventhorizontr/Dashboardv1`.
+1. vercel.com → **Add New… → Project** → import `eventhorizontr/FlameBridge-Dashboard`.
 2. Framework preset: **Next.js** (auto). Root directory: repository root. Build and install
    commands: leave the defaults.
 

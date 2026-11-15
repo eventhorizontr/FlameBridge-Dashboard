@@ -12,7 +12,7 @@ Tokens live in [`src/app/globals.css`](../src/app/globals.css). **Components use
 3. **Motion explains, never decorates.** Transitions show causality (filter → chart morph,
    timeline scrub → flame frame). Respect `prefers-reduced-motion`.
 4. **Honesty is visible.** Uncertainty, nulls, QA flags and sources have first-class styling.
-5. **Two modes, one language.** Expert = dense, numeric, keyboard-first. Explore & Learn =
+5. **Two modes, one language.** Expert = dense, numeric, keyboard-first. Guided =
    narrative, larger type, guided steps. Same tokens, different density.
 
 ## 2. Colour
@@ -50,6 +50,7 @@ serious `#ec835a`, critical `#d03b3b`.
 
 ## 3. Typography
 - **UI / display:** Geist (variable). Display sizes use `letter-spacing: -0.02em`.
+- **Landing display:** Unbounded.
 - **Numbers, units, IDs, code:** Geist Mono with `font-variant-numeric: tabular-nums`.
 - Scale (rem): 0.75 caption · 0.8125 label · 0.875 body-sm · 1 body · 1.25 h4 · 1.5 h3 ·
   2 h2 · 3 h1 · 4.5 hero. Line-height 1.5 body, 1.1 display.
@@ -70,11 +71,11 @@ serious `#ec835a`, critical `#d03b3b`.
 - Charts morph between states (shared scales); never re-mount with a flash.
 - `prefers-reduced-motion: reduce` → opacity-only transitions, no parallax, no autoplay.
 
-## 6. Signature components (to build)
+## 6. Signature components
 | Component | Notes |
 |---|---|
 | **App shell** | slim left rail (icons + labels on hover), top context bar (dataset · mode switch · ⌘K), right docked AI assistant (collapsible) |
-| **Mode switch** | Expert ⇄ Explore & Learn; animated pill; persisted in URL |
+| **Mode switch** | Expert ⇄ Guided; animated pill; persisted in URL |
 | **Experiment matrix** | dense, sortable, virtualized table; inline sparkline of flow set-points; QA badge |
 | **Parameter-space map** | O₂ % × flow speed scatter, colour = fuel family, size = thickness/diameter; brushing filters everything |
 | **Flame viewer** | NASA video + synchronized timeline, frame stepping (←/→), playback rate, scrubber with event markers (ignition, flow change, extinction), A/B compare split |
@@ -85,6 +86,6 @@ serious `#ec835a`, critical `#d03b3b`.
 | **AI assistant panel** | streaming answers with evidence chips; tool-call timeline ("Filtered to PMMA rods · Opened O13a"); every UI action it takes is visible and undoable |
 
 ## 7. Accessibility
-WCAG 2.2 AA: text contrast ≥ 4.5:1 (`--text-2` on `--surface-1` passes), focus ring
+WCAG 2.1 AA (target): text contrast ≥ 4.5:1 (`--text-2` on `--surface-1` passes), focus ring
 2 px `--accent` + 2 px offset, every chart has a table view and `aria-describedby` summary,
 keyboard for all interactions, target size ≥ 24 px.

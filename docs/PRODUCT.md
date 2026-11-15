@@ -8,14 +8,14 @@ Credits are rendered from `src/config/site.ts` (single source).
 
 ## Problem
 NASA has flown hundreds of solid-fuel burns in microgravity, but the evidence sits in a
-repository of spreadsheets, PDFs and ~300 videos (PSI-25 alone: 695 files, ~275 GB). Engineers
+repository of spreadsheets, PDFs and videos (PSI-25 alone: 296 videos, 695 files, ~275 GB). Engineers
 cannot quickly compare conditions; students cannot see *why* fire behaves differently in space.
 
 ## Users & modes
 | Mode | Persona | Needs |
 |---|---|---|
 | **Expert** | combustion researcher, spacecraft-fire-safety engineer | filter 129 runs by O₂/flow/geometry, inspect raw rows & QA, frame-step footage, compare runs side by side, export, cite |
-| **Explore & Learn** | student, teacher, public | guided story ("Why is a space flame blue and round?"), plain-language explanations, interactive what-ifs, quizzes; always backed by real footage |
+| **Guided** | student, teacher, public | guided story ("Why is a space flame blue and round?"), plain-language explanations, interactive what-ifs, quizzes; always backed by real footage |
 
 Mode is a global switch (URL-persisted); both read the same data.
 
@@ -34,7 +34,7 @@ Mode is a global switch (URL-persisted); both read the same data.
 6. **AI research assistant** — user can switch between **OpenAI** and **Claude**; answers with evidence chips, runs validated calculations,
    compares experiments and **drives the dashboard** (filter, open, compare, switch mode,
    configure views) through the same store actions as the UI. Every action visible & undoable.
-7. **Learn track** — 4–6 short guided chapters built on real runs.
+7. **Learn Academy** — five short missions with quizzes, built on real runs.
 
 ## Scientific-integrity requirements
 - Display only measured values, documented derivations, or cited literature.
@@ -42,10 +42,13 @@ Mode is a global switch (URL-persisted); both read the same data.
 - Nulls and QA flags are shown, not hidden.
 - The assistant must refuse to invent values and say "not in the dataset" instead.
 
-## Stretch (post-v1)
-- Image-derived metrics from video (flame length, spread rate) via the Colab pipeline, each
-  marked "derived — method X".
-- Second dataset (PSI-20 ACME BRE) to prove multi-investigation architecture.
+## Delivered beyond v1
+- Image-derived metrics from video (flame area, visible time, overlay telemetry), in pixels
+  only and labelled image-derived. No spread rate is computed.
+- Second dataset builder (PSI-20 ACME BRE) to prove the multi-investigation architecture. It is
+  not shown in the main views.
+
+## Not built
 - Shareable "evidence boards" via URL state.
 
 ## Success criteria for judging

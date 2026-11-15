@@ -35,7 +35,7 @@ Everything shown is real NASA PSI-25 (BASS-II) data or footage; say so once, ear
 ## 1 · The problem (0:00–0:25) — `/` → `/overview`
 
 > "NASA flew 129 solid-fuel fires on the Space Station. The evidence sits in spreadsheets,
-> PDFs and about 300 videos. Engineers can't compare conditions and students can't see why
+> PDFs and 296 videos. Engineers can't compare conditions and students can't see why
 > fire behaves differently in space. FlameBridge turns that archive into one instrument."
 
 Start on the landing page, click **Go to dashboard**, then point at the live ISS footage and the stat strip on Home (129 runs, 6 PIs, O₂ envelope, 123 with video).
@@ -50,7 +50,7 @@ Mention the DOI chip: *every number on screen traces to the NASA source.*
 3. Double-click **O13a** → the flame viewer. Press **→** a few times: frame-by-frame NASA footage
    with the recorded airflow sequence 5 → 2 → 0 cm/s underneath.
 4. **Flame vision** (toolbar above the video): *Frame* → *Outline* → *Flame only* → *Follow flame*.
-   > "Every one of the ~300 ISS videos was analysed by computer vision: the flame is framed,
+   > "179 of the 296 ISS video files were measured by computer vision: the flame is framed,
    > measured in pixels, and the telemetry burned into the picture — duct airflow, fan, radiometer —
    > was read back by a small neural network trained only on labels the data itself provides."
    Point at the flame strip under the timeline, then scroll to **Flame Geometry, Telemetry & Frame

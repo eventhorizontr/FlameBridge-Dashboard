@@ -11,7 +11,7 @@ NASA Space Apps asks teams to state clearly where and how SI (AI) tools were use
 |---|---|---|
 | **Images and videos** made with SI must carry a visible watermark | The [demo video](https://youtu.be/5k1sTZwlpyk) contains SI-generated visual scenes. They carry a visible watermark and are acknowledged in the video description. Apart from that video, which is embedded on the landing page, and its two poster frames, the repository and the app contain no SI-generated image or video. Screen mockups made with SI were design references only and are not in the repository. The logo and brand assets were designed by the team by hand. Flame footage and stills are NASA PSI-25 recordings. Screenshots are captures of the running app. Flame outlines and overlays are drawn by deterministic code | Watermark in the video, video description, [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
 | **Audio** made with SI must be acknowledged in descriptive text and metadata | The demo video contains SI-generated audio, acknowledged in the video description and in the video's YouTube metadata. The repository contains no audio | Video description, [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
-| **Code** made with SI must be acknowledged in descriptive text and metadata | The code and documentation were written with SI coding agents under human direction | Text: this file and the README. Metadata: commits made by the agents carry an `Agent:` line and a `Co-authored-by` line naming the model |
+| **Code** made with SI must be acknowledged in descriptive text and metadata | The code and documentation were written with SI coding agents under human direction | Text: this file and the README. Metadata: the pull-request merge commits made by the agents carry an `Agent:` line, and many also a `Co-authored-by` line naming the model. Documentation commits after the build (from 2026-11-15 23:47 +03:00) were uploaded directly and carry no such line. They were also prepared with SI assistance |
 | **Data** made with SI must be acknowledged in descriptive text and metadata | Image-derived data in `public/data/*/vision/` uses two models: overlay telemetry is read by a CNN, and frame similarity uses DINOv2. NASA table values are parsed by rule-based code, with no SI | Text: this file and the vision README. Metadata: each per-video analysis file (`<id>.json`) and `index.json` record the pipeline name and version, `frame-index.json` names the DINOv2 model, and the UI labels these values "image-derived" |
 | **Generated content may not use NASA branding** | No NASA logo, insignia, flag or mission identifier is used anywhere | [MEDIA_CREDITS.md](MEDIA_CREDITS.md) |
 
@@ -89,7 +89,7 @@ owner and team (see [AGENTS.md](../AGENTS.md)).
 | OpenAI Codex | Data pipeline, science module, visualisations, Lab, Learn routes |
 | Antigravity | UI work until 2026-11-15 (ADR-016) |
 
-Commits made by the agents carry an `Agent:` line. Work runs through GitHub issues and pull requests. Decisions
+Pull-request merge commits made by the agents carry an `Agent:` line. Work runs through GitHub issues and pull requests. Decisions
 are logged in [DECISIONS.md](DECISIONS.md), and the hand-offs between agents are kept in
 [docs/coordination/](coordination/PROTOCOL.md).
 

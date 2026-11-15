@@ -18,14 +18,16 @@ design tool or a safety certification, and it does not replace physical testing.
 
 ## Image measurements
 
-- **Classical image processing, not deep learning.** The flame is measured with OpenCV background
-  subtraction and fixed rules. No segmentation model was trained: the footage is large and has no
-  hand-labelled flame masks.
+- **Flame segmentation is classical image processing.** The flame is measured with OpenCV
+  background subtraction and fixed rules. No segmentation model was trained: the footage is large
+  and has no hand-labelled flame masks. The overlay text is read by a small CNN and frame
+  similarity uses DINOv2, and neither measures the flame.
 - **No ground truth.** Flame outlines have not been checked against hand labels. Compact flames
   read up to about 15 to 20 % large.
 - **Pixels only.** The footage has no physical scale, so sizes are never converted to millimetres.
-- **Coverage.** 179 of 296 video files are measured. 102 second-view recordings are skipped,
-  10 are not instrument footage and 5 could not be decoded.
+- **Coverage.** 179 of 296 unique video files are measured. 102 second-view recordings are
+  skipped, 10 are not instrument footage and 5 could not be decoded. The app counts run-video
+  links, so it shows 208 measured, because repeated runs share a file.
 
 ## AI assistant
 

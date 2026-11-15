@@ -102,10 +102,10 @@ actions it proposes are validated on the server like any UI click.
 Feature vector per run: O₂ % (initial), representative flow (median of set-points), material,
 geometry, characteristic size (thickness or diameter). Distance = weighted, range-normalized
 Euclidean on numeric features + categorical mismatch penalties; weights documented in
-`src/lib/science/matching.ts`. Output: top-k with per-feature deltas and an "envelope"
-score (is the query inside the convex hull of measured runs?). Never interpolates outcomes.
+`src/lib/science/matching.ts`. Output: top-k with per-feature deltas and an envelope
+verdict: inside only when a complete same-material, same-geometry run lies within 0.25
+normalised distance and every input is inside that group's range. Never interpolates outcomes.
 
 ## 5. Quality
 A GitHub Actions workflow is configured for lint · typecheck · vitest · build · pipeline unit
-tests. The jobs do not start at present (account billing), so the same checks are run locally. Preview deploys
-per PR on Vercel. Lighthouse ≥ 90 performance/accessibility on the overview page.
+tests. The jobs do not start at present (account billing), so the same checks are run locally.

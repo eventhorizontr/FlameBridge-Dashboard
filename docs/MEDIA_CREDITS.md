@@ -10,6 +10,7 @@
 | Team mark and wordmark, horizon glow | `public/landing/team-mark.png`, `team-wordmark.png`, `horizon-glow.png` | Team design file (owner), made by hand without SI | Team |
 | Demo poster frames | `public/landing/demo-poster.webp`, `docs/media/demo-video.jpg` | Stills of the demo video | Team |
 | Screenshots | `docs/media/home.png`, `docs/qa/` | Captures of the running app | Team |
+| Our Road figures | `docs/media/our-road-at-a-glance.png`, `our-road-timeline.png` | Charts of the team's own timeline and numbers | Team |
 | OCR glyph assets | `pipeline/vision/assets/osd-glyphs.png`, `osd-label-row.png` | Cut from PSI-25 video overlays | CC0 1.0 (source) |
 | Fonts | Geist, Geist Mono, Unbounded | Google Fonts via `next/font` | SIL Open Font License 1.1 |
 | Icons | `lucide-react` | Lucide | ISC |
