@@ -77,6 +77,21 @@ checkerboard novelty give time-labelled image phases.
 **Area oscillation.** Periodogram of the detrended flame area in the longest visible run (≥ 20 s,
 ≥ 4 cycles); reported only if the peak holds ≥ 15 % of the variance.
 
+## Frame search, posters, 3D (ADR-018)
+
+```bash
+python pipeline/vision/build.py --data public/data/psi-25 --cache ../vision-cache/psi-25 --posters
+python pipeline/vision/frame_index.py --out public/data/psi-25/vision --frames ../vision-cache/embed-frames/psi-25
+python pipeline/vision/audit.py --data public/data/psi-25 --cache ../vision-cache/psi-25 --out audit/
+```
+
+- `frame-index.{bin,json}` + `frames/sim-*.webp`: 1 Hz flame-visible frames, DINOv2 → PCA-128 →
+  int8, thumbnail sheets. Queried by `/api/vision/similar` and `find_similar_frames`.
+- `frames/<id>.poster.webp`: the steady peak frame cropped around the flame (Overview library).
+- The 3D flame (experiment page) is computed in the browser from `<id>.contours.json`: revolve
+  (axisymmetric), extrude (planar) or space-time stacks, each labelled with its assumption.
+- `audit.py`: one tile per analysed video (peak + mid-burn) for a dataset-wide visual review.
+
 ## Outputs (`public/data/<acc>/vision/`)
 
 - `index.json` — status, events, summary and OCR audit of every video (contract: `src/types/vision.ts`)

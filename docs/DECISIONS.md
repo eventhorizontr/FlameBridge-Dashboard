@@ -118,3 +118,17 @@ series at 5 Hz, lazily loaded contours, keyframe sprites); contract `src/types/v
 access via `src/lib/vision`, `/api/vision`, AI tools `get_flame_analysis` / `rank_flame_metrics`
 and the `setFlameOverlay` action. Ownership: `pipeline/vision/**`, `src/lib/vision/**`,
 `src/components/vision/**`, `src/app/api/vision/**` and `public/data/*/vision/**` → Claude.
+
+**ADR-018 · 2026-11-15 · accepted** (amends ADR-017) — **Frame search, 3D flame and 3D Lab.**
+(1) *Contextual frame search*: DINOv2 embeddings of 1 Hz flame-visible frames, PCA-128 + int8
+(`frame-index.bin`; recall@10 vs. full vectors recorded), cosine search server-side
+(`/api/vision/similar`, tool `find_similar_frames`); results travel as an optional `gallery` on
+`tool_result` events (contract `FrameGallery` in `src/types/ai.ts`) and render as clickable tiles.
+(2) *3D flame*: built only from measured outlines; three models with stated assumptions — revolve
+(axisymmetric; default for rods, spheres, candles in axial flow), extrude (planar samples, depth
+illustrative), space-time (x, y, t; assumption-free). A two-camera visual hull is not built: video
+and still cameras are unsynchronised and uncalibrated (FlameBridge's rod-scale study found the
+dark body is the holder, so no mm scale either). (3) *Lab 3D*: O₂ × √flow × log size scatter of
+the measured runs with the query and the group envelope. (4) Peaks use frames fully inside the
+view (igniter glow excluded); still-camera playback layouts are measured on the photo only
+(vision v1.3.0). Deps: three, @react-three/fiber, @react-three/drei.
