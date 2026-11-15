@@ -211,7 +211,7 @@ Rebuild the data from NASA PSI (network): `pnpm data:psi25`. Vision layer:
   the vision models, and the AI coding agents that built the repo: [AI_USAGE.md](AI_USAGE.md).
 - **SI statement** — the code and docs in this repository were written with SI coding agents
   (Claude Code, OpenAI Codex, Antigravity until 2026-11-15) under human direction. The [demo video](https://youtu.be/5k1sTZwlpyk)
-  contains SI-generated visual scenes, marked with a visible watermark, and SI-generated audio. Apart from that video and its
+  contains SI-generated visual scenes and SI-generated audio, labelled with YouTube's altered or synthetic content label and acknowledged in the video description. Apart from that video and its
   two poster frames, the repository and the app contain no SI-generated image, video or audio.
 - **Resources** — all data, literature, visuals and tools: [RESOURCES.md](RESOURCES.md).
 - **Media credits** — NASA footage, team brand assets, fonts: [docs/MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md).

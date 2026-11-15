@@ -54,7 +54,7 @@ The literature is cited, not copied. No text or figure from these works is repro
 | ISS flame videos (streamed, not stored) | NASA PSI-25 | CC0 1.0 |
 | Fallback clips B3, O1, T1, keyframes, posters, landing still sequence | Cut or transcoded from NASA PSI-25 videos | CC0 1.0 (source) |
 | FlameBridge mark, team mark and wordmark, horizon glow | Team design, made by hand without SI | Team |
-| Demo video and its two poster frames | Team production. Contains SI-generated content, marked with a visible watermark | Team |
+| Demo video and its two poster frames | Team production. Contains SI-generated visual scenes and audio, labelled with YouTube's altered or synthetic content label | Team |
 | Screenshots in `docs/` | Captures of the running app | Team |
 | Our Road figures (`docs/media/our-road-*.png`) | Charts of the team's own timeline and numbers | Team |
 | Fonts: [Geist and Geist Mono](https://vercel.com/font), [Unbounded](https://fonts.google.com/specimen/Unbounded) | Google Fonts through `next/font` | SIL Open Font License 1.1 |
