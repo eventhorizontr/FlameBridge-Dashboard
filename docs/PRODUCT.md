@@ -21,7 +21,7 @@ Mode is a global switch (URL-persisted); both read the same data.
 
 ## Core features (v1 scope)
 1. **Mission overview** — what BASS-II is, the ISS glovebox wind tunnel, key numbers
-   (129 runs · 6 PIs · O₂ 13.6–22.2 % · flow 0–40 cm/s), all sourced.
+   (129 runs · 6 PIs · O₂ 13.6–22.2 % · flow 0–47 cm/s), all sourced.
 2. **Experiment explorer** — matrix table + parameter-space map (O₂ × flow), linked brushing,
    facets (PI, material, geometry, flow configuration), QA visibility.
 3. **Experiment detail** — conditions card, raw row, QA flags, publications, every video

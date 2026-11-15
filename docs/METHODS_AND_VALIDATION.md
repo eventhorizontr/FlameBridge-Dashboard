@@ -47,11 +47,12 @@ flow, DINOv2 ViT-S/14 embeddings). All lengths stay in pixels of the 720×480 fr
 | AI tools: filter semantics; unknown runs refused; dashboard actions validated against known ids; out-of-bounds inputs rejected; errors are outcomes, not crashes; rate limit | `pnpm test` (`ai.test.ts`) | pass |
 | Store: invalid or hallucinated actions rejected without state change; every applied action logged with a label and source; undo restores exactly the touched slice, including a whole AI turn | `pnpm test` (`store.test.ts`) | pass |
 | Pipeline: test-matrix parsing, cell parsing, PSI-20 builder, vision helpers | `python -m unittest discover -s pipeline/tests` | pass |
-| Overlay OCR, held out by video (26 of 132 videos) | `pipeline/vision/train_osd.py` | 99.98 % character accuracy on 16 404 held-out cells (`assets/osd-glyph-cnn.report.json`) |
+| Overlay OCR, held out by video (26 of the 132 videos used for OCR training) | `pipeline/vision/train_osd.py` | 99.98 % character accuracy on 16 404 held-out cells (`assets/osd-glyph-cnn.report.json`) |
 
-`pnpm test` on 2026-11-15: 16 files, 142 tests passed. `unittest`: 27 tests passed.
-CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests, build and the pipeline tests on
-every pull request.
+`pnpm test` on 2026-11-15: 18 files, 150 tests passed. `unittest`: 27 tests passed.
+A GitHub Actions workflow (`.github/workflows/ci.yml`) is configured for lint, typecheck, tests,
+build and the pipeline tests. The jobs currently do not start because of an
+account billing issue, so the same checks are run locally before every merge.
 
 Notes on independence: the OCR labels come from the NASA test matrix and clock continuity, and the
 held-out set is split by video, but it is the same campaign and overlay font. It is not an

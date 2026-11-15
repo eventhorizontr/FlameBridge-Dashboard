@@ -3,39 +3,41 @@
 FlameBridge helps people read and compare NASA experiments. It is **not** a fire simulator, a
 design tool or a safety certification, and it does not replace physical testing.
 
-## Scope
+## Data
 
-- **One campaign behind the views.** All views use PSI-25 (BASS-II): 129 runs, mostly PMMA,
-  plus SIBAL fabric, Nomex and a candle. Other fuels, geometries and flow regimes are not covered.
-- **Narrow conditions.** Initial O₂ 13.6–22.2 %, recorded airflow 0–47 cm/s, ISS cabin as flown. The Lab
-  flags a query outside these ranges as outside the measured envelope; it does not extrapolate.
-- **No pressure data.** No PSI-25 or PSI-20 run states a pressure. A pressure query can only be
-  shown as a gap, never matched (ADR-021).
+- **One campaign.** All views use PSI-25 (BASS-II): 129 runs, 98 of them PMMA, plus SIBAL fabric,
+  Nomex and a candle.
+- **Narrow conditions.** Initial O₂ 13.6 to 22.2 %, airflow set-points 0 to 47 cm/s. Outside these
+  ranges the Lab reports "outside the measured envelope". It does not extrapolate.
+- **No pressure.** No PSI-25 or PSI-20 run states a pressure, so pressure can only be shown as a
+  gap.
+- **Sensors (NASA ReadMe).** The O₂ reading is corrected by a daily constant offset. The duct
+  airflow sensor responds in about 1 minute. The radiometer is uncalibrated and is useful for
+  relative change only.
+- **Unreadable cells** are shown as missing with a flag. They are never guessed.
 
-## Measurement limits (from the NASA ReadMe)
+## Image measurements
 
-- O₂ sensor out of calibration; corrected by a daily constant offset.
-- Duct airflow sensor responds in ~1 min; only long holds are steady.
-- Radiometer is uncalibrated; its gain differs by test. Use it for relative change only.
-- CO over range (> 1000 ppm) is recorded as `OR`.
-- Some table cells are ambiguous or implausible; they are `null` + flagged, not guessed
-  ([DATA.md](DATA.md#known-issues-in-the-source-table)).
+- **Classical image processing, not deep learning.** The flame is measured with OpenCV background
+  subtraction and fixed rules. No segmentation model was trained: the footage is large and has no
+  hand-labelled flame masks.
+- **No ground truth.** Flame outlines have not been checked against hand labels. Compact flames
+  read up to about 15 to 20 % large.
+- **Pixels only.** The footage has no physical scale, so sizes are never converted to millimetres.
+- **Coverage.** 179 of 296 video files are measured. 102 second-view recordings are skipped,
+  10 are not instrument footage and 5 could not be decoded.
 
-## Image measurement limits
+## AI assistant
 
-- No physical scale in the footage: all flame sizes are pixels, never millimetres.
-- Compact flames read up to ~15–20 % large; coloured hardware light can pass as flame briefly.
-- 5 videos are unreadable, 10 are not instrument footage, 120 second-view recordings are skipped.
-- Segmentation has no hand-labelled ground truth ([METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md)).
+- It can only state values returned by its read-only tools, but a language model can still
+  phrase things wrongly. Every cited run links to its record.
+- There is no fixed evaluation set for its answers yet.
 
-## AI assistant limits
+## Method
 
-- It can only state values returned by its read-only tools, but an LLM can still phrase
-  things wrongly. Every cited run links to its record so the user can check.
-- No fixed evaluation set yet (planned). Without an API key the assistant is off; every other
-  feature works.
+- The Lab's distance weights are retrieval choices. They have not been tested against expert
+  judgement.
+- Learn Academy drawings are illustrations, not simulations.
 
-## Illustrations
-
-The Learn track uses schematic interactives labelled "Illustration · not a simulation" or
-"Schematic shape · no fitted values". They teach concepts and carry no measured numbers.
+Details: [METHODS_AND_VALIDATION.md](METHODS_AND_VALIDATION.md), [DATA.md](DATA.md),
+[AI_USAGE.md](AI_USAGE.md).

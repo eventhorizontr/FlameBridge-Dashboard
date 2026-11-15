@@ -106,5 +106,6 @@ Euclidean on numeric features + categorical mismatch penalties; weights document
 score (is the query inside the convex hull of measured runs?). Never interpolates outcomes.
 
 ## 5. Quality
-CI (GitHub Actions): lint · typecheck · vitest · build · pipeline unit tests. Preview deploys
+A GitHub Actions workflow is configured for lint · typecheck · vitest · build · pipeline unit
+tests. The jobs do not start at present (account billing), so the same checks are run locally. Preview deploys
 per PR on Vercel. Lighthouse ≥ 90 performance/accessibility on the overview page.
