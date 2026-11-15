@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronRight, Command, FilterX, GraduationCap, Microscope, PanelRightClose, PanelRightOpen, Sparkles, Undo2 } from "lucide-react";
+import { ChevronRight, Command, FilterX, GraduationCap, Microscope, PanelRightClose, PanelRightOpen, Undo2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 
 import { Badge, Button, IconButton, Kbd, SegmentedControl } from "@/components/ui";
+import { LEARN_MODULES } from "@/components/learn/curriculum";
 import { SITE } from "@/config/site";
 import { dashboardStore, describeFilters, useDashboard, useDashboardShallow, useDispatch } from "@/lib/store";
 import type { UserMode } from "@/types/dashboard";
@@ -13,6 +14,7 @@ import type { UserMode } from "@/types/dashboard";
 import { shellUiStore, useShellUi } from "./shell-state";
 
 const SECTION: Record<string, string> = {
+  overview: "Home",
   explore: "Runs",
   experiments: "Runs",
   compare: "Compare",
@@ -20,18 +22,26 @@ const SECTION: Record<string, string> = {
   learn: "Learn",
 };
 
+const SECTION_HREF: Record<string, string> = { experiments: "/explore", learn: "/learn" };
+
 /** Where am I: "Runs / B1", "Compare", … (the brand lives in the rail). */
 function Breadcrumb() {
   const pathname = usePathname();
   const [first, second] = pathname.split("/").filter(Boolean);
   if (!first) return <span className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-[var(--text-1)]">{SITE.name}</span>;
   const section = SECTION[first] ?? first;
-  const run = first === "experiments" && second ? decodeURIComponent(second).split(":").pop() : null;
+  // second crumb: a run ("Runs › B1") or a Learn module ("Learn › M2")
+  const run =
+    first === "experiments" && second
+      ? decodeURIComponent(second).split(":").pop()
+      : first === "learn" && second
+        ? (LEARN_MODULES.find((m) => m.id === second)?.code ?? null)
+        : null;
   return (
     <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-[0.9375rem]">
       {run ? (
         <>
-          <Link href="/explore" className="text-[var(--text-2)] hover:text-[var(--text-1)]">
+          <Link href={SECTION_HREF[first] ?? "/explore"} className="text-[var(--text-2)] hover:text-[var(--text-1)]">
             {section}
           </Link>
           <ChevronRight className="size-3.5 shrink-0 text-[var(--text-3)]" aria-hidden="true" />
@@ -73,7 +83,7 @@ export function TopContextBar() {
             aria-label={SITE.name}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/orbital-flame-mark.svg" alt="" className="size-6" />
+            <img src="/brand/flamebridge-mark-128.png" alt="" className="size-6" />
           </button>
 
           <Suspense fallback={<span className="text-[0.9375rem] font-semibold">{SITE.name}</span>}>
@@ -165,7 +175,7 @@ export function TopContextBar() {
             data-highlight="assistant-toggle"
             aria-label={assistantOpen ? "Close research assistant" : "Open research assistant"}
           >
-            <Sparkles className="size-3.5 text-[var(--accent)]" aria-hidden="true" />
+            <span className="sm:hidden">AI</span>
             <span className="hidden sm:inline">Research AI</span>
             {assistantOpen ? (
               <PanelRightClose className="size-3.5 hidden sm:inline" aria-hidden="true" />

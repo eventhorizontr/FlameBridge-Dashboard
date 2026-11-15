@@ -29,16 +29,16 @@ export function LearnGate({ children }: { children: ReactNode }) {
   return (
     <EmptyState
       icon={<BookOpen className="size-5" aria-hidden="true" />}
-      eyebrow="Explore & Learn"
-      title="The Learn track is part of Explore & Learn mode"
-      description="Expert mode keeps to the research views: overview, explorer, compare and the What-if Lab. Switch to Explore & Learn to open the guided chapters."
+      eyebrow="Guided mode"
+      title="The Learn Academy is part of Guided mode"
+      description="Expert mode keeps to the research views: Home, Runs, Compare and the What-if Lab. Switch to Guided mode to open the Academy."
       actions={
         <>
           <Button variant="primary" size="sm" onClick={() => dispatch({ type: "setMode", mode: "learn" })}>
-            Switch to Explore & Learn
+            Switch to Guided mode
           </Button>
           <Button variant="secondary" size="sm" onClick={() => dispatch({ type: "navigate", route: "/overview" })}>
-            Back to Mission overview
+            Back to Home
           </Button>
         </>
       }

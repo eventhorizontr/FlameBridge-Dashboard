@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, CheckCircle2, Loader2, RefreshCw, Sparkles, Square, Undo2, Wrench } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2, RefreshCw, Square, Undo2, Wrench } from "lucide-react";
 import { Fragment } from "react";
 
 import { Badge, Button, cn, EvidenceChip } from "@/components/ui";
@@ -246,7 +246,6 @@ export function AssistantMessageCard({
       {/* Header: model badge + turn undo / status */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-1.5">
-          <Sparkles className="size-3.5 text-[var(--accent)]" aria-hidden="true" />
           <span className="num text-[0.6875rem] rounded-full border border-[var(--line)] bg-[var(--surface-2)] px-2 py-0.5 text-[var(--text-2)]">
             {message.model ?? (message.provider ? message.provider : "Assistant")}
           </span>

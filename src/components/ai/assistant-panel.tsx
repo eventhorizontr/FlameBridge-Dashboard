@@ -1,6 +1,6 @@
 "use client";
 
-import { History, Maximize2, Minimize2, Send, Sparkles, Square, Trash2, X } from "lucide-react";
+import { History, Maximize2, Minimize2, Send, Square, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { shellUiStore, useShellUi } from "@/components/layout/shell-state";
@@ -51,7 +51,8 @@ export function AssistantPanel() {
       <div className="px-4 py-3 border-b border-[var(--line)] space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
-            <Sparkles className="size-4 text-[var(--accent)] shrink-0" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/flamebridge-mark-128.png" alt="" className="size-5 shrink-0" />
             <h2 className="text-[0.875rem] font-medium text-[var(--text-1)] truncate">
               Research Assistant
             </h2>

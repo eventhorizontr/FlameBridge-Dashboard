@@ -1,49 +1,30 @@
 import type { Metadata } from "next";
 
-import { FlameLibrary, type LibraryEntry } from "@/components/vision/flame-library";
+import { FlameLibrary } from "@/components/vision/flame-library";
+import { computeOverviewStats } from "@/components/viz/dataset-queries";
 import { loadPsi25Dataset, loadPsi25Manifest } from "@/components/viz/dataset-bridge";
-import { representativeAirflow } from "@/components/viz/dataset-queries";
 import { MissionOverview } from "@/components/viz/mission-overview";
+import { flameLibraryEntries } from "@/lib/vision/library";
 import { getVisionIndex } from "@/lib/vision/server";
 
-export const metadata: Metadata = { title: "Mission overview" };
+export const metadata: Metadata = { title: "Home" };
 
 export default function OverviewPage() {
   const dataset = loadPsi25Dataset();
   const manifest = loadPsi25Manifest();
-  const index = getVisionIndex("PSI-25");
-  const byId = new Map(dataset.experiments.map((e) => [e.id, e]));
-  const seen = new Set<string>();
-  const library: LibraryEntry[] = [];
-  for (const v of index?.videos ?? []) {
-    if (v.status !== "ok" || v.kind !== "primary" || seen.has(v.experimentId) || !v.events || v.events.visibleS < 2) continue;
-    const e = byId.get(v.experimentId);
-    if (!e) continue;
-    seen.add(v.experimentId);
-    library.push({
-      experimentId: e.id,
-      testId: e.testId,
-      principalInvestigator: e.principalInvestigator,
-      material: e.fuel.material,
-      geometry: e.fuel.geometry,
-      fuelRaw: e.fuel.raw,
-      o2Pct: e.conditions.o2InitialPct,
-      airflowCmS: representativeAirflow(e),
-      videoId: v.videoId,
-      visibleS: v.events.visibleS,
-      peakAreaPx: v.events.peakAreaPx,
-      peakAreaS: v.events.peakAreaS,
-      keyframes: v.keyframes ?? null,
-      poster: v.poster ? { file: v.poster.file, t: v.poster.t } : null,
-    });
-  }
+  const library = flameLibraryEntries(dataset);
+
+  // Start the hero clip on its measured steady-peak frame instead of the dark pre-ignition frame.
+  const heroId = computeOverviewStats(dataset, manifest).heroVideo?.id ?? null;
+  const heroVision = heroId ? getVisionIndex("PSI-25")?.videos.find((v) => v.videoId === heroId) : undefined;
+  const heroStartS = heroVision?.poster?.t ?? heroVision?.events?.firstFlameS ?? null;
 
   return (
     <>
-      <MissionOverview dataset={dataset} manifest={manifest} />
+      <MissionOverview dataset={dataset} manifest={manifest} heroStartS={heroStartS} />
       {library.length > 0 && (
         <div className="mt-6">
-          <FlameLibrary entries={library} />
+          <FlameLibrary entries={library} limit={6} />
         </div>
       )}
     </>

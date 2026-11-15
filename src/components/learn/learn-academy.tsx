@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BookOpen, CheckCircle2, Flame, Lock, Map as MapIcon, Microscope, Rocket, RotateCcw, Sparkles, Star, Target } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Lock, Map as MapIcon, Microscope, Rocket, RotateCcw, Sparkles, Target } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "zustand";
 
@@ -37,7 +37,8 @@ function prefersReducedMotion(): boolean {
   }
 }
 
-export function LearnAcademy({ dataset }: { dataset: ExperimentDataset }) {
+/** `initialModuleId` (from /learn/<id>) opens that module once progress is loaded, or selects it if still locked. */
+export function LearnAcademy({ dataset, initialModuleId }: { dataset: ExperimentDataset; initialModuleId?: string }) {
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
   const completed = useStore(learnProgressStore, (s) => s.completed);
@@ -60,13 +61,28 @@ export function LearnAcademy({ dataset }: { dataset: ExperimentDataset }) {
     void Promise.resolve(learnProgressStore.persist.rehydrate()).then(() => {
       if (cancelled) return;
       setHydrated(true);
-      const next = nextModuleIndex(learnProgressStore.getState().completed);
+      const progress = learnProgressStore.getState().completed;
+      const requested = initialModuleId ? LEARN_MODULES.findIndex((m) => m.id === initialModuleId) : -1;
+      if (requested !== -1) {
+        setSelected(requested);
+        if (isUnlocked(requested, progress)) {
+          setOpenIndex(requested);
+          window.requestAnimationFrame(() => lessonRef.current?.scrollIntoView({ behavior: "auto", block: "start" }));
+        } else {
+          // still locked: show it selected on the mission map, where the earlier modules are
+          window.requestAnimationFrame(() =>
+            document.getElementById("learn-roadmap")?.scrollIntoView({ behavior: "auto", block: "start" }),
+          );
+        }
+        return;
+      }
+      const next = nextModuleIndex(progress);
       setSelected(next === -1 ? LEARN_MODULES.length - 1 : next);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialModuleId]);
 
   useEffect(() => {
     if (!justEarned) return;
@@ -174,7 +190,7 @@ export function LearnAcademy({ dataset }: { dataset: ExperimentDataset }) {
               {mode !== "learn" && (
                 <Button variant="ghost" size="sm" onClick={() => dispatch({ type: "setMode", mode: "learn" })}>
                   <Sparkles className="size-3.5" aria-hidden="true" />
-                  Use Explore &amp; Learn display mode
+                  Use Guided display mode
                 </Button>
               )}
             </div>

@@ -3,6 +3,7 @@
  * (used for snapshot-based undo), whether undo is meaningful, and a human label for the
  * assistant timeline. Validation lives in `@/types/schemas` (DashboardActionSchema).
  */
+import { LEARN_MODULES } from "@/components/learn/curriculum";
 import type { DashboardAction, ExperimentFilters, Range } from "@/types/dashboard";
 import { EMPTY_FILTERS } from "@/types/dashboard";
 
@@ -28,6 +29,8 @@ const ROUTE_NAMES: Record<string, string> = {
   "/lab": "What-if Lab",
   "/learn": "Learn",
 };
+
+const learnModuleTitle = (id: string): string => LEARN_MODULES.find((m) => m.id === id)?.title ?? id;
 
 /** "PSI-25:O13a" → "O13a" for labels. */
 export const runLabel = (id: string): string => id.split(":").slice(1).join(":") || id;
@@ -141,6 +144,7 @@ export const ACTIONS: Registry = {
       if (p.geometry) parts.push(p.geometry);
       if (p.characteristicSizeMm !== undefined)
         parts.push(p.characteristicSizeMm === null ? "any size" : `${p.characteristicSizeMm} mm`);
+      if (p.pressureKpa !== undefined) parts.push(p.pressureKpa === null ? "pressure not compared" : `${p.pressureKpa} kPa`);
       if (p.k !== undefined) parts.push(`${p.k} matches`);
       return `Set What-if Lab: ${parts.join(", ") || "no change"}`;
     },
@@ -157,7 +161,9 @@ export const ACTIONS: Registry = {
     label: (a) =>
       isExperimentRoute(a.route)
         ? `Opened run ${runLabel(decodeURIComponent(a.route.slice("/experiments/".length)))}`
-        : `Went to ${ROUTE_NAMES[a.route] ?? a.route}`,
+        : a.route.startsWith("/learn/")
+          ? `Opened Learn module ${learnModuleTitle(a.route.slice("/learn/".length))}`
+          : `Went to ${ROUTE_NAMES[a.route] ?? a.route}`,
   },
   highlight: {
     touches: ["highlight"],

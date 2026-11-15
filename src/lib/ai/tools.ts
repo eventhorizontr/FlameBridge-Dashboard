@@ -6,6 +6,7 @@
  */
 import { z } from "zod";
 
+import { LEARN_MODULES, REFERENCES, type CourseReference } from "@/components/learn/curriculum";
 import { representativeAirflow } from "@/lib/data";
 import { findClosestExperiments } from "@/lib/science/matching";
 import { checkReferences } from "@/lib/store/references";
@@ -412,6 +413,61 @@ export const TOOLS: AgentTool[] = [
         },
         summary: `Ranked ${rows.length} runs by ${spec.label.toLowerCase()}`,
         evidence: rows.map((r) => experimentEvidence(r.e!)),
+      };
+    },
+  }),
+  defineTool({
+    name: "get_learn_modules",
+    description:
+      "The Learn Academy curriculum (/learn): five plain-language modules on how flames behave without gravity, each with its concept cards, the cited references, the featured ISS run and the quiz size. Call this before explaining a concept the Academy teaches or before opening a module. Open one with dashboard_actions navigate to /learn/<id>; the Academy shows only in Guided mode (mode value learn), so send setMode learn first when the user is in Expert mode. Modules unlock in order and progress is stored in the viewer's browser, so a locked module opens on its overview card. The interactive pieces are illustrations, not simulations.",
+    input: z.strictObject({
+      id: z.string().optional().describe('One module id such as "m3-two-ways-out"; omit to list all five'),
+    }),
+    execute: ({ id }) => {
+      const cite = (r: CourseReference) => ({
+        label: r.label,
+        detail: r.detail,
+        ...(r.kind === "doi" && r.doi ? { href: `https://doi.org/${r.doi}` } : {}),
+        ...(r.kind === "url" && r.url ? { href: r.url } : {}),
+      });
+      const modules = id ? LEARN_MODULES.filter((m) => m.id === id) : LEARN_MODULES;
+      if (id && modules.length === 0) {
+        return {
+          ok: false,
+          content: { error: `No Learn module "${id}". Valid ids: ${LEARN_MODULES.map((m) => m.id).join(", ")}` },
+          summary: `No Learn module ${id}`,
+          evidence: [],
+        };
+      }
+      const detailed = Boolean(id);
+      return {
+        ok: true,
+        content: {
+          note: "Concepts, not coefficients: the Academy teaches no fitted constants or thresholds. Interactives are labelled illustrations.",
+          modules: modules.map((m) => ({
+            id: m.id,
+            code: m.code,
+            route: `/learn/${m.id}`,
+            title: m.title,
+            subtitle: m.subtitle,
+            objectives: m.objectives,
+            featuredRunId: m.featuredRunId,
+            quizQuestions: m.gate.length,
+            cards: m.cards.map((c) =>
+              detailed
+                ? { title: c.title, body: c.body, ...(c.formula ? { formula: c.formula } : {}), refs: c.refs.map((k) => cite(REFERENCES[k])) }
+                : c.title,
+            ),
+          })),
+        },
+        summary: id ? `Read Learn module ${modules[0].code} · ${modules[0].title}` : `Listed ${modules.length} Learn modules`,
+        evidence: [
+          ...new Set(modules.flatMap((m) => m.cards.flatMap((c) => c.refs))),
+        ].flatMap((k): Evidence[] => {
+          const r = REFERENCES[k];
+          const href = r.kind === "doi" && r.doi ? `https://doi.org/${r.doi}` : r.kind === "url" ? r.url : undefined;
+          return href ? [{ id: `ref:${k}`, label: r.label, kind: "publication", href }] : [];
+        }),
       };
     },
   }),

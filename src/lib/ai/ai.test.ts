@@ -152,6 +152,47 @@ describe("tools over PSI-25", () => {
   });
 });
 
+describe("Hakan's features are drivable (ADR-021/023/024)", () => {
+  it("a partial setLabParams keeps the user's pressure; null clears it", () => {
+    const keep = executeTool("dashboard_actions", { actions: [{ type: "setLabParams", params: { o2Pct: 30 } }] });
+    expect(keep.ok).toBe(true);
+    expect(keep.actions?.[0]).toEqual({ type: "setLabParams", params: { o2Pct: 30 } });
+    const clear = executeTool("dashboard_actions", { actions: [{ type: "setLabParams", params: { pressureKpa: null } }] });
+    expect(clear.actions?.[0]).toEqual({ type: "setLabParams", params: { pressureKpa: null } });
+    const set = executeTool("dashboard_actions", { actions: [{ type: "setLabParams", params: { o2Pct: 34, pressureKpa: 56.5 } }] });
+    expect(set.ok).toBe(true);
+  });
+
+  it("opens Learn Academy modules by id and rejects unknown ones", () => {
+    const ok = executeTool("dashboard_actions", {
+      actions: [{ type: "setMode", mode: "learn" }, { type: "navigate", route: "/learn/m3-two-ways-out" }],
+    });
+    expect(ok.ok).toBe(true);
+    expect(executeTool("dashboard_actions", { actions: [{ type: "navigate", route: "/learn/m9-made-up" }] }).ok).toBe(false);
+    expect(executeTool("dashboard_actions", { actions: [{ type: "navigate", route: "/overview" }] }).ok).toBe(true);
+  });
+
+  it("get_learn_modules lists the curriculum and details one module with cited references", () => {
+    const all = executeTool("get_learn_modules", {});
+    expect(all.ok).toBe(true);
+    const list = (all.content as { modules: { id: string; route: string }[] }).modules;
+    expect(list).toHaveLength(5);
+    expect(list.every((m) => m.route === `/learn/${m.id}`)).toBe(true);
+    const one = executeTool("get_learn_modules", { id: "m2-gravity" });
+    const mod = (one.content as { modules: { cards: { refs: { label: string }[] }[] }[] }).modules[0];
+    expect(mod.cards.every((c) => c.refs.length > 0)).toBe(true);
+    expect(one.evidence.every((e) => e.kind === "publication" && e.href)).toBe(true);
+    expect(executeTool("get_learn_modules", { id: "nope" }).ok).toBe(false);
+  });
+
+  it("the system prompt names the new routes and the pressure rule", () => {
+    const p = systemPrompt();
+    expect(p).toContain("/overview");
+    expect(p).toContain("/learn/<module id>");
+    expect(p).toContain("pressureKpa");
+  });
+});
+
 describe("providers", () => {
   it("reports availability from env and resolves defaults", () => {
     const none = describeProviders({});

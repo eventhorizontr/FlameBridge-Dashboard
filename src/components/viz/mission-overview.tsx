@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BookOpen, Compass, Film, FlaskConical, GitCompareArrows, Pause, Play, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Compass, Film, FlaskConical, GitCompareArrows, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -36,9 +36,12 @@ const SERIES_VARS = [
 export function MissionOverview({
   dataset,
   manifest,
+  heroStartS = null,
 }: {
   dataset: ExperimentDataset;
   manifest: InvestigationManifest;
+  /** Measured steady-peak time of the hero clip (vision poster), so it never opens on a black frame. */
+  heroStartS?: number | null;
 }) {
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
@@ -121,8 +124,7 @@ export function MissionOverview({
                 size="lg"
                 onClick={() => shellUiStore.getState().setAssistantOpen(true)}
               >
-                <Sparkles className="size-4" aria-hidden="true" />
-                <span>Ask AI Assistant</span>
+                <span>Ask the Research AI</span>
               </Button>
             </div>
           </div>
@@ -151,8 +153,16 @@ export function MissionOverview({
                   src={stats.heroVideo.href}
                   crossOrigin="anonymous"
                   muted
-                  loop
                   playsInline
+                  preload="metadata"
+                  onLoadedMetadata={(e) => {
+                    if (heroStartS != null && heroStartS < e.currentTarget.duration) e.currentTarget.currentTime = heroStartS;
+                  }}
+                  onEnded={(e) => {
+                    // loop from the flame, not from the dark start of the recording
+                    e.currentTarget.currentTime = heroStartS ?? 0;
+                    void e.currentTarget.play().catch(() => {});
+                  }}
                   onPlay={() => setPlaying(true)}
                   onPause={() => setPlaying(false)}
                   onError={() => setVideoFailed(true)}
@@ -162,7 +172,7 @@ export function MissionOverview({
                 <div className="p-6 text-center space-y-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="/brand/orbital-flame-mark.svg"
+                    src="/brand/flamebridge-mark-128.png"
                     alt="Illustrative flame schematic"
                     className="size-16 mx-auto"
                   />
@@ -368,16 +378,20 @@ export function MissionOverview({
           },
           {
             route: "/learn" as const,
-            title: "Explore & Learn Track",
+            title: "Learn Academy",
             Icon: mode === "learn" ? BookOpen : Film,
-            expert: "5 structured pedagogical modules linking NASA ReadMe science directly to verified BASS-II clips.",
+            expert: "Five short modules on flames without gravity, with quizzes. Opens in Guided mode.",
             learn: "Take a 5-chapter interactive tour through microgravity flames with real footage & quizzes.",
           },
         ].map((card) => (
           <button
             key={card.route}
             type="button"
-            onClick={() => dispatch({ type: "navigate", route: card.route })}
+            onClick={() => {
+              // the Academy lives in Guided mode (ADR-023)
+              if (card.route === "/learn" && mode !== "learn") dispatch({ type: "setMode", mode: "learn" });
+              dispatch({ type: "navigate", route: card.route });
+            }}
             className="group text-left rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] hover:border-[var(--accent)]/60 hover:bg-[var(--surface-2)] p-4 sm:p-5 transition-colors cursor-pointer flex flex-col justify-between gap-4"
           >
             <div className="space-y-2">

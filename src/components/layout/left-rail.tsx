@@ -167,11 +167,11 @@ export function LeftRail() {
         <button
           type="button"
           onClick={() => dispatch({ type: "navigate", route: "/" })}
-          aria-label="Fire in Freefall landing page"
+          aria-label="FlameBridge landing page"
           className="size-10 rounded-[var(--radius-sm)] flex items-center justify-center border border-[var(--line)] bg-[var(--surface-2)] hover:border-[var(--accent)]/60 transition-colors cursor-pointer mb-2"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/orbital-flame-mark.svg" alt="" className="size-7" />
+          <img src="/brand/flamebridge-mark-128.png" alt="" className="size-7" />
         </button>
 
         <Suspense fallback={<DesktopNavLinksFallback />}>

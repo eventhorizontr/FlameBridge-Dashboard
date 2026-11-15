@@ -1,4 +1,4 @@
-# UX: information architecture (ADR-022)
+# UX: information architecture (ADR-022, ADR-025)
 
 **Process.** A planning agent audited the live UI at 1440 and 390 px. Codex generated a mockup for each screen from the planner's briefs. Claude then built the UI from those mockups, keeping the existing tokens and look.
 
@@ -8,19 +8,24 @@
 
 | Route | Rail label | Job | Above the fold | Primary action |
 |---|---|---|---|---|
-| `/` | Home | Explain and invite | Question headline, real flame posters, computed numbers | Explore the burns → `/explore` |
+| `/` | (landing) | Explain and invite | FlameBridge headline, ISS flame sequence, computed figures | Go to dashboard → `/overview`; Explore runs · Compare · What-if Lab |
+| `/overview` | Home | Orient | Hero with real footage at peak flame, dataset figures, apparatus | Explore runs / Lab / Ask the Research AI |
 | `/explore` | Runs | Find runs | Toolbar, filter sidebar, table + side map (≥1400 px) | Open a run / Compare selected |
 | `/experiments/[id]` | (Runs) | Understand one burn | Header + actions, conditions strip, video at peak flame, Flame at a glance | Play / Compare / Find runs like this |
 | `/compare` | Compare | See what differs | Synced videos at the latest first flame | Play all |
-| `/lab` | Lab | "Is there a real burn like this?" | Conditions, verdict, closest runs | Preview footage / Inspect |
-| `/learn` | Learn | Guided understanding | Chapter stepper, reading, video | Next chapter |
+| `/lab` | Lab | "Is there a real burn like this?" | Verdict, Conditions + live map side by side | Move a slider, watch the map |
+| `/learn`, `/learn/<module>` | Learn (Guided mode only) | Learn Academy for younger learners | Hero, world picker, mission map | Launch mission |
 
 ## Page notes
 
-**Home.**
-- Has its own top navigation, with no rail.
-- Hero posters are the measured peak frames, picked by burn duration per fuel family.
-- Every number on the page is computed in `src/lib/vision/landing.ts`.
+**Landing (`/`).**
+- The owner's FlameBridge design (ADR-023), outside the AppShell, with its own bar.
+- "Go to dashboard" opens Home; section links open Runs, Compare and the Lab directly.
+- Figures are computed in `src/app/page.tsx` from the data.
+
+**Home (`/overview`).**
+- The hero clip starts on its measured steady-peak frame.
+- The flame gallery shows the top 6 and links to Runs › Gallery.
 
 **Runs.**
 - One filter set narrows the runs; Table, Map and Gallery show that same set.
@@ -39,14 +44,18 @@
 - The set-point and O₂ charts appear only when there is something to draw.
 
 **Lab.**
-- The closest runs and their footage come first; the map comes last, with axes on the data range.
+- "Where your query sits" is right of Conditions and stays in view while sliders move (pinned above
+  them on phones). A live readout and axis guides follow the query; axes span the data range.
+- The closest runs and the footage follow in the next row.
 - Pressure (ADR-021) sits under "More".
 - The physics narration appears in Guided mode only.
 
 ## Global
 
-- **Rail:** Home · Runs · Compare · Lab · Learn. A bottom tab bar is used on phones.
-- **Top bar:** breadcrumb, filter pill, undo, Expert ⇄ Guided, ⌘K, Research AI.
+- **Rail:** Home · Runs · Compare · Lab · Learn (Learn only in Guided mode). The logo returns to the
+  landing page. A bottom tab bar is used on phones.
+- **Top bar:** breadcrumb (Runs › B1, Learn › M2), filter pill, undo, Expert ⇄ Guided, ⌘K, Research AI.
+- **Brand:** FlameBridge, flame mark in `public/brand/`; favicon and app icons in `src/app/`.
 - **Mode:** "Explore & Learn" is renamed **Guided**. This is a label only; the `UserMode` value stays `learn`.
 - **Text budget:**
   - Page headline: ≤ 4 words, plus one sentence.

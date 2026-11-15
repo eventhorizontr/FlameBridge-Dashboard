@@ -11,6 +11,13 @@ export const PRODUCT_NAME = "FlameBridge";
 const TEAM_NAME = "EventHorizonTR";
 const DASHBOARD_ROUTE = "/overview";
 
+/** Direct ways into the dashboard besides "Go to dashboard" (Home). */
+const SECTIONS = [
+  { href: "/explore", label: "Explore runs" },
+  { href: "/compare", label: "Compare" },
+  { href: "/lab", label: "What-if Lab" },
+] as const;
+
 /** Every figure on the landing page, computed from the built PSI-25 data by the route. */
 export interface LandingFacts {
   /** Runs in public/data/PSI-25/experiments.json. */
@@ -104,9 +111,16 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
       <div className="nf-navwrap">
         <nav aria-label="Primary" className="nf-wrap nf-nav">
           <a href="#top" className="nf-brand">
-            <Image src="/landing/team-mark.png" alt={`${TEAM_NAME} logo`} width={68} height={40} priority />
+            <Image src="/brand/flamebridge-mark-128.png" alt="" width={32} height={32} priority />
             <span className="nf-brand-name">{PRODUCT_NAME}</span>
           </a>
+          <div className="nf-navlinks">
+            {SECTIONS.map((l) => (
+              <Link key={l.href} href={l.href} className="nf-navlink">
+                {l.label}
+              </Link>
+            ))}
+          </div>
           <DashboardCta />
         </nav>
         <div className="nf-bar" aria-hidden="true" />
@@ -130,6 +144,14 @@ export function LandingPage({ facts }: { facts: LandingFacts }) {
             testable and honest research tool for fire safety in weightless spacecraft.
           </p>
           <DashboardCta large />
+          <nav aria-label="Open a section" className="nf-quick">
+            {SECTIONS.map((l) => (
+              <Link key={l.href} href={l.href} className="nf-ghost">
+                {l.label}
+                <Arrow size={14} />
+              </Link>
+            ))}
+          </nav>
         </div>
 
         <div className="nf-hero-figure">

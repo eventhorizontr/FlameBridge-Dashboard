@@ -1,6 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
 
 import { SegmentedControl, Skeleton, type SegmentedOption } from "@/components/ui";
 import { useAssistant } from "@/lib/ai/client/use-assistant";
@@ -16,7 +15,6 @@ export function ProviderSwitch() {
   const options: SegmentedOption<AiProviderId>[] = providers.providers.map((info) => ({
     value: info.id,
     label: info.label,
-    icon: <Sparkles className="size-3" aria-hidden="true" />,
     disabled: !info.available || busy,
     disabledReason: !info.available
       ? info.reason ?? `${info.label} key is not configured on this server.`

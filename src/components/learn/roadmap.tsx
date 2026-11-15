@@ -95,7 +95,7 @@ export function Roadmap({ modules, titles, states, selectedIndex, onSelect }: Ro
                 )}
               </span>
               <span className="min-w-0" aria-hidden="true">
-                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
+                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-2)]">
                   {m.code} · {m.xp} XP
                 </span>
                 <span className={cn("block text-[0.8125rem] leading-tight font-medium", state === "locked" ? "text-[var(--text-3)]" : "text-[var(--text-1)]")}>
@@ -197,7 +197,7 @@ export function Roadmap({ modules, titles, states, selectedIndex, onSelect }: Ro
                   labelRight ? "left-8 sm:left-10 text-left" : "right-8 sm:right-10 text-right",
                 )}
               >
-                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
+                <span className="block font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-2)]">
                   {m.code} · {m.xp} XP
                 </span>
                 <span

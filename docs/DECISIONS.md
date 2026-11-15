@@ -228,3 +228,28 @@ has unit-free axes. Gravity ratios for the world picker come from the NASA Plane
 localStorage (`fif:learn-progress:v2`, safe when storage is blocked), not a dashboard action
 (ADR-007). (5) New tokens `--paper*`, `--ember-soft`, `--ember-glow`, `--planet-*` and `learn-*`
 motion classes, all disabled under `prefers-reduced-motion`.
+
+
+**ADR-025 · 2026-11-15 · accepted** — **Integrating #67 (FlameBridge landing, Learn Academy), brand and
+AI wiring.** Owner request: adopt Hakan's branch on top of #66, make every new feature drivable by the
+AI and the command palette, use the owner's flame icon as the brand, and keep the Lab map in view.
+- *Merge:* the FlameBridge landing (ADR-023) replaces the #66 landing; Mission overview is **Home** at
+  `/overview` (rail, breadcrumb); the Learn Academy (ADR-024, renumbered from Hakan's ADR-022)
+  replaces `learn-track.tsx`. The mode label stays **Guided** (gate copy updated).
+- *Brand:* product name **FlameBridge** (`SITE.name`, metadata, AI prompt); the owner's dual-ribbon
+  flame is the mark (`public/brand/flamebridge-mark-*.png`, `src/app/icon.png`, `apple-icon.png`,
+  `favicon.ico`). The decorative star icons are removed from the AI entry points.
+- *Landing:* section links (Explore runs, Compare, What-if Lab) in the bar and under the hero CTA.
+- *Contract:* `navigate` accepts `/learn/<module id>` (validated against `LEARN_MODULES` in
+  `lib/store/references.ts`); new route `src/app/(learn)/learn/[module]`. The `setLabParams` action
+  schema no longer defaults `pressureKpa`, so a partial update keeps the user's pressure (bug: an
+  AI "set O₂ to 30 %" cleared it).
+- *AI:* new read-only tool `get_learn_modules` (curriculum, cards, cited references, routes); the
+  system prompt lists the new routes, the Guided-mode rule and the pressure parameter.
+- *Palette:* landing page, Home, Lab "exploration atmosphere (34 % O₂ · 56.5 kPa)" and "stop comparing
+  pressure", and the five Academy modules (switching to Guided mode when needed).
+- *Lab:* "Where your query sits" sits right of Conditions and stays in view (sticky); on phones it is
+  pinned above the sliders with a smaller viewBox. A live readout and axis guides follow the sliders;
+  match labels are de-cluttered. Matches and footage follow in the next row.
+- *Home:* the hero clip starts on its measured steady-peak frame; the flame gallery shows the top 6
+  and links to Runs › Gallery.

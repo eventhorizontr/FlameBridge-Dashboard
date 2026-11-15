@@ -1,3 +1,4 @@
+import { LEARN_MODULES } from "@/components/learn/curriculum";
 import type { DashboardAction } from "@/types/dashboard";
 
 import { runLabel } from "./actions";
@@ -10,6 +11,12 @@ export type Catalog = ReadonlyMap<string, ReadonlySet<string>>;
  * Shared by the client store and the server-side AI tool validation. Empty catalog = skip.
  */
 export function checkReferences(action: DashboardAction, catalog: Catalog | null): string | null {
+  if (action.type === "navigate" && action.route.startsWith("/learn/")) {
+    const id = action.route.slice("/learn/".length);
+    return LEARN_MODULES.some((m) => m.id === id)
+      ? null
+      : `Unknown Learn module ${id}; valid ids: ${LEARN_MODULES.map((m) => m.id).join(", ")}`;
+  }
   if (!catalog || catalog.size === 0) return null;
   const unknown = (id: string) => (catalog.has(id) ? null : `Unknown experiment ${id}`);
   switch (action.type) {
