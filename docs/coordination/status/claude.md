@@ -9,6 +9,7 @@ _Updated: 2026-11-15 (+03:00)_
   - one PR containing the data
 
 ## Done
+- PR #60 (ADR-018): rail tooltip fix, vision v1.3.0 audit fixes (peaks without igniter glow, still-camera photo ROI), flame library, DINOv2 flame-crop frame search (API, tool, galleries), compare per-stream overlays, Lab 3D space, 3D flame (revolve / extrude / space-time / two-camera hull)
 - Flame vision:
   - pipeline: segmentation, overlay OCR CNN, similarity, DINOv2, keyframes, QA sheets, validation
   - contract `src/types/vision.ts`, `/api/vision`
