@@ -33,7 +33,8 @@ export function SimilarFrames({ videoId, timeS }: { videoId: string; timeS: numb
         <div className="space-y-0.5">
           <p className="text-[0.8125rem] font-medium text-[var(--text-1)]">Frames like this one</p>
           <p className="text-[0.6875rem] text-[var(--text-3)]">
-            Contextual search over every analysed ISS video from the moment at {formatTime(timeS)} (DINOv2 embeddings).
+            Contextual search of the flame at {formatTime(timeS)} (the playhead if the flame is visible there, else the peak)
+            against every analysed ISS video — DINOv2 embeddings of flame crops.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -56,7 +57,7 @@ export function SimilarFrames({ videoId, timeS }: { videoId: string; timeS: numb
       {state.status === "ready" && <FrameGalleryGrid gallery={state.gallery} />}
       {state.status === "error" && <p className="text-[0.75rem] text-[var(--warning)]">{state.message}</p>}
       <p className="text-[0.6875rem] text-[var(--text-3)]">
-        Similarity is visual likeness of the whole frame, not a physical equivalence of the burns. Ask the Research AI
+        Similarity is visual likeness of the flame crops, not a physical equivalence of the burns. Ask the Research AI
         “show me frames like this one” to get the same search in the conversation.
       </p>
     </div>

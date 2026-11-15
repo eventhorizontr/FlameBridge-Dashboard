@@ -26,11 +26,12 @@ interface LoadedIndex {
   byVideo: Map<string, number[]>;
 }
 
-const cache = new Map<string, LoadedIndex | null>();
+const cache = new Map<string, LoadedIndex>();
 
 export function loadFrameIndex(accession = "PSI-25"): LoadedIndex | null {
   const key = accession.toUpperCase();
-  if (cache.has(key)) return cache.get(key) ?? null;
+  const hit = cache.get(key);
+  if (hit) return hit;
   const dir = join(process.cwd(), "public", "data", key.toLowerCase(), "vision");
   const metaPath = join(dir, "frame-index.json");
   const binPath = join(dir, "frame-index.bin");
@@ -50,7 +51,7 @@ export function loadFrameIndex(accession = "PSI-25"): LoadedIndex | null {
     });
     value = { meta, vectors, byVideo };
   }
-  cache.set(key, value);
+  if (value) cache.set(key, value); // a missing index is re-checked, so a later build is picked up
   return value;
 }
 
@@ -126,7 +127,7 @@ export function similarFrames(
   }
   return {
     title: `Frames most similar to ${testIds.get(qVideo.experimentId) ?? qVideo.experimentId} at ${idx.meta.rows[q][1].toFixed(1)} s`,
-    method: `DINOv2 ViT-S/14 cosine similarity (PCA-${d}, int8; recall@10 vs full vectors ${idx.meta.recallAt10VsFull}); ${scope === "other-runs" ? "other runs only" : "all runs"}; max 3 frames per run.`,
+    method: `DINOv2 ViT-S/14 cosine similarity of flame crops (PCA-${d}, int8; recall@10 vs full vectors ${idx.meta.recallAt10VsFull}); ${scope === "other-runs" ? "other runs only" : "all runs"}; max 3 frames per run.`,
     query: matchOf(idx, q, 1, testIds),
     frames: picked.map((i) => matchOf(idx, i, scores[i], testIds)),
   };
