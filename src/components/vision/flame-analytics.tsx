@@ -1,9 +1,9 @@
 "use client";
 
-import { ScanEye } from "lucide-react";
+import { Images, ScanEye } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
 
-import { Badge, EmptyState, EvidenceChip, Panel, PanelBody, PanelHeader, PanelTitle, Skeleton, Stat } from "@/components/ui";
+import { Badge, Button, EmptyState, EvidenceChip, Panel, PanelBody, PanelHeader, PanelTitle, Skeleton, Stat } from "@/components/ui";
 import { useDispatch } from "@/lib/store";
 import type { Experiment } from "@/types/experiment";
 import { sampleIndexAt } from "@/lib/vision/digest";
@@ -30,7 +30,10 @@ function runs(t: readonly number[], on: (i: number) => boolean, tone: Band["tone
 
 const pct = (v: number | null | undefined) => (v == null ? "—" : `${(v * 100).toFixed(v >= 0.995 && v < 1 ? 1 : 0)} %`);
 
-export function FlameAnalytics({ experiment }: { experiment: Experiment }) {
+export type AnalyticsSection = "all" | "measurements" | "similarity";
+
+/** The run's measured video (the one playing, else the primary) and its vision analysis. */
+function useRunVision(experiment: Experiment) {
   const dispatch = useDispatch();
   const playingVideo = usePlayback((s) => s.videoId);
   const playheadS = usePlayback((s) => s.timeS);
@@ -45,9 +48,15 @@ export function FlameAnalytics({ experiment }: { experiment: Experiment }) {
     if (!videoId) return;
     dispatch({ type: "seekVideo", experimentId: experiment.id, videoId, timeS: Number(timeS.toFixed(2)) });
   };
+  return { videoId, load, isPlaying, playheadS, seek };
+}
+
+export function FlameAnalytics({ experiment, section = "all" }: { experiment: Experiment; section?: AnalyticsSection }) {
+  const { videoId, load, isPlaying, playheadS, seek } = useRunVision(experiment);
 
   return (
     <Panel surface="surface-1">
+      {section === "all" && (
       <PanelHeader>
         <PanelTitle
           eyebrow="Flame vision · image-derived from the ISS footage"
@@ -61,6 +70,7 @@ export function FlameAnalytics({ experiment }: { experiment: Experiment }) {
           }
         />
       </PanelHeader>
+      )}
       <PanelBody>
         {!videoId ? (
           <EmptyState icon={<ScanEye className="size-5" />} title="No footage for this run" description="Flame vision needs at least one video of the run." />
@@ -83,7 +93,7 @@ export function FlameAnalytics({ experiment }: { experiment: Experiment }) {
             description={load.data.reason ?? "The footage could not be analysed."}
           />
         ) : (
-          <Analytics analysis={load.data} playheadS={isPlaying ? playheadS : null} onSeek={seek} accession={experiment.investigation} />
+          <Analytics analysis={load.data} playheadS={isPlaying ? playheadS : null} onSeek={seek} accession={experiment.investigation} section={section} />
         )}
       </PanelBody>
     </Panel>
@@ -95,12 +105,16 @@ function Analytics({
   playheadS,
   onSeek,
   accession,
+  section,
 }: {
   analysis: VisionVideo;
   playheadS: number | null;
   onSeek: (t: number) => void;
   accession: string;
+  section: AnalyticsSection;
 }) {
+  const showM = section === "all" || section === "measurements";
+  const showS = section === "all" || section === "similarity";
   const s = a.series!;
   const src = a.source!;
   const ev = a.events!;
@@ -138,6 +152,7 @@ function Analytics({
 
   return (
     <div className="space-y-5">
+      {section === "all" && (
       <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3 xl:grid-cols-6">
         <Stat label="First flame" value={ev.firstFlameS} unit="s" precision={1} nullReason="No flame detected" />
         <Stat label="Flame visible" value={ev.visibleS} unit="s" precision={1} delta={ev.episodes > 1 ? `${ev.episodes} episodes` : undefined} />
@@ -169,10 +184,12 @@ function Analytics({
           nullReason="No telemetry overlay in this footage"
         />
       </div>
+      )}
 
-      {a.keyframes && <Filmstrip a={a} accession={accession} playheadS={playheadS} onSeek={onSeek} />}
+      {showM && a.keyframes && <Filmstrip a={a} accession={accession} playheadS={playheadS} onSeek={onSeek} />}
 
       <div className="grid gap-x-6 gap-y-5 xl:grid-cols-2">
+        {showM && (<>
         <TimeChart
           title="Flame area"
           unit="px of the 720×480 frame"
@@ -225,6 +242,8 @@ function Analytics({
             note="Measured duct velocity read from the video overlay; the sensor responds slowly (~1 min)."
           />
         )}
+        </>)}
+        {showS && (<>
         <TimeChart
           title="Frame-to-frame similarity"
           unit="0–1"
@@ -251,18 +270,19 @@ function Analytics({
           bands={bands}
           series={[{ key: "flow", label: "Motion (1 s mean)", color: "var(--series-4)", values: flowSmooth }]}
         />
+        </>)}
       </div>
 
-      {emb && <Recurrence a={a} playheadS={playheadS} onSeek={onSeek} />}
+      {showS && emb && <Recurrence a={a} playheadS={playheadS} onSeek={onSeek} />}
 
-      <SimilarFrames
+      {showS && <SimilarFrames
         videoId={a.videoId}
         timeS={
           playheadS != null && s.visible[sampleIndexAt(s.t, playheadS)] === 1
             ? playheadS
             : ev.peakAreaS ?? ev.firstFlameS ?? 0
         }
-      />
+      />}
 
       <div className="flex flex-wrap items-center gap-2 text-[0.6875rem] text-[var(--text-3)]">
         <span className="inline-flex items-center gap-1.5">
@@ -435,5 +455,95 @@ function Recurrence({ a, playheadS, onSeek }: { a: VisionVideo; playheadS: numbe
         </p>
       </div>
     </div>
+  );
+}
+
+/**
+ * Run page side card: the image-derived headline numbers of the measured video plus the gas
+ * readings of the PSI table. Areas are pixels of the 720×480 frame, never millimetres.
+ */
+export function FlameGlance({ experiment, onFindSimilar }: { experiment: Experiment; onFindSimilar?: () => void }) {
+  const { load, seek } = useRunVision(experiment);
+  const c = experiment.conditions;
+  const a = load.status === "ready" && load.data.status === "ok" ? load.data : null;
+  const ev = a?.events ?? null;
+  const sum = a?.summary ?? null;
+  const minRead = a?.osd ? Math.min(...Object.values(a.osd.readRate)) : null;
+  const note =
+    load.status === "loading"
+      ? "Loading measurements…"
+      : load.status === "absent"
+        ? "Footage not analysed."
+        : load.status === "ready" && load.data.status !== "ok"
+          ? load.data.reason ?? "This video is not measured."
+          : experiment.videos.length === 0
+            ? "No ISS video for this run."
+            : null;
+  const co = c.coFinalLowerBoundPpm != null ? `>${c.coFinalLowerBoundPpm}` : c.coFinalPpm;
+  const gas = (label: string, a0: number | string | null, a1: number | string | null, unit: string) => (
+    <div className="flex items-baseline justify-between gap-3 py-1">
+      <dt className="text-[var(--text-2)]">{label}</dt>
+      <dd className="num text-[var(--text-1)]">
+        {a0 ?? "—"} → {a1 ?? "—"} <span className="text-[var(--text-3)]">{unit}</span>
+      </dd>
+    </div>
+  );
+  const row = (label: string, value: string | null, onClick?: () => void) => (
+    <div className="flex items-baseline justify-between gap-3 py-1">
+      <dt className="text-[var(--text-2)]">{label}</dt>
+      <dd className="num text-[var(--text-1)]">
+        {value == null ? (
+          "—"
+        ) : onClick ? (
+          <button type="button" onClick={onClick} className="hover:text-[var(--accent)] cursor-pointer" title="Jump to this moment">
+            {value}
+          </button>
+        ) : (
+          value
+        )}
+      </dd>
+    </div>
+  );
+
+  return (
+    <Panel surface="surface-1" className="h-full">
+      <PanelHeader>
+        <PanelTitle
+          title="Flame at a glance"
+          actions={<Badge className="num">image-derived · px, not mm</Badge>}
+        />
+      </PanelHeader>
+      <PanelBody className="space-y-4 text-[0.8125rem]">
+        {note ? (
+          <p className="text-[var(--text-3)]">{note}</p>
+        ) : ev && sum ? (
+          <dl className="divide-y divide-[var(--line)]">
+            {row("First flame", ev.firstFlameS != null ? `${ev.firstFlameS.toFixed(1)} s` : null, ev.firstFlameS != null ? () => seek(ev.firstFlameS!) : undefined)}
+            {row("Visible", `${ev.visibleS.toFixed(1)} s${ev.episodes > 1 ? ` · ${ev.episodes} episodes` : ""}`)}
+            {row(
+              "Peak area",
+              ev.peakAreaPx != null ? `${ev.peakAreaPx.toLocaleString("en-US")} px${ev.peakAreaS != null ? ` @ ${formatTime(ev.peakAreaS)}` : ""}` : null,
+              ev.peakAreaS != null ? () => seek(ev.peakAreaS!) : undefined,
+            )}
+            {row("Largest frame", sum.maxBBoxW != null && sum.maxBBoxH != null ? `${sum.maxBBoxW}×${sum.maxBBoxH} px` : null)}
+            {row("Overlay OCR", minRead != null ? pct(minRead) : null)}
+          </dl>
+        ) : null}
+        <div>
+          <p className="mb-1 text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">Gases · initial → final</p>
+          <dl className="divide-y divide-[var(--line)]">
+            {gas("O₂", c.o2InitialPct, c.o2FinalPct, "% vol")}
+            {gas("CO₂", c.co2InitialPct, c.co2FinalPct, "% vol")}
+            {gas("CO", c.coInitialPpm, co, "ppm")}
+          </dl>
+        </div>
+        {onFindSimilar && a && (
+          <Button size="sm" variant="secondary" className="w-full justify-center" onClick={onFindSimilar}>
+            <Images className="size-3.5" aria-hidden="true" />
+            <span>Frames like this one</span>
+          </Button>
+        )}
+      </PanelBody>
+    </Panel>
   );
 }

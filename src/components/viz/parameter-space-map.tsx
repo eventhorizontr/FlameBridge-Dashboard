@@ -34,11 +34,9 @@ const SERIES_META: Record<FuelFamily, { label: string; colorVar: string }> = {
   "fabric-other": { label: "Fabric / Candle", colorVar: "var(--series-3)" },
 };
 
-const SVG_W = 700;
-const SVG_H = 380;
 const MARGIN = { top: 22, right: 24, bottom: 48, left: 56 };
-const PLOT_W = SVG_W - MARGIN.left - MARGIN.right;
-const PLOT_H = SVG_H - MARGIN.top - MARGIN.bottom;
+/** Coordinate system per variant: the compact side pane uses a narrower box so axis text stays ≥ 11 px. */
+const SIZE = { full: { w: 700, h: 380 }, compact: { w: 340, h: 340 } } as const;
 
 interface BrushBox {
   x0: number;
@@ -48,15 +46,20 @@ interface BrushBox {
 }
 
 export interface ParameterSpaceMapProps {
+  /** Side-pane variant for the Runs page: chart only, inspector on hover, one-line exclusions. */
+  compact?: boolean;
   allExperiments: readonly Experiment[];
   filteredExperiments: readonly Experiment[];
 }
 
 export function ParameterSpaceMap({
   allExperiments,
-  filteredExperiments,
-}: ParameterSpaceMapProps) {
+  filteredExperiments, compact = false }: ParameterSpaceMapProps) {
   const mode = useDashboard((s) => s.mode);
+  const SVG_W = SIZE[compact ? "compact" : "full"].w;
+  const SVG_H = SIZE[compact ? "compact" : "full"].h;
+  const PLOT_W = SVG_W - MARGIN.left - MARGIN.right;
+  const PLOT_H = SVG_H - MARGIN.top - MARGIN.bottom;
   const selection = useDashboard((s) => s.selection);
   const dispatch = useDispatch();
 
@@ -177,11 +180,12 @@ export function ParameterSpaceMap({
     <Panel surface="surface-1">
       <PanelHeader className="flex-wrap">
         <PanelTitle
-          eyebrow="Parameter Space · D3 Linked Scatter"
           title={
-            mode === "learn"
-              ? "Oxygen vs. Airflow Map Across Space Station Burns"
-              : "Initial O₂ × Representative Airflow (Median Set-Point)"
+            compact
+              ? "Initial O₂ × Airflow"
+              : mode === "learn"
+                ? "Oxygen vs. airflow across the space-station burns"
+                : "Initial O₂ × airflow (median set-point)"
           }
           actions={
             <div className="flex flex-wrap items-center gap-2">
@@ -217,7 +221,7 @@ export function ParameterSpaceMap({
                   <span>Clear ({selection.length})</span>
                 </Button>
               )}
-              <SegmentedControl<"chart" | "table">
+              {!compact && <SegmentedControl<"chart" | "table">
                 ariaLabel="Parameter-space visualization mode"
                 size="sm"
                 value={viewMode}
@@ -226,7 +230,7 @@ export function ParameterSpaceMap({
                   { value: "chart", label: "Scatter" },
                   { value: "table", label: "Table" },
                 ]}
-              />
+              />}
             </div>
           }
         />
@@ -248,13 +252,11 @@ export function ParameterSpaceMap({
                 </span>
               ),
             )}
-            <span className="text-[var(--text-3)]">
-              Radius ∝ fuel thickness / diameter · Drag plot to brush-select runs
-            </span>
+            {!compact && (
+              <span className="text-[var(--text-3)]">Size = fuel thickness / diameter · drag to select</span>
+            )}
           </div>
-          <span className="num text-[var(--text-3)]">
-            Plotted: {plotted.length} · Unplotted nulls: {unplotted.length}
-          </span>
+          {!compact && <span className="num text-[var(--text-3)]">Plotted: {plotted.length}</span>}
         </div>
 
         <p id={descId} className="sr-only">
@@ -265,9 +267,9 @@ export function ParameterSpaceMap({
           and are listed separately below without being plotted at zero.
         </p>
 
-        {viewMode === "chart" ? (
+        {viewMode === "chart" || compact ? (
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
-            <div className="xl:col-span-9 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-2 sm:p-3 overflow-hidden">
+            <div className={`${compact ? "xl:col-span-12" : "xl:col-span-9"} rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-2 sm:p-3 overflow-hidden`}>
               <svg
                 ref={svgRef}
                 viewBox={`0 0 ${SVG_W} ${SVG_H}`}
@@ -439,7 +441,8 @@ export function ParameterSpaceMap({
             </div>
 
             {/* Readout & Selection Inspector Card */}
-            <div className="xl:col-span-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3.5 space-y-3">
+            {(!compact || hovered) && (
+            <div className={`${compact ? "xl:col-span-12" : "xl:col-span-3"} rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3.5 space-y-3`}>
               {hovered ? (
                 <>
                   <div className="flex items-center justify-between gap-2">
@@ -494,19 +497,11 @@ export function ParameterSpaceMap({
                 </>
               ) : (
                 <div className="space-y-2 text-[0.8125rem] text-[var(--text-2)]">
-                  <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-                    Point Inspector
-                  </p>
-                  <p>
-                    Hover or focus any plotted point to inspect its telemetry, click to select, Shift-click to
-                    multi-select, or double-click / press Enter to open the Flame Viewer.
-                  </p>
-                  <p className="text-[0.75rem] text-[var(--text-3)]">
-                    Selected runs ({selection.length}) sync across the matrix below and can be launched into Compare.
-                  </p>
+                  <p>Hover a point to see the run. Click selects, Shift-click adds, Enter or double-click opens it.</p>
                 </div>
               )}
             </div>
+            )}
           </div>
         ) : (
           /* Accessible Table View of Plotted Data */
@@ -549,16 +544,13 @@ export function ParameterSpaceMap({
           </div>
         )}
 
-        {/* Explicit Unplotted Runs Strip (zero fabricated coordinates) */}
+        {/* Runs without O₂ or airflow are listed, never plotted at 0 */}
         {unplotted.length > 0 && (
-          <div className="rounded-[var(--radius-md)] border border-[var(--warning)]/35 bg-[var(--warning)]/5 px-3.5 py-2.5 space-y-1.5">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[0.75rem] font-medium text-[var(--warning)]">
-                {unplotted.length} matching run{unplotted.length === 1 ? "" : "s"} excluded from scatter coordinates
-                (missing valid Initial O₂ or airflow set-points — never plotted at 0):
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
+          <details className="text-[0.75rem] text-[var(--text-3)]">
+            <summary className="cursor-pointer hover:text-[var(--text-2)]">
+              {unplotted.length} run{unplotted.length === 1 ? "" : "s"} not plotted — missing initial O₂ or airflow
+            </summary>
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {unplotted.map((exp) => {
                 const reason =
                   exp.conditions.o2InitialPct === null
@@ -569,7 +561,7 @@ export function ParameterSpaceMap({
                     <button
                       type="button"
                       onClick={() => dispatch({ type: "openExperiment", id: exp.id })}
-                      className="num min-h-6 px-2 py-0.5 rounded-[var(--radius-sm)] border border-[var(--warning)]/40 bg-[var(--surface-2)] text-[0.75rem] text-[var(--text-1)] hover:border-[var(--accent)] cursor-pointer"
+                      className="num min-h-6 px-2 py-0.5 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-2)] text-[0.75rem] text-[var(--text-1)] hover:border-[var(--accent)] cursor-pointer"
                     >
                       {exp.testId}
                     </button>
@@ -577,7 +569,7 @@ export function ParameterSpaceMap({
                 );
               })}
             </div>
-          </div>
+          </details>
         )}
       </PanelBody>
     </Panel>

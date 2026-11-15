@@ -137,7 +137,7 @@ export function getSuggestedPrompts(route: string, mode: UserMode): string[] {
   return mode === "learn"
     ? [
         "What is BASS-II and why did NASA burn plastic on the ISS?",
-        "Show me the Explore & Learn view and open a beginner-friendly run.",
+        "Switch to Guided mode and open a beginner-friendly run.",
         "Filter the Explorer to blue microgravity flames in low oxygen.",
         "Open the What-if Lab at 18 % O₂.",
       ]

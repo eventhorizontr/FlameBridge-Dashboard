@@ -282,14 +282,17 @@ interface DiffField {
   renderCell?: (exp: Experiment, idx: number) => React.ReactNode;
 }
 
-export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
+/** Image-derived headline numbers of each run's primary video (vision index; px, not mm). */
+export type CompareVision = Record<string, { firstFlameS: number | null; visibleS: number; peakAreaPx: number | null; peakAreaS: number | null }>;
+
+export function CompareWorkspace({ dataset, vision = {} }: { dataset: ExperimentDataset; vision?: CompareVision }) {
   const flameOverlay = useDashboard((st) => st.flameOverlay);
   const compareIds = useDashboard((s) => s.compareIds);
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
 
   const [addSearch, setAddSearch] = useState("");
-  const [diffMode, setDiffMode] = useState<"all" | "diff">("all");
+  const [diffMode, setDiffMode] = useState<"all" | "diff">("diff");
   const [overlayView, setOverlayView] = useState<"chart" | "table">("chart");
   const [playingAll, setPlayingAll] = useState(false);
   const [rate, setRate] = useState<number>(1);
@@ -345,6 +348,21 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
       if (v) v.currentTime = clamped;
     }
   };
+
+  // Open where every compared flame is burning: the latest measured first-flame time (vision),
+  // applied once per set of runs after all streams report their duration; sync is kept.
+  const syncStartS = Math.max(0, ...comparedRuns.map((r) => vision[r.id]?.firstFlameS ?? 0));
+  const syncKey = comparedRuns.map((r) => r.id).join(",");
+  const autoSyncedRef = useRef<string | null>(null);
+  const allReady = comparedRuns.length > 1 && comparedRuns.every((r) => (durations[r.id] ?? 0) > 0);
+  useEffect(() => {
+    if (!allReady || syncStartS <= 0 || autoSyncedRef.current === syncKey) return;
+    autoSyncedRef.current = syncKey;
+    for (const run of comparedRuns) {
+      const v = videoRefs.current.get(run.id);
+      if (v && v.paused && v.currentTime < 0.05) v.currentTime = Math.min(syncStartS, (durations[run.id] ?? syncStartS) - 0.1);
+    }
+  }, [allReady, comparedRuns, durations, syncKey, syncStartS]);
 
   const stepAllFrames = (delta: number) => {
     if (playingAll) {
@@ -451,6 +469,13 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
         get: (e) => (e.qa.flags.length ? e.qa.flags.join("; ") : "Clean"),
         renderCell: (e) => <QABadge flags={e.qa.flags} parse={e.qa.parse} showClean />,
       },
+      { label: "Image-derived · First flame", get: (e) => (vision[e.id]?.firstFlameS != null ? formatClock(vision[e.id].firstFlameS!) : "—") },
+      { label: "Image-derived · Flame visible", get: (e) => (vision[e.id] ? `${vision[e.id].visibleS.toFixed(0)} s` : "—") },
+      {
+        label: "Image-derived · Peak area (px)",
+        get: (e) => (vision[e.id]?.peakAreaPx != null ? `${vision[e.id].peakAreaPx!.toLocaleString("en-US")} px` : "—"),
+      },
+      { label: "Image-derived · Peak at", get: (e) => (vision[e.id]?.peakAreaS != null ? formatClock(vision[e.id].peakAreaS!) : "—") },
     ];
 
     return specs.map((spec) => {
@@ -462,7 +487,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
         renderCell: spec.renderCell,
       };
     });
-  }, [comparedRuns, mode]);
+  }, [comparedRuns, mode, vision]);
 
   const visibleDiffRows =
     diffMode === "diff"
@@ -505,16 +530,8 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
       {/* Title & Shareable URL Info */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div className="space-y-1">
-          <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-            Multi-Run Comparison · 2–4 Simultaneous Records
-          </p>
-          <h1 className="text-[1.5rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">
-            Compare Runs
-          </h1>
-          <p className="text-[0.875rem] text-[var(--text-2)] max-w-2xl">
-            Synchronized NASA S3 video playback, condition differences, and airflow set-point
-            overlays synced directly with the shareable <code className="text-[var(--text-1)]">?cmp=</code> URL.
-          </p>
+          <h1 className="text-[1.75rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">Compare</h1>
+          <p className="text-[0.9375rem] text-[var(--text-2)] max-w-2xl">Watch burns in sync and see exactly what differs.</p>
         </div>
 
         <EvidenceChip
@@ -532,7 +549,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-[0.75rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-                Active Slots ({comparedRuns.length}/4):
+                Runs ({comparedRuns.length}/4)
               </span>
               {comparedRuns.map((run, idx) => (
                 <div
@@ -597,7 +614,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--line)]">
-            <span className="text-[0.75rem] text-[var(--text-3)]">Curated comparisons:</span>
+            <span className="text-[0.75rem] text-[var(--text-3)]">Suggestions:</span>
             {PRESETS.map((preset) => (
               <Button
                 key={preset.label}
@@ -618,9 +635,8 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
       {comparedRuns.length < 2 ? (
         <EmptyState
           icon={<GitCompareArrows className="size-5" />}
-          eyebrow="Select 2 to 4 Runs"
-          title="Pick at least 2 runs to unlock side-by-side comparison"
-          description="Choose a curated scientific preset above, type a run ID into the Add Run field, or select 2–4 checkboxes in the Experiment Explorer."
+          title="Pick 2 to 4 runs"
+          description="Use a suggestion above, add a run by its ID, or tick runs in the Runs table."
           actions={
             <Button
               size="sm"
@@ -637,8 +653,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
           <Panel surface="surface-1">
             <PanelHeader className="flex-wrap">
               <PanelTitle
-                eyebrow="Synchronized Footage Grid"
-                title={`Master Transport · ${comparedRuns.length} Streams`}
+                title={`Footage in sync · ${comparedRuns.length} runs`}
                 actions={
                   <div className="flex flex-wrap items-center gap-1.5">
                     <SegmentedControl<FlameOverlayMode>
@@ -756,12 +771,89 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
             </PanelBody>
           </Panel>
 
+          {/* Highlighted Condition Diff Matrix */}
+          <Panel surface="surface-1">
+            <PanelHeader className="flex-wrap">
+              <PanelTitle
+                title="What differs"
+                actions={
+                  <SegmentedControl<"all" | "diff">
+                    ariaLabel="Diff visibility filter"
+                    size="sm"
+                    value={diffMode}
+                    onChange={setDiffMode}
+                    options={[
+                      { value: "all", label: "All fields" },
+                      { value: "diff", label: "Differences only" },
+                    ]}
+                  />
+                }
+              />
+            </PanelHeader>
+            <PanelBody className="p-0 sm:p-0 overflow-x-auto">
+              <table className="w-full min-w-[700px] border-collapse text-left text-[0.8125rem]">
+                <thead className="bg-[var(--surface-3)] border-b border-[var(--line-strong)] text-[0.75rem]">
+                  <tr>
+                    <th className="py-2.5 pl-4 pr-3 text-[var(--text-3)] uppercase tracking-[0.06em] text-[0.6875rem] w-52">
+                      Parameter
+                    </th>
+                    {comparedRuns.map((run, idx) => (
+                      <th key={run.id} className="py-2.5 px-3">
+                        <button
+                          type="button"
+                          onClick={() => dispatch({ type: "openExperiment", id: run.id })}
+                          className="inline-flex items-center gap-1.5 font-semibold text-[var(--text-1)] hover:text-[var(--accent)] cursor-pointer"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="size-2.5 rounded-full"
+                            style={{ backgroundColor: COMPARE_SERIES[idx % COMPARE_SERIES.length] }}
+                          />
+                          <span className="num">{run.testId}</span>
+                          <ExternalLink className="size-3 text-[var(--text-3)]" aria-hidden="true" />
+                        </button>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--line)]">
+                  {visibleDiffRows.map((row) => {
+                    const differs = new Set(row.rawCompareValues).size > 1;
+                    return (
+                      <tr
+                        key={row.label}
+                        className={differs ? "bg-[var(--accent-soft)]/25" : undefined}
+                      >
+                        <th
+                          scope="row"
+                          className={`py-2 pl-4 pr-3 font-medium text-[var(--text-2)] align-top border-l-2 ${
+                            differs ? "border-[var(--accent)]" : "border-transparent"
+                          }`}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span>{row.label}</span>
+                            {differs && <Badge variant="accent">Δ</Badge>}
+                          </div>
+                        </th>
+                        {comparedRuns.map((run, idx) => (
+                          <td key={`${row.label}-${run.id}`} className="py-2 px-3 num text-[var(--text-1)] align-top">
+                            {row.renderCell ? row.renderCell(run, idx) : row.values[idx]}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </PanelBody>
+          </Panel>
+          {comparedRuns.some((r) => r.conditions.airflowSetpointsCmS.length > 1 || r.conditions.o2FinalPct != null) ? (
+          <>
           {/* D3 Set-Point & Gas Shift Overlay */}
           <Panel surface="surface-1">
             <PanelHeader className="flex-wrap">
               <PanelTitle
-                eyebrow="D3 Telemetry Overlay"
-                title="Airflow Set-Point Trajectories & O₂ Consumption Shift"
+                title="Airflow set-points and O₂ shift"
                 actions={
                   <SegmentedControl<"chart" | "table">
                     ariaLabel="Overlay visualization mode"
@@ -955,83 +1047,12 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
             </PanelBody>
           </Panel>
 
-          {/* Highlighted Condition Diff Matrix */}
-          <Panel surface="surface-1">
-            <PanelHeader className="flex-wrap">
-              <PanelTitle
-                eyebrow="Telemetry & Conditions Diff Matrix"
-                title="Side-by-Side Field Comparison"
-                actions={
-                  <SegmentedControl<"all" | "diff">
-                    ariaLabel="Diff visibility filter"
-                    size="sm"
-                    value={diffMode}
-                    onChange={setDiffMode}
-                    options={[
-                      { value: "all", label: "All fields" },
-                      { value: "diff", label: "Differences only" },
-                    ]}
-                  />
-                }
-              />
-            </PanelHeader>
-            <PanelBody className="p-0 sm:p-0 overflow-x-auto">
-              <table className="w-full min-w-[700px] border-collapse text-left text-[0.8125rem]">
-                <thead className="bg-[var(--surface-3)] border-b border-[var(--line-strong)] text-[0.75rem]">
-                  <tr>
-                    <th className="py-2.5 pl-4 pr-3 text-[var(--text-3)] uppercase tracking-[0.06em] text-[0.6875rem] w-52">
-                      Parameter
-                    </th>
-                    {comparedRuns.map((run, idx) => (
-                      <th key={run.id} className="py-2.5 px-3">
-                        <button
-                          type="button"
-                          onClick={() => dispatch({ type: "openExperiment", id: run.id })}
-                          className="inline-flex items-center gap-1.5 font-semibold text-[var(--text-1)] hover:text-[var(--accent)] cursor-pointer"
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="size-2.5 rounded-full"
-                            style={{ backgroundColor: COMPARE_SERIES[idx % COMPARE_SERIES.length] }}
-                          />
-                          <span className="num">{run.testId}</span>
-                          <ExternalLink className="size-3 text-[var(--text-3)]" aria-hidden="true" />
-                        </button>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--line)]">
-                  {visibleDiffRows.map((row) => {
-                    const differs = new Set(row.rawCompareValues).size > 1;
-                    return (
-                      <tr
-                        key={row.label}
-                        className={differs ? "bg-[var(--accent-soft)]/25" : undefined}
-                      >
-                        <th
-                          scope="row"
-                          className={`py-2 pl-4 pr-3 font-medium text-[var(--text-2)] align-top border-l-2 ${
-                            differs ? "border-[var(--accent)]" : "border-transparent"
-                          }`}
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span>{row.label}</span>
-                            {differs && <Badge variant="accent">Δ</Badge>}
-                          </div>
-                        </th>
-                        {comparedRuns.map((run, idx) => (
-                          <td key={`${row.label}-${run.id}`} className="py-2 px-3 num text-[var(--text-1)] align-top">
-                            {row.renderCell ? row.renderCell(run, idx) : row.values[idx]}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </PanelBody>
-          </Panel>
+          </>
+          ) : (
+            <p className="text-[0.8125rem] text-[var(--text-3)]">
+              Each run held a single airflow set-point and no final O₂ was recorded, so there is no set-point or O₂-shift chart to draw.
+            </p>
+          )}
         </>
       )}
     </div>

@@ -19,7 +19,7 @@ export function SuggestedPrompts({
   return (
     <div className="space-y-2">
       <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-        Suggested for this view ({mode === "learn" ? "Explore & Learn" : "Expert"})
+        Suggested for this view ({mode === "learn" ? "Guided" : "Expert"})
       </p>
       <div className="flex flex-col gap-1.5">
         {prompts.map((prompt) => (

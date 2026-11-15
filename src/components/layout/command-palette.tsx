@@ -122,7 +122,7 @@ export function CommandPalette() {
       {
         id: "nav-learn",
         group: "Navigate",
-        label: "Explore & Learn Track",
+        label: "Learn — guided chapters",
         hint: "/learn",
         icon: <BookOpen className="size-4 text-[var(--accent)]" />,
         run: () => {
@@ -144,7 +144,7 @@ export function CommandPalette() {
       {
         id: "mode-learn",
         group: "Mode",
-        label: "Switch to Explore & Learn Mode",
+        label: "Switch to Guided mode",
         hint: "Guided narrative",
         icon: <BookOpen className="size-4 text-[var(--text-2)]" />,
         run: () => {

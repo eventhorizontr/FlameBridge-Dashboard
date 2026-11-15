@@ -1,13 +1,52 @@
 "use client";
 
-import { BookOpen, Command, FilterX, Microscope, PanelRightClose, PanelRightOpen, Sparkles, Undo2 } from "lucide-react";
+import { ChevronRight, Command, FilterX, GraduationCap, Microscope, PanelRightClose, PanelRightOpen, Sparkles, Undo2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 
-import { Badge, Button, EvidenceChip, IconButton, Kbd, SegmentedControl } from "@/components/ui";
+import { Badge, Button, IconButton, Kbd, SegmentedControl } from "@/components/ui";
 import { SITE } from "@/config/site";
 import { dashboardStore, describeFilters, useDashboard, useDashboardShallow, useDispatch } from "@/lib/store";
 import type { UserMode } from "@/types/dashboard";
 
 import { shellUiStore, useShellUi } from "./shell-state";
+
+const SECTION: Record<string, string> = {
+  explore: "Runs",
+  experiments: "Runs",
+  compare: "Compare",
+  lab: "What-if Lab",
+  learn: "Learn",
+};
+
+/** Where am I: "Runs / B1", "Compare", … (the brand lives in the rail). */
+function Breadcrumb() {
+  const pathname = usePathname();
+  const [first, second] = pathname.split("/").filter(Boolean);
+  if (!first) return <span className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-[var(--text-1)]">{SITE.name}</span>;
+  const section = SECTION[first] ?? first;
+  const run = first === "experiments" && second ? decodeURIComponent(second).split(":").pop() : null;
+  return (
+    <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-[0.9375rem]">
+      {run ? (
+        <>
+          <Link href="/explore" className="text-[var(--text-2)] hover:text-[var(--text-1)]">
+            {section}
+          </Link>
+          <ChevronRight className="size-3.5 shrink-0 text-[var(--text-3)]" aria-hidden="true" />
+          <span className="num truncate font-semibold text-[var(--text-1)]" aria-current="page">
+            {run}
+          </span>
+        </>
+      ) : (
+        <span className="font-semibold text-[var(--text-1)]" aria-current="page">
+          {section}
+        </span>
+      )}
+    </nav>
+  );
+}
 
 export function TopContextBar() {
   const { mode, filters, log } = useDashboardShallow((s) => ({
@@ -37,28 +76,9 @@ export function TopContextBar() {
             <img src="/brand/orbital-flame-mark.svg" alt="" className="size-6" />
           </button>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-[0.875rem] sm:text-[0.9375rem] font-semibold tracking-[-0.02em] text-[var(--text-1)] truncate">
-                {SITE.name}
-              </span>
-              <Badge variant="accent" className="hidden sm:inline-flex">
-                PSI-25 · BASS-II
-              </Badge>
-              <span className="hidden lg:inline-flex">
-                <EvidenceChip
-                  id="doi:10.60555/4qc4-de67"
-                  label="DOI 10.60555/4qc4-de67"
-                  kind="dataset"
-                  href="https://psi.nasa.gov/physci/repo/data/investigations/PSI-25"
-                  detail="NASA Physical Sciences Informatics (PSI-25) BASS-II — 129 ISS microgravity solid-fuel flame tests (CC0 1.0)."
-                />
-              </span>
-            </div>
-            <p className="hidden xl:block text-[0.75rem] text-[var(--text-3)] truncate">
-              {SITE.tagline}
-            </p>
-          </div>
+          <Suspense fallback={<span className="text-[0.9375rem] font-semibold">{SITE.name}</span>}>
+            <Breadcrumb />
+          </Suspense>
         </div>
 
         {/* Center/Right: Active filter pill + Undo + Mode switch + Command palette + AI dock */}
@@ -110,8 +130,8 @@ export function TopContextBar() {
                 },
                 {
                   value: "learn",
-                  label: "Explore & Learn",
-                  icon: <BookOpen className="size-3.5" aria-hidden="true" />,
+                  label: "Guided",
+                  icon: <GraduationCap className="size-3.5" aria-hidden="true" />,
                 },
               ]}
             />

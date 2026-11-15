@@ -279,8 +279,13 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const plotW = svgW - pad.l - pad.r;
   const plotH = svgH - pad.t - pad.b;
 
-  const xScale = scaleLinear().domain([0, 65]).range([0, plotW]).nice();
-  const yScale = scaleLinear().domain([10, 32]).range([plotH, 0]).nice();
+  // axes span the measured runs (+10 %) and the query, not the slider limits
+  const xMaxData = Math.max(...allAir, labParams.airflowCmS, 1);
+  const xScale = scaleLinear().domain([0, xMaxData * 1.1]).range([0, plotW]).nice();
+  const yScale = scaleLinear()
+    .domain([Math.min(...allO2, labParams.o2Pct) - 1, Math.max(...allO2, labParams.o2Pct) + 1])
+    .range([plotH, 0])
+    .nice();
 
   const [grpAirMin, grpAirMax] = extent(groupAir);
   const [grpO2Min, grpO2Max] = extent(groupO2);
@@ -318,16 +323,9 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
         <div className="space-y-1">
-          <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--text-3)]">
-            Measured-Envelope Retrieval · Zero Extrapolation
-          </p>
-          <h1 className="text-[1.5rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">
-            Visual What-if Lab
-          </h1>
-          <p className="text-[0.875rem] text-[var(--text-2)] max-w-3xl">
-            {mode === "learn"
-              ? "Adjust oxygen concentration, airflow speed, and fuel shape to find the closest real Space Station burns—and immediately see where NASA’s data ends."
-              : "Distance-ranked k-nearest-neighbor retrieval over 129 PSI-25 runs with slider density tracks and strict hull guardrails."}
+          <h1 className="text-[1.75rem] sm:text-[2rem] font-semibold tracking-[-0.02em] text-[var(--text-1)]">What-if Lab</h1>
+          <p className="text-[0.9375rem] text-[var(--text-2)] max-w-3xl">
+            Set conditions. We find the closest real ISS burns — never a simulation.
           </p>
         </div>
 
@@ -372,18 +370,16 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                   result.insideEnvelope ? "text-[var(--good)]" : "text-[var(--warning)]"
                 }`}
               >
-                {result.insideEnvelope
-                  ? "Inside Measured PSI-25 Envelope"
-                  : "Outside Measured Envelope — No Extrapolated Visuals"}
+                {result.insideEnvelope ? "Inside the measured envelope" : "Outside the measured envelope — nothing is extrapolated"}
               </h2>
               <Badge variant={result.insideEnvelope ? "good" : "warning"}>
-                {sameGroupRuns.length} measured {labParams.material} {labParams.geometry} runs
+                {sameGroupRuns.length} {labParams.material} {labParams.geometry} runs
               </Badge>
             </div>
             <p className="text-[0.8125rem] text-[var(--text-2)]">
               {result.insideEnvelope
-                ? "A same-material, same-geometry ISS experiment exists within normalized distance ≤ 0.25 and your query lies inside the measured min–max hull."
-                : "Your dialed conditions fall outside NASA BASS-II's measured envelope for this fuel family. Synthetic flames are never fabricated—only nearest measured analog runs and exact parameter deltas are listed."}
+                ? "A real run of the same fuel lies within distance 0.25 and your inputs sit inside that group’s measured range."
+                : "No real run of this fuel matches closely enough. The nearest real runs and their exact differences are listed below."}
             </p>
             {result.pressure.status !== "not-queried" && (
               <p className="text-[0.8125rem] text-[var(--text-2)]" data-testid="lab-pressure-coverage">
@@ -409,7 +405,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
         {/* Controls Column */}
         <Panel surface="surface-1" className="xl:col-span-5">
           <PanelHeader>
-            <PanelTitle eyebrow="Query Parameters" title="Measured-Coverage Sliders" />
+            <PanelTitle title="Conditions" />
           </PanelHeader>
           <PanelBody className="space-y-5">
             <CoverageSlider
@@ -475,7 +471,11 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
             </div>
 
             {/* Total pressure (ADR-021): no PSI-25 run states one, so the track has no measured ticks */}
-            <div className="space-y-2 pt-2 border-t border-[var(--line)]">
+            <details className="group pt-2 border-t border-[var(--line)]" open={labParams.pressureKpa !== null}>
+              <summary className="cursor-pointer py-1 text-[0.8125rem] text-[var(--text-2)] hover:text-[var(--text-1)]">
+                More · Pressure <span className="text-[var(--text-3)]">(not recorded in PSI-25)</span>
+              </summary>
+            <div className="space-y-2 pt-2">
               <CoverageSlider
                 id="lab-pressure-slider"
                 label="Total Pressure"
@@ -510,6 +510,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 </Button>
               </div>
             </div>
+            </details>
 
             {/* Fuel Material */}
             <div className="space-y-1.5 pt-2 border-t border-[var(--line)]">
@@ -584,25 +585,161 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
               />
             </div>
 
-            {/* Sourced Physics Narration */}
-            <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3.5 space-y-1.5">
+            {/* Sourced Physics Narration (Guided mode) */}
+            {mode === "learn" && <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-3.5 space-y-1.5">
               <p className="text-[0.6875rem] uppercase tracking-[0.08em] text-[var(--accent)]">
                 {mode === "learn" ? "Why These Controls Matter (Sourced)" : "Regime Physical Context"}
               </p>
               <p className="text-[0.8125rem] font-medium text-[var(--text-1)]">{narration.headline}</p>
               <p className="text-[0.75rem] text-[var(--text-2)] leading-relaxed">{narration.body}</p>
-            </div>
+            </div>}
           </PanelBody>
         </Panel>
 
         {/* Visualization + Nearest Matches Column */}
         <div className="xl:col-span-7 space-y-5">
+          {/* Top-k Match Cards */}
+          <Panel surface="surface-1">
+            <PanelHeader className="flex-wrap">
+              <PanelTitle
+                title={`Closest ${matchedDetails.length} real runs`}
+                actions={
+                  matchedDetails.length >= 2 && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() =>
+                        dispatch({
+                          type: "compare",
+                          ids: matchedDetails.slice(0, 4).map((m) => m.experiment.id),
+                        })
+                      }
+                    >
+                      <GitCompareArrows className="size-3.5" aria-hidden="true" />
+                      <span>Compare Top {Math.min(4, matchedDetails.length)}</span>
+                    </Button>
+                  )
+                }
+              />
+            </PanelHeader>
+            <PanelBody className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {matchedDetails.map(({ match, experiment }, idx) => {
+                const isPreviewing = activePreview?.id === experiment.id;
+                const repAir = representativeAirflow(experiment);
+                const sizeMm = characteristicSizeMm(experiment.fuel);
+
+                return (
+                  <div
+                    key={experiment.id}
+                    className={`rounded-[var(--radius-md)] border p-3.5 space-y-2.5 transition-colors ${
+                      isPreviewing
+                        ? "border-[var(--accent)] bg-[var(--accent-soft)]/25"
+                        : "border-[var(--line)] bg-[var(--surface-2)]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="num text-[0.6875rem] font-semibold text-[var(--accent)]">
+                            #{idx + 1}
+                          </span>
+                          <span className="num font-semibold text-[0.9375rem] text-[var(--text-1)]">
+                            {experiment.testId}
+                          </span>
+                          <span className="text-[0.75rem] text-[var(--text-2)]">
+                            · {experiment.principalInvestigator}
+                          </span>
+                        </div>
+                        <p className="text-[0.75rem] text-[var(--text-2)] mt-0.5">
+                          {experiment.fuel.raw}
+                        </p>
+                      </div>
+                      <Badge variant="accent">d={match.distance.toFixed(3)}</Badge>
+                    </div>
+
+                    {/* Signed Deltas */}
+                    <div className="flex flex-wrap gap-1.5 text-[0.6875rem]">
+                      <Badge>
+                        ΔO₂: {formatSigned(match.deltas.o2Pct, "%")} (
+                        {formatMetricValue(experiment.conditions.o2InitialPct, { unit: "%" }).text})
+                      </Badge>
+                      <Badge>
+                        ΔFlow: {formatSigned(match.deltas.airflowCmS, "cm/s")} (
+                        {formatMetricValue(repAir, { unit: "cm/s" }).text})
+                      </Badge>
+                      {match.deltas.pressureKpa !== null && (
+                        <Badge>ΔPressure: {formatSigned(match.deltas.pressureKpa, "kPa")}</Badge>
+                      )}
+                      {match.deltas.characteristicSizeMm !== null && (
+                        <Badge>
+                          ΔSize: {formatSigned(match.deltas.characteristicSizeMm, "mm", 2)} (
+                          {sizeMm ?? "—"} mm)
+                        </Badge>
+                      )}
+                    </div>
+
+                    {/* Mismatch & QA Warnings */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {match.categoricalMismatches.map((mm) => (
+                        <Badge key={mm} variant="warning">
+                          <AlertTriangle className="size-3 mr-1" aria-hidden="true" />
+                          {mm} mismatch
+                        </Badge>
+                      ))}
+                      <QABadge flags={experiment.qa.flags} parse={experiment.qa.parse} />
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--line)]">
+                      <Button
+                        size="sm"
+                        variant={isPreviewing ? "primary" : "ghost"}
+                        onClick={() => setSelectedPreviewId(experiment.id)}
+                        disabled={experiment.videos.length === 0}
+                      >
+                        <Film className="size-3.5" aria-hidden="true" />
+                        <span>
+                          {experiment.videos.length > 0
+                            ? isPreviewing
+                              ? "Previewing"
+                              : `Preview Footage (${experiment.videos.length})`
+                            : "No video"}
+                        </span>
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => dispatch({ type: "openExperiment", id: experiment.id })}
+                      >
+                        <span>Inspect</span>
+                        <ExternalLink className="size-3" aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </PanelBody>
+          </Panel>
+
+          {/* Embedded Real-Footage Preview of Selected Match */}
+          {activePreview && (
+            <FlameViewer
+              key={activePreview.id}
+              experiment={activePreview}
+              compact
+              titleOverride={
+                result.insideEnvelope
+                  ? `Closest Measured Match Preview — Run ${activePreview.testId}`
+                  : `Nearest Analog Reference ONLY — Run ${activePreview.testId} (Query Outside Hull)`
+              }
+            />
+          )}
+
           {/* 2D Envelope Map */}
           <Panel surface="surface-1">
             <PanelHeader className="flex-wrap">
               <PanelTitle
-                eyebrow="Measured Hull & Distance Vectors"
-                title="Query Position vs. PSI-25 Nearest Neighbors"
+                title="Where your query sits"
                 actions={
                   <SegmentedControl<"map" | "3d" | "table">
                     ariaLabel="What-if hull visualization mode"
@@ -838,143 +975,6 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
             </PanelBody>
           </Panel>
 
-          {/* Top-k Match Cards */}
-          <Panel surface="surface-1">
-            <PanelHeader className="flex-wrap">
-              <PanelTitle
-                eyebrow="Distance-Ranked Nearest Analogs"
-                title={`Top ${matchedDetails.length} Measured Matches`}
-                actions={
-                  matchedDetails.length >= 2 && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      onClick={() =>
-                        dispatch({
-                          type: "compare",
-                          ids: matchedDetails.slice(0, 4).map((m) => m.experiment.id),
-                        })
-                      }
-                    >
-                      <GitCompareArrows className="size-3.5" aria-hidden="true" />
-                      <span>Compare Top {Math.min(4, matchedDetails.length)}</span>
-                    </Button>
-                  )
-                }
-              />
-            </PanelHeader>
-            <PanelBody className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {matchedDetails.map(({ match, experiment }, idx) => {
-                const isPreviewing = activePreview?.id === experiment.id;
-                const repAir = representativeAirflow(experiment);
-                const sizeMm = characteristicSizeMm(experiment.fuel);
-
-                return (
-                  <div
-                    key={experiment.id}
-                    className={`rounded-[var(--radius-md)] border p-3.5 space-y-2.5 transition-colors ${
-                      isPreviewing
-                        ? "border-[var(--accent)] bg-[var(--accent-soft)]/25"
-                        : "border-[var(--line)] bg-[var(--surface-2)]"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="num text-[0.6875rem] font-semibold text-[var(--accent)]">
-                            #{idx + 1}
-                          </span>
-                          <span className="num font-semibold text-[0.9375rem] text-[var(--text-1)]">
-                            {experiment.testId}
-                          </span>
-                          <span className="text-[0.75rem] text-[var(--text-2)]">
-                            · {experiment.principalInvestigator}
-                          </span>
-                        </div>
-                        <p className="text-[0.75rem] text-[var(--text-2)] mt-0.5">
-                          {experiment.fuel.raw}
-                        </p>
-                      </div>
-                      <Badge variant="accent">d={match.distance.toFixed(3)}</Badge>
-                    </div>
-
-                    {/* Signed Deltas */}
-                    <div className="flex flex-wrap gap-1.5 text-[0.6875rem]">
-                      <Badge>
-                        ΔO₂: {formatSigned(match.deltas.o2Pct, "%")} (
-                        {formatMetricValue(experiment.conditions.o2InitialPct, { unit: "%" }).text})
-                      </Badge>
-                      <Badge>
-                        ΔFlow: {formatSigned(match.deltas.airflowCmS, "cm/s")} (
-                        {formatMetricValue(repAir, { unit: "cm/s" }).text})
-                      </Badge>
-                      {match.deltas.pressureKpa !== null && (
-                        <Badge>ΔPressure: {formatSigned(match.deltas.pressureKpa, "kPa")}</Badge>
-                      )}
-                      {match.deltas.characteristicSizeMm !== null && (
-                        <Badge>
-                          ΔSize: {formatSigned(match.deltas.characteristicSizeMm, "mm", 2)} (
-                          {sizeMm ?? "—"} mm)
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Mismatch & QA Warnings */}
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {match.categoricalMismatches.map((mm) => (
-                        <Badge key={mm} variant="warning">
-                          <AlertTriangle className="size-3 mr-1" aria-hidden="true" />
-                          {mm} mismatch
-                        </Badge>
-                      ))}
-                      <QABadge flags={experiment.qa.flags} parse={experiment.qa.parse} />
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[var(--line)]">
-                      <Button
-                        size="sm"
-                        variant={isPreviewing ? "primary" : "ghost"}
-                        onClick={() => setSelectedPreviewId(experiment.id)}
-                        disabled={experiment.videos.length === 0}
-                      >
-                        <Film className="size-3.5" aria-hidden="true" />
-                        <span>
-                          {experiment.videos.length > 0
-                            ? isPreviewing
-                              ? "Previewing"
-                              : `Preview Footage (${experiment.videos.length})`
-                            : "No video"}
-                        </span>
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => dispatch({ type: "openExperiment", id: experiment.id })}
-                      >
-                        <span>Inspect</span>
-                        <ExternalLink className="size-3" aria-hidden="true" />
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </PanelBody>
-          </Panel>
-
-          {/* Embedded Real-Footage Preview of Selected Match */}
-          {activePreview && (
-            <FlameViewer
-              key={activePreview.id}
-              experiment={activePreview}
-              compact
-              titleOverride={
-                result.insideEnvelope
-                  ? `Closest Measured Match Preview — Run ${activePreview.testId}`
-                  : `Nearest Analog Reference ONLY — Run ${activePreview.testId} (Query Outside Hull)`
-              }
-            />
-          )}
         </div>
       </div>
     </div>
