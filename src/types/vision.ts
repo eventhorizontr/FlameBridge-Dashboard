@@ -28,6 +28,7 @@ export const VisionEventsSchema = z.object({
   peakAreaS: nullableNum,
   peakAreaPx: nullableNum,
   transientFrames: num.optional(),
+  edgeFrames: num.optional(),
   litFrames: num.optional(),
 });
 
@@ -133,6 +134,7 @@ export const VisionVideoSchema = z.object({
     .optional(),
   segmentation: z
     .object({
+      photoRoi: z.object({ layout: z.string(), box: z.array(num) }).nullable().optional(),
       noiseSigma: num,
       weakThreshold: num,
       strongThreshold: num,

@@ -24,7 +24,7 @@ from profiles import VisionProfile
 import segment as seg
 import similarity as sim
 
-ALGORITHM_VERSION = "1.2.0"
+ALGORITHM_VERSION = "1.3.0"
 KEYFRAME_TILE = (192, 128)
 KEYFRAME_COUNT = 12
 EMBED_SIZE = (336, 224)  # multiples of the DINOv2 patch size (14)
@@ -186,6 +186,13 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
                                "width": width, "height": height}}
     box = osd_box(registration, reader, width)
     exclude_work = seg.overlay_exclusion((height, width), box, params)
+    photo_roi = None
+    if video.get("kind") == "still-sequence" and profile.still_layout is not None:
+        photo_roi = still_photo_roi(cap, frames, width, height, profile.still_layout)
+        x0, y0, x1, y1 = (int(round(v * params.work_scale)) for v in photo_roi[1])
+        keep = np.zeros_like(exclude_work)
+        keep[y0:y1, x0:x1] = True
+        exclude_work |= ~keep
     exclude_full = cv2.resize(exclude_work.astype(np.uint8), (width, height),
                               interpolation=cv2.INTER_NEAREST).astype(bool)
 
@@ -314,7 +321,12 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
         if b and (b[0] <= 4 or b[1] <= 4 or b[0] + b[2] >= width - 4 or b[1] + b[3] >= height - 4):
             flags |= FLAG_EDGE
         r["flags"] = flags
-    steady = visible & ~transient  # frames used for peak/summary statistics
+    edge = np.array([bool(r.get("flags", 0) & FLAG_EDGE) for r in rows], dtype=bool)
+    # peaks and summaries use frames where the flame is fully in view and not a glow spike
+    # (a region cut by the frame edge has an unknown size; at ignition it is the igniter glow)
+    steady = visible & ~transient & ~edge
+    if not steady.any():
+        steady = visible & ~transient
 
     # ---- events (image-derived, stated as such)
     events: dict = {"firstFlameS": None, "lastFlameS": None, "visibleS": 0.0, "episodes": 0,
@@ -330,6 +342,7 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
         events["peakAreaS"] = round(times[peak_i], 2)
         events["peakAreaPx"] = area[peak_i]
     events["transientFrames"] = int((visible & transient).sum())
+    events["edgeFrames"] = int((visible & edge).sum())
     events["litFrames"] = int(sum(1 for r in rows if r.get("lit")))
 
     # ---- overlay telemetry
@@ -415,7 +428,8 @@ def analyze(path: Path, *, profile: VisionProfile, experiment: dict, video: dict
         "coverage": {"analysedFrames": len(rows), "instrumentFrames": valid_count,
                      "instrumentFraction": round(valid_count / max(1, len(rows)), 4),
                      "flameFrames": int(visible.sum())},
-        "segmentation": {"noiseSigma": round(background.noise, 3), "weakThreshold": round(background.t_lo, 2),
+        "segmentation": {"photoRoi": {"layout": photo_roi[0], "box": list(photo_roi[1])} if photo_roi else None,
+                         "noiseSigma": round(background.noise, 3), "weakThreshold": round(background.t_lo, 2),
                          "strongThreshold": round(background.t_hi, 2), "workScale": params.work_scale,
                          "overlayBox": list(box) if box else None},
         "events": events,
@@ -569,6 +583,26 @@ def peak_pick(signal: np.ndarray, threshold: float, min_gap: int = 4) -> list[in
             elif signal[i] > signal[peaks[-1]]:
                 peaks[-1] = i
     return peaks
+
+
+def still_photo_roi(cap: cv2.VideoCapture, frames: int, width: int, height: int,
+                    layout) -> tuple[str, tuple[int, int, int, int]]:
+    """Which playback layout the still-camera recording uses, and where its photo is."""
+    greys = []
+    for k in range(24):
+        frame = _read_at(cap, int(frames * (k + 0.5) / 24))
+        if frame is not None:
+            greys.append(cv2.cvtColor(cv2.resize(frame, (720, 480)), cv2.COLOR_BGR2GRAY))
+    sx, sy = width / 720.0, height / 480.0
+    scale = lambda b: (int(b[0] * sx), int(b[1] * sy), int(b[2] * sx), int(b[3] * sy))  # noqa: E731
+    if not greys:
+        return "fullscreen", scale(layout.fullscreen_photo)
+    median = np.median(np.stack(greys), axis=0)
+    a, b = layout.histogram_edge_x
+    edge = median[int(0.27 * 480):int(0.5 * 480), a:b].mean(axis=0).max()
+    if edge >= layout.histogram_edge_min:
+        return "metadata", scale(layout.metadata_photo)
+    return "fullscreen", scale(layout.fullscreen_photo)
 
 
 def write_keyframes(path: Path, out: Path, rows: list[dict], visible: np.ndarray, fps: float) -> dict:
