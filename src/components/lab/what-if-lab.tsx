@@ -32,6 +32,8 @@ import {
   representativeAirflow,
 } from "@/components/viz/dataset-queries";
 import { FlameViewer } from "@/components/viz/flame-viewer";
+
+import { Envelope3D } from "./envelope-3d";
 import { DEFAULT_LAB_PARAMS, useDashboard, useDispatch } from "@/lib/store";
 import type { Experiment, ExperimentDataset, FuelGeometry, FuelMaterial } from "@/types/experiment";
 
@@ -207,7 +209,7 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const mode = useDashboard((s) => s.mode);
   const dispatch = useDispatch();
 
-  const [viewMode, setViewMode] = useState<"map" | "table">("map");
+  const [viewMode, setViewMode] = useState<"map" | "3d" | "table">("map");
   const [selectedPreviewId, setSelectedPreviewId] = useState<string | null>(null);
   const descId = useId();
 
@@ -545,13 +547,14 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 eyebrow="Measured Hull & Distance Vectors"
                 title="Query Position vs. PSI-25 Nearest Neighbors"
                 actions={
-                  <SegmentedControl<"map" | "table">
+                  <SegmentedControl<"map" | "3d" | "table">
                     ariaLabel="What-if hull visualization mode"
                     size="sm"
                     value={viewMode}
                     onChange={setViewMode}
                     options={[
                       { value: "map", label: "Envelope Map" },
+                      { value: "3d", label: "3D Space" },
                       { value: "table", label: "Match Table" },
                     ]}
                   />
@@ -586,7 +589,16 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
                 </span>
               </div>
 
-              {viewMode === "map" ? (
+              {viewMode === "3d" ? (
+                <Envelope3D
+                  experiments={dataset.experiments}
+                  params={labParams}
+                  matchIds={result.matches.map((m) => m.experimentId)}
+                  inside={result.insideEnvelope}
+                  selectedId={activePreview?.id ?? null}
+                  onSelect={setSelectedPreviewId}
+                />
+              ) : viewMode === "map" ? (
                 <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-2">
                   <svg
                     viewBox={`0 0 ${svgW} ${svgH}`}

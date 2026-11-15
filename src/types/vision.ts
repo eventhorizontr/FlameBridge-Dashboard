@@ -28,6 +28,7 @@ export const VisionEventsSchema = z.object({
   peakAreaS: nullableNum,
   peakAreaPx: nullableNum,
   transientFrames: num.optional(),
+  edgeFrames: num.optional(),
   litFrames: num.optional(),
 });
 
@@ -133,6 +134,7 @@ export const VisionVideoSchema = z.object({
     .optional(),
   segmentation: z
     .object({
+      photoRoi: z.object({ layout: z.string(), box: z.array(num) }).nullable().optional(),
       noiseSigma: num,
       weakThreshold: num,
       strongThreshold: num,
@@ -146,6 +148,7 @@ export const VisionVideoSchema = z.object({
   osd: OsdSchema.nullable().optional(),
   embedding: EmbeddingSchema.nullable().optional(),
   keyframes: KeyframesSchema.nullable().optional(),
+  poster: z.object({ file: z.string(), t: num, crop: z.array(num) }).nullable().optional(),
 });
 
 export const VisionContoursSchema = z.object({
@@ -166,6 +169,8 @@ export const VisionIndexEntrySchema = z.object({
   hasContours: z.boolean(),
   hasKeyframes: z.boolean(),
   hasEmbedding: z.boolean(),
+  keyframes: KeyframesSchema.nullable().optional(),
+  poster: z.object({ file: z.string(), t: num, crop: z.array(num) }).nullable().optional(),
   coverage: VisionVideoSchema.shape.coverage,
   events: VisionEventsSchema.optional(),
   summary: VisionSummarySchema.optional(),

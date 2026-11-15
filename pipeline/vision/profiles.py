@@ -68,6 +68,21 @@ class SegmentationParams:
 
 
 @dataclass(frozen=True)
+class StillReviewLayout:
+    """The still camera's playback screen recorded as video ("still sequence").
+
+    In the full-metadata layout the photo is a thumbnail at top left, a histogram box sits to its
+    right and exposure text below; elsewhere the photo fills the screen between a frame counter and
+    a text band. Only the photo is measured. Boxes are (x0, y0, x1, y1) on the 720x480 frame.
+    """
+
+    histogram_edge_x: tuple[int, int] = (405, 420)  # left border of the histogram box
+    histogram_edge_min: float = 150.0  # median brightness of that border when present
+    metadata_photo: tuple[int, int, int, int] = (0, 60, 404, 252)
+    fullscreen_photo: tuple[int, int, int, int] = (0, 58, 720, 395)
+
+
+@dataclass(frozen=True)
 class VisionProfile:
     accession: str
     camera: str
@@ -76,6 +91,7 @@ class VisionProfile:
     embed_hz: float  # rate of the deep-embedding pass
     osd: OsdLayout | None
     segmentation: SegmentationParams = field(default_factory=SegmentationParams)
+    still_layout: StillReviewLayout | None = None
     citation: str = ""
 
     def to_json(self) -> dict:
@@ -110,6 +126,7 @@ PSI25 = VisionProfile(
         date_row=2,
         displayed_date_offset_days=1,
     ),
+    still_layout=StillReviewLayout(),
     citation=(
         "Overlay fields per PSI-25 BASS-II ReadMe (NASA PSI, DOI 10.60555/4qc4-de67). Image-based flame "
         "measurement precedent: Bhattacharjee et al., Fire Safety Journal (2017), DOI 10.1016/j.firesaf.2017.03.039."

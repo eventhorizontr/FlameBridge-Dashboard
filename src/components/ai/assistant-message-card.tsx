@@ -4,6 +4,7 @@ import { AlertCircle, CheckCircle2, Loader2, RefreshCw, Sparkles, Square, Undo2,
 import { Fragment } from "react";
 
 import { Badge, Button, cn, EvidenceChip } from "@/components/ui";
+import { FrameGalleryGrid } from "@/components/vision/frame-gallery";
 import type { AssistantMessage } from "@/lib/ai/client/assistant-store";
 import type { AiProviderId, AiProviderInfo, Evidence } from "@/types/ai";
 
@@ -320,6 +321,13 @@ export function AssistantMessageCard({
       ) : message.status === "streaming" ? (
         <p className="text-[0.8125rem] text-[var(--text-3)]">Inspecting NASA PSI-25 records…</p>
       ) : null}
+
+      {/* Frame galleries from find_similar_frames */}
+      {message.galleries?.map((g, i) => (
+        <div key={i} className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-2)] p-2">
+          <FrameGalleryGrid gallery={g} compact />
+        </div>
+      ))}
 
       {/* Error surface + provider fallback */}
       {message.status === "error" && message.error && (

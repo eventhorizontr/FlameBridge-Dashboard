@@ -63,6 +63,7 @@ export function applyEvent(id: string, event: AiStreamEvent, turn: { groupId: st
       updateMessage(id, (m) => ({
         ...m,
         evidence: mergeEvidence(m.evidence, event.evidence),
+        ...(event.gallery ? { galleries: [...(m.galleries ?? []), event.gallery] } : {}),
         steps: m.steps.map((st) =>
           st.callId === event.callId ? { ...st, status: event.ok ? "ok" : "error", summary: event.summary } : st,
         ),

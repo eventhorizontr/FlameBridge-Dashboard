@@ -124,6 +124,49 @@ def rekey_one(args: tuple) -> str:
     return "ok"
 
 
+POSTER = (360, 240)
+
+
+def poster_one(args: tuple) -> str:
+    """Flame poster: the steady peak frame cropped around the flame (padded, 3:2), full resolution."""
+    json_path, cache = args
+    import cv2
+    data = json.loads(Path(json_path).read_text(encoding="utf8"))
+    if data.get("status") != "ok" or data["events"].get("peakAreaS") is None:
+        return "skip"
+    video = Path(cache) / f"{data['videoId']}.mp4"
+    if not video.exists():
+        return "missing"
+    s = data["series"]
+    t = data["events"]["peakAreaS"]
+    i = min(range(len(s["t"])), key=lambda k: abs(s["t"][k] - t))
+    if s["bboxX"][i] is None:
+        return "skip"
+    x, y, w, h = s["bboxX"][i], s["bboxY"][i], s["bboxW"][i], s["bboxH"][i]
+    W, H = data["source"]["width"], data["source"]["height"]
+    cx, cy = x + w / 2, y + h / 2
+    cw = max(w * 1.6, h * 1.6 * 1.5, 120.0)
+    ch = cw / 1.5
+    if ch > H:
+        ch, cw = H, H * 1.5
+    if cw > W:
+        cw, ch = W, W / 1.5
+    x0 = int(min(max(cx - cw / 2, 0), W - cw))
+    y0 = int(min(max(cy - ch / 2, 0), H - ch))
+    cap = cv2.VideoCapture(str(video))
+    cap.set(cv2.CAP_PROP_POS_FRAMES, int(round(s["t"][i] * data["source"]["fps"])))
+    ok, frame = cap.read()
+    cap.release()
+    if not ok:
+        return "unreadable"
+    crop = frame[y0:y0 + int(ch), x0:x0 + int(cw)]
+    out = Path(json_path).parent / "frames" / f"{data['videoId']}.poster.webp"
+    cv2.imwrite(str(out), cv2.resize(crop, POSTER, interpolation=cv2.INTER_AREA), [cv2.IMWRITE_WEBP_QUALITY, 80])
+    data["poster"] = {"file": out.name, "t": s["t"][i], "crop": [x0, y0, int(cw), int(ch)]}
+    write_json(Path(json_path), data)
+    return "ok"
+
+
 def build_index(data_dir: Path, out_dir: Path, accession: str) -> dict:
     from analyze import ALGORITHM_VERSION
     from profiles import profile_for
@@ -143,6 +186,8 @@ def build_index(data_dir: Path, out_dir: Path, accession: str) -> dict:
                 "durationS": (d.get("source") or {}).get("durationS"),
                 "hasContours": (out_dir / f"{video['id']}.contours.json").exists(),
                 "hasKeyframes": bool(d.get("keyframes")),
+                "keyframes": d.get("keyframes"),
+                "poster": d.get("poster"),
                 "hasEmbedding": bool(d.get("embedding")),
             }
             if d.get("status") == "ok":
@@ -187,6 +232,7 @@ def main() -> int:
     parser.add_argument("--embed", action="store_true", help="run the GPU DINOv2 pass afterwards")
     parser.add_argument("--index-only", action="store_true")
     parser.add_argument("--rekey", action="store_true", help="only regenerate keyframe sprites from stored series")
+    parser.add_argument("--posters", action="store_true", help="only write flame posters (peak crop) from stored series")
     args = parser.parse_args()
 
     from analyze import ALGORITHM_VERSION
@@ -195,7 +241,13 @@ def main() -> int:
     accession = dataset["accession"]
     out_dir = args.out or (args.data / "vision")
     embed_dir = args.embed_cache or (args.cache.parent / "embed-frames" / accession.lower())
-    if args.rekey:
+    if args.posters:
+        files = [str(p) for p in sorted(out_dir.glob("*.json")) if not p.name.endswith(".contours.json")
+                 and p.name not in ("index.json", "frame-index.json")]
+        with ProcessPoolExecutor(max_workers=args.workers) as pool:
+            done = list(pool.map(poster_one, [(f, str(args.cache)) for f in files]))
+        print(f"posters: {done.count('ok')}", flush=True)
+    elif args.rekey:
         files = [str(p) for p in sorted(out_dir.glob("*.json")) if not p.name.endswith(".contours.json") and p.name != "index.json"]
         with ProcessPoolExecutor(max_workers=args.workers) as pool:
             done = list(pool.map(rekey_one, [(f, str(args.cache)) for f in files]))

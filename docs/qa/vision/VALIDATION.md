@@ -1,6 +1,6 @@
 # Vision layer — validation against independent sources
 
-Generated from `public/data/psi-25/vision` (algorithm fif-flame-vision 1.2.0). Regenerate with `python pipeline/vision/validate.py`.
+Generated from `public/data/psi-25/vision` (algorithm fif-flame-vision 1.3.0). Regenerate with `python pipeline/vision/validate.py`.
 
 ## Coverage
 
@@ -11,7 +11,7 @@ Generated from `public/data/psi-25/vision` (algorithm fif-flame-vision 1.2.0). R
 | skipped | 120 |
 | unreadable | 5 |
 
-Analysed frames (≈10 Hz): 905,053; instrument-camera frames 864,011 (95.5%); frames with a visible flame 302,991.
+Analysed frames (≈10 Hz): 905,053; instrument-camera frames 864,011 (95.5%); frames with a visible flame 302,190.
 
 ## Overlay OCR
 
@@ -62,6 +62,6 @@ The sensor lags the set-point by ~1 min and some recordings stop before a later 
 
 ## Flame onset (geometry) vs. DINOv2 phase boundaries
 
-Videos with a flame after 5 s and an embedding: 93. Median distance from the first-flame time to the nearest DINOv2 phase boundary: **1.7 s**; within 5 s in 61 of 93.
+Videos with a flame after 5 s and an embedding: 96. Median distance from the first-flame time to the nearest DINOv2 phase boundary: **1.6 s**; within 5 s in 64 of 96.
 
 Two unrelated methods (thresholded flame mask vs. self-supervised scene embedding) agreeing on when the scene changes is evidence that both track the flame rather than noise.

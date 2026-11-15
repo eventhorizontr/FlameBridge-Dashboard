@@ -71,7 +71,8 @@ function DesktopNavLinks() {
         return (
           <Tooltip
             key={route}
-            side="bottom"
+            side="right"
+            className="w-full"
             content={
               <span>
                 <strong className="font-medium text-[var(--text-1)]">{label}</strong>
