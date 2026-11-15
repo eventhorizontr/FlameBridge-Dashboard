@@ -620,7 +620,7 @@ export function CompareWorkspace({ dataset }: { dataset: ExperimentDataset }) {
           icon={<GitCompareArrows className="size-5" />}
           eyebrow="Select 2 to 4 Runs"
           title="Pick at least 2 runs to unlock side-by-side comparison"
-          description="Choose a curated scientific preset above, type a run ID into the Add Run field, or select 2–4 checkboxes in the Atlas table."
+          description="Choose a curated scientific preset above, type a run ID into the Add Run field, or select 2–4 checkboxes in the Experiment Explorer."
           actions={
             <Button
               size="sm"

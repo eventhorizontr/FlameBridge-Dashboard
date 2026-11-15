@@ -3,7 +3,7 @@
 import { Flame, ScanEye } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { SegmentedControl } from "@/components/ui";
+import { Badge, Panel, PanelBody, PanelHeader, PanelTitle, SegmentedControl } from "@/components/ui";
 import { useDispatch } from "@/lib/store";
 
 import { formatTime } from "./time-chart";
@@ -68,7 +68,7 @@ function Card({ e, accession, onOpen }: { e: LibraryEntry; accession: string; on
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
-      className="group text-left rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] backdrop-blur-xl overflow-hidden shadow-[inset_0_1px_0_var(--glow-line)] hover:-translate-y-0.5 hover:border-[var(--flame-edge)] hover:shadow-[0_18px_50px_-20px_rgb(255_120_60/0.45)] focus-visible:border-[var(--flame-edge)] transition-[transform,border-color,box-shadow] duration-[var(--dur-2)] cursor-pointer"
+      className="group text-left rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] overflow-hidden hover:border-[var(--flame-edge)] focus-visible:border-[var(--flame-edge)] transition-colors cursor-pointer"
       aria-label={`Open run ${e.testId} in the flame viewer`}
     >
       <span className="relative block w-full bg-[var(--bg)]" style={{ aspectRatio: "3 / 2" }}>
@@ -94,7 +94,7 @@ function Card({ e, accession, onOpen }: { e: LibraryEntry; accession: string; on
           </span>
         )}
       </span>
-      <span className="block space-y-1 p-3">
+      <span className="block space-y-1 p-2.5">
         <span className="block truncate text-[0.75rem] text-[var(--text-1)]">{e.fuelRaw}</span>
         <span className="num flex flex-wrap gap-x-2 text-[0.6875rem] text-[var(--text-2)]">
           <span>{e.principalInvestigator}</span>
@@ -111,42 +111,87 @@ function Card({ e, accession, onOpen }: { e: LibraryEntry; accession: string; on
 }
 
 /**
- * Atlas gallery (ADR-020): every run whose primary footage the vision layer measured, shown by
- * its real peak flame. Filtering is done by the Atlas facets; this only sorts and lays out.
- * Hover plays the 12-frame keyframe strip.
+ * Overview gallery of every run whose footage the vision layer measured: pick a flame before
+ * opening the viewer. Thumbnails are real keyframes; hover plays the 12-frame keyframe strip.
  */
 export function FlameLibrary({ entries, accession = "PSI-25" }: { entries: LibraryEntry[]; accession?: string }) {
   const dispatch = useDispatch();
+  const pis = useMemo(() => ["All", ...[...new Set(entries.map((e) => e.principalInvestigator))].sort()], [entries]);
+  const [pi, setPi] = useState("All");
+  const [geometry, setGeometry] = useState<string>("all");
   const [sort, setSort] = useState<SortKey>("visible");
+  const geometries = useMemo(() => [...new Set(entries.map((e) => e.geometry ?? "unknown"))].sort(), [entries]);
 
   const shown = useMemo(() => {
+    const list = entries.filter((e) => (pi === "All" || e.principalInvestigator === pi) && (geometry === "all" || (e.geometry ?? "unknown") === geometry));
     const key = (e: LibraryEntry) => (sort === "visible" ? e.visibleS : sort === "peak" ? e.peakAreaPx ?? -1 : e.o2Pct ?? -1);
-    return [...entries].sort((a, b) => key(b) - key(a));
-  }, [entries, sort]);
+    return [...list].sort((a, b) => key(b) - key(a));
+  }, [entries, pi, geometry, sort]);
 
   return (
-    <section id="flame-library" aria-label="Flame gallery" className="space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[0.75rem] text-[var(--text-3)]">
-          Peak frame of the primary ISS camera, cropped to the flame · hover to play · areas in px of the 720×480 frame
-        </p>
-        <SegmentedControl<SortKey>
-          ariaLabel="Sort flames"
-          size="sm"
-          value={sort}
-          onChange={setSort}
-          options={[
-            { value: "visible", label: "Longest burn" },
-            { value: "peak", label: "Largest flame" },
-            { value: "o2", label: "Highest O₂" },
-          ]}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-        {shown.map((e) => (
-          <Card key={e.experimentId} e={e} accession={accession} onOpen={() => dispatch({ type: "openExperiment", id: e.experimentId })} />
-        ))}
-      </div>
+    <section id="flame-library" aria-labelledby="flame-library-title">
+      <Panel surface="surface-1">
+        <PanelHeader>
+          <PanelTitle
+            eyebrow={`Flame library · ${entries.length} runs measured by computer vision`}
+            title="Choose a flame"
+            actions={
+              <SegmentedControl<SortKey>
+                ariaLabel="Sort flames"
+                size="sm"
+                value={sort}
+                onChange={setSort}
+                options={[
+                  { value: "visible", label: "Longest burn" },
+                  { value: "peak", label: "Largest flame" },
+                  { value: "o2", label: "Highest O₂" },
+                ]}
+              />
+            }
+          />
+        </PanelHeader>
+        <PanelBody className="space-y-3">
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Filter by principal investigator">
+            {pis.map((p) => (
+              <button
+                key={p}
+                type="button"
+                aria-pressed={pi === p}
+                onClick={() => setPi(p)}
+                className={`min-h-7 rounded-full border px-2.5 text-[0.75rem] cursor-pointer ${
+                  pi === p ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]" : "border-[var(--line)] text-[var(--text-2)] hover:text-[var(--text-1)]"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+            <span className="mx-1 h-4 w-px bg-[var(--line-strong)]" aria-hidden="true" />
+            {["all", ...geometries].map((g) => (
+              <button
+                key={g}
+                type="button"
+                aria-pressed={geometry === g}
+                onClick={() => setGeometry(g)}
+                className={`min-h-7 rounded-full border px-2.5 text-[0.75rem] cursor-pointer ${
+                  geometry === g ? "border-[var(--flame-edge)] text-[var(--flame-edge)]" : "border-[var(--line)] text-[var(--text-2)] hover:text-[var(--text-1)]"
+                }`}
+              >
+                {g === "all" ? "All shapes" : g}
+              </button>
+            ))}
+            <Badge className="ml-auto num">{shown.length} shown</Badge>
+          </div>
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+            {shown.map((e) => (
+              <Card key={e.experimentId} e={e} accession={accession} onOpen={() => dispatch({ type: "openExperiment", id: e.experimentId })} />
+            ))}
+          </div>
+          <p className="text-[0.6875rem] text-[var(--text-3)]">
+            Thumbnails are keyframes of the primary ISS camera across the flame-visible span; hover to play them. Areas are pixels of the
+            720×480 frame (image-derived).
+          </p>
+        </PanelBody>
+      </Panel>
     </section>
   );
 }
