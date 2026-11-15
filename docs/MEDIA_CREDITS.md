@@ -6,8 +6,11 @@
 | Fallback clips B3, O1, T1 | `public/media/psi25-*.mp4` | Transcodes of the PSI-25 videos listed in [data-manifest.csv](data-manifest.csv) | CC0 1.0 |
 | Keyframes, posters, similarity thumbnails | `public/data/psi-25/vision/frames/` | Frames cut from PSI-25 videos by `pipeline/vision/` | CC0 1.0 (source) |
 | B12 still sequence (landing hero) | `public/landing/b12-still-sequence.jpg` | Stills from the PSI-25 B12 run, assembled from the owner's design file | CC0 1.0 (source) |
-| FlameBridge mark | `public/brand/flamebridge-mark-*.png`, `src/app/icon.png`, `apple-icon.png`, `favicon.ico` | Team design (owner) | Team |
-| Team mark and wordmark, horizon glow | `public/landing/team-mark.png`, `team-wordmark.png`, `horizon-glow.png` | Team design file (owner) | Team |
+| FlameBridge mark | `public/brand/flamebridge-mark-*.png`, `src/app/icon.png`, `apple-icon.png`, `favicon.ico` | Team design (owner), made by hand without SI | Team |
+| Team mark and wordmark, horizon glow | `public/landing/team-mark.png`, `team-wordmark.png`, `horizon-glow.png` | Team design file (owner), made by hand without SI | Team |
+| Demo poster frames | `public/landing/demo-poster.webp`, `docs/media/demo-video.jpg` | Stills of the demo video | Team |
+| Screenshots | `docs/media/home.png`, `docs/qa/` | Captures of the running app | Team |
+| OCR glyph assets | `pipeline/vision/assets/osd-glyphs.png`, `osd-label-row.png` | Cut from PSI-25 video overlays | CC0 1.0 (source) |
 | Fonts | Geist, Geist Mono, Unbounded | Google Fonts via `next/font` | SIL Open Font License 1.1 |
 | Icons | `lucide-react` | Lucide | ISC |
 
@@ -16,11 +19,12 @@ by NASA, and no NASA logo or insignia is used.
 
 ## Presentation and video
 
-The presentation video is produced outside this repository. Any generated scenes, voice-over or
-music in it are credited in the video's own description. The demo video is at https://youtu.be/5k1sTZwlpyk;
+The presentation video is produced outside this repository. It contains SI-generated visual
+scenes, which carry a visible watermark, and SI-generated audio. Both are acknowledged in the
+video's own description. The demo video is at https://youtu.be/5k1sTZwlpyk;
 its poster frames (`public/landing/demo-poster.webp`, `docs/media/demo-video.jpg`) are taken from
-that video. On the landing page it loads from youtube-nocookie.com only after the viewer presses play. Nothing in this repository is
-AI-generated media.
+that video. On the landing page it loads from youtube-nocookie.com only after the viewer presses play. No other file
+in this repository comes from AI-generated media.
 
 ## Third-party code
 
