@@ -180,8 +180,8 @@ Rebuild the data from NASA PSI (network): `pnpm data:psi25`. Vision layer:
 - **AI disclosure** — the assistant's models, tools, limits and evaluation, the vision models,
   and the AI coding agents that built the repo: [docs/AI_USAGE.md](docs/AI_USAGE.md).
 - **Media credits** — NASA footage, team brand assets, fonts: [docs/MEDIA_CREDITS.md](docs/MEDIA_CREDITS.md).
-- **Licence** — NASA PSI data is CC0 1.0. A licence for this repository's own code has not been
-  chosen yet; third-party data, media and dependencies keep their own licences.
+- **Licence** — code and docs: [MIT](LICENSE). NASA PSI data is CC0 1.0. Third-party data,
+  media, brand assets and dependencies keep their own terms.
 - **Team Event Horizon** — Adil Sevim · Hakan Celep · Ceren Akgün · Muhammed Ensar Aktaş.
 - Built with AI coding agents (Claude Code, OpenAI Codex, Antigravity) under human direction —
   [AGENTS.md](AGENTS.md), [decisions](docs/DECISIONS.md), [coordination](docs/coordination/PROTOCOL.md).

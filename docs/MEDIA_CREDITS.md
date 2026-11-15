@@ -21,5 +21,6 @@ voice-over and music, each with its licence. Nothing in this repository is AI-ge
 
 ## Third-party code
 
-Dependencies keep their own licences (`package.json`, `pipeline/vision/requirements.txt`). A
-licence for this repository's own code does not change them.
+Dependencies keep their own licences (`package.json`, `pipeline/vision/requirements.txt`). The
+MIT licence of this repository's own code ([LICENSE](../LICENSE)) does not change them, and it
+does not cover the team brand assets listed above.

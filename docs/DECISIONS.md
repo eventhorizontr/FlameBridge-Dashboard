@@ -285,8 +285,9 @@ architecture intact.
   information and the decision/explanation boundary; its AI section is corrected to the code
   (NDJSON, current tool list, rate limit).
 - *English-only:* the last Turkish word ("Katman" → "Layer") is replaced in `pressure.ts` and here.
-- *Open for the owner:* code licence (no `LICENSE` added — the rights holders choose), live app
-  and slide-deck links, generated-media credits for the presentation video.
+- *Licence:* the owner chose **MIT** for the repository's own code and docs (`LICENSE`, scope note
+  excludes NASA data, brand assets and dependencies).
+- *Open for the owner:* live app and slide-deck links, generated-media credits for the presentation video.
 - *Ownership:* two one-line edits in Codex-owned files at the owner's request
   (`src/components/viz/mission-overview.tsx` slogan line, a comment in
   `src/lib/science/pressure.ts`); handoff filed.
