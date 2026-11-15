@@ -284,10 +284,13 @@ const ExperimentIdSchema = z.string().regex(/^PSI-\d+:.+$/, "expected an experim
 
 export const RouteSchema = z.union([
   z.literal("/"),
+  z.literal("/overview"),
   z.literal("/explore"),
   z.literal("/compare"),
   z.literal("/lab"),
   z.literal("/learn"),
+  // one Learn Academy module, e.g. /learn/m2-gravity (ids checked in lib/store/references.ts)
+  z.templateLiteral(["/learn/", z.string()]),
   z.templateLiteral(["/experiments/", z.string()]),
 ]);
 
@@ -304,7 +307,11 @@ export const DashboardActionSchema = z.discriminatedUnion("type", [
     videoId: PsiFileIdSchema,
     timeS: z.number().finite().nonnegative(),
   }),
-  z.strictObject({ type: z.literal("setLabParams"), params: LabParamsSchema.partial() }),
+  // pressureKpa without the default: a partial update that leaves pressure out must keep it (ADR-025)
+  z.strictObject({
+    type: z.literal("setLabParams"),
+    params: LabParamsSchema.partial().extend({ pressureKpa: z.number().positive().max(1000).nullable().optional() }),
+  }),
   z.strictObject({ type: z.literal("navigate"), route: RouteSchema }),
   z.strictObject({ type: z.literal("highlight"), target: z.string().min(1).max(120) }),
   z.strictObject({

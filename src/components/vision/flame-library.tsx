@@ -1,6 +1,7 @@
 "use client";
 
-import { Flame, ScanEye } from "lucide-react";
+import { ArrowRight, Flame, ScanEye } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { SegmentedControl } from "@/components/ui";
@@ -115,14 +116,24 @@ function Card({ e, accession, onOpen }: { e: LibraryEntry; accession: string; on
  * flame. Filtering is done by the Runs filters; this only sorts and lays out. Hover plays the
  * 12-frame keyframe strip.
  */
-export function FlameLibrary({ entries, accession = "PSI-25" }: { entries: LibraryEntry[]; accession?: string }) {
+/** `limit` shows only the top entries for the chosen sort and links to the full gallery in Runs. */
+export function FlameLibrary({
+  entries,
+  accession = "PSI-25",
+  limit,
+}: {
+  entries: LibraryEntry[];
+  accession?: string;
+  limit?: number;
+}) {
   const dispatch = useDispatch();
   const [sort, setSort] = useState<SortKey>("visible");
 
   const shown = useMemo(() => {
     const key = (e: LibraryEntry) => (sort === "visible" ? e.visibleS : sort === "peak" ? e.peakAreaPx ?? -1 : e.o2Pct ?? -1);
-    return [...entries].sort((a, b) => key(b) - key(a));
-  }, [entries, sort]);
+    const sorted = [...entries].sort((a, b) => key(b) - key(a));
+    return limit ? sorted.slice(0, limit) : sorted;
+  }, [entries, sort, limit]);
 
   return (
     <section id="flame-library" aria-label="Flame gallery" className="space-y-3">
@@ -145,6 +156,15 @@ export function FlameLibrary({ entries, accession = "PSI-25" }: { entries: Libra
           <Card key={e.experimentId} e={e} accession={accession} onOpen={() => dispatch({ type: "openExperiment", id: e.experimentId })} />
         ))}
       </div>
+      {limit && entries.length > limit && (
+        <Link
+          href="/explore?view=gallery"
+          className="inline-flex min-h-11 items-center gap-1.5 text-[0.875rem] font-medium text-[var(--accent)] hover:underline"
+        >
+          See all {entries.length} measured burns in Runs › Gallery
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      )}
     </section>
   );
 }

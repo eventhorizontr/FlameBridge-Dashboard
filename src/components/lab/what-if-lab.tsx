@@ -11,11 +11,12 @@ import {
   RotateCcw,
   ShieldAlert,
 } from "lucide-react";
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, useSyncExternalStore } from "react";
 
 import {
   Badge,
   Button,
+  cn,
   EvidenceChip,
   formatMetricValue,
   Panel,
@@ -205,6 +206,20 @@ function physicsNarration(params: typeof DEFAULT_LAB_PARAMS, insideEnvelope: boo
   };
 }
 
+const NARROW_QUERY = "(max-width: 639px)";
+/** Phones get a taller, smaller-viewBox map so its labels stay readable when it is pinned above the sliders. */
+function useNarrow(): boolean {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia(NARROW_QUERY);
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia(NARROW_QUERY).matches,
+    () => false,
+  );
+}
+
 export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
   const labParams = useDashboard((s) => s.labParams);
   const mode = useDashboard((s) => s.mode);
@@ -273,9 +288,10 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
     .filter((v): v is number => v !== null);
 
   // D3 Envelope plot setup
-  const svgW = 640;
-  const svgH = 340;
-  const pad = { t: 20, r: 22, b: 44, l: 52 };
+  const narrow = useNarrow();
+  const svgW = narrow ? 380 : 640;
+  const svgH = narrow ? 210 : 340;
+  const pad = narrow ? { t: 12, r: 14, b: 34, l: 40 } : { t: 20, r: 22, b: 44, l: 52 };
   const plotW = svgW - pad.l - pad.r;
   const plotH = svgH - pad.t - pad.b;
 
@@ -286,6 +302,22 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
     .domain([Math.min(...allO2, labParams.o2Pct) - 1, Math.max(...allO2, labParams.o2Pct) + 1])
     .range([plotH, 0])
     .nice();
+
+  // which match dots get a run label: keep labels ≥ 14 px from the query marker and from each other
+  const labelled = new Set<number>();
+  {
+    const placed: [number, number][] = [[xScale(labParams.airflowCmS), yScale(labParams.o2Pct)]];
+    matchedDetails.forEach(({ experiment }, idx) => {
+      const o2 = experiment.conditions.o2InitialPct;
+      const air = representativeAirflow(experiment);
+      if (o2 === null || air === null) return;
+      const p: [number, number] = [xScale(air), yScale(o2)];
+      if (placed.every(([x, y]) => Math.hypot(x - p[0], y - p[1]) >= 14)) {
+        labelled.add(idx);
+        placed.push(p);
+      }
+    });
+  }
 
   const [grpAirMin, grpAirMax] = extent(groupAir);
   const [grpO2Min, grpO2Max] = extent(groupO2);
@@ -596,7 +628,308 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
           </PanelBody>
         </Panel>
 
-        {/* Visualization + Nearest Matches Column */}
+        {/* Live map: right of the conditions on desktop, pinned above the sliders on phones */}
+        <div
+          className={cn(
+            "order-first xl:order-none xl:col-span-7 xl:sticky xl:top-[4.5rem] z-10",
+            "max-sm:sticky max-sm:top-[3.75rem]",
+          )}
+        >
+          {/* 2D Envelope Map */}
+          <Panel surface="surface-1">
+            <PanelHeader className="flex-wrap">
+              <PanelTitle
+                title="Where your query sits"
+                actions={
+                  <div className="hidden sm:block">
+                  <SegmentedControl<"map" | "3d" | "table">
+                    ariaLabel="What-if hull visualization mode"
+                    size="sm"
+                    value={viewMode}
+                    onChange={setViewMode}
+                    options={[
+                      { value: "map", label: "Envelope Map" },
+                      { value: "3d", label: "3D Space" },
+                      { value: "table", label: "Match Table" },
+                    ]}
+                  />
+                  </div>
+                }
+              />
+            </PanelHeader>
+            <PanelBody className="space-y-3">
+              <p id={descId} className="sr-only">
+                Scatter chart placing the current What-if query at {labParams.airflowCmS} cm/s airflow and{" "}
+                {labParams.o2Pct}% oxygen against all measured PSI-25 runs, with dashed lines to the top{" "}
+                {labParams.k} closest neighbors.
+              </p>
+
+              <div
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.8125rem]"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <span className="num font-medium text-[var(--text-1)]">
+                  O₂ {labParams.o2Pct.toFixed(1)} % · {labParams.airflowCmS.toFixed(1)} cm/s
+                  {labParams.characteristicSizeMm !== null ? ` · ${labParams.characteristicSizeMm} mm` : ""}
+                  {labParams.pressureKpa !== null ? ` · ${labParams.pressureKpa} kPa` : ""}
+                </span>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[0.75rem] font-medium"
+                  style={{
+                    color: result.insideEnvelope ? "var(--good)" : "var(--warning)",
+                    backgroundColor: "var(--surface-3)",
+                  }}
+                >
+                  {result.insideEnvelope ? "Inside measured range" : "Outside measured range"}
+                </span>
+                {matchedDetails[0] && (
+                  <span className="text-[var(--text-2)]">
+                    Nearest <span className="num font-semibold text-[var(--text-1)]">{matchedDetails[0].experiment.testId}</span>{" "}
+                    <span className="num">d={matchedDetails[0].match.distance.toFixed(3)}</span>
+                  </span>
+                )}
+              </div>
+
+              <div className="hidden sm:flex flex-wrap items-center gap-4 text-[0.75rem] text-[var(--text-2)]">
+                <span className="inline-flex items-center gap-1.5">
+                  <span
+                    aria-hidden="true"
+                    className="size-2.5 rounded-full"
+                    style={{
+                      backgroundColor: result.insideEnvelope ? "var(--good)" : "var(--warning)",
+                    }}
+                  />
+                  <span>Your query</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-2)]" />
+                  <span>Same {labParams.material} {labParams.geometry} hull</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-1)]" />
+                  <span>Top-{labParams.k} matches</span>
+                </span>
+              </div>
+
+              {viewMode === "3d" && !narrow ? (
+                <Envelope3D
+                  experiments={dataset.experiments}
+                  params={labParams}
+                  matchIds={result.matches.map((m) => m.experimentId)}
+                  inside={result.insideEnvelope}
+                  selectedId={activePreview?.id ?? null}
+                  onSelect={setSelectedPreviewId}
+                />
+              ) : viewMode === "map" || narrow ? (
+                <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-2">
+                  <svg
+                    viewBox={`0 0 ${svgW} ${svgH}`}
+                    className="w-full h-auto"
+                    role="img"
+                    aria-label="Measured envelope and nearest neighbor vector map"
+                    aria-describedby={descId}
+                  >
+                    <g transform={`translate(${pad.l},${pad.t})`}>
+                      {xScale.ticks(7).map((t) => (
+                        <g key={`x-${t}`} transform={`translate(${xScale(t)},0)`}>
+                          <line y1={0} y2={plotH} stroke="var(--line)" strokeDasharray="2 4" />
+                          <text
+                            y={plotH + 16}
+                            textAnchor="middle"
+                            fill="var(--text-3)"
+                            fontSize="10"
+                            className="num"
+                          >
+                            {t}
+                          </text>
+                        </g>
+                      ))}
+                      {yScale.ticks(6).map((t) => (
+                        <g key={`y-${t}`} transform={`translate(0,${yScale(t)})`}>
+                          <line x1={0} x2={plotW} stroke="var(--line)" strokeDasharray="2 4" />
+                          <text
+                            x={-8}
+                            dy="0.32em"
+                            textAnchor="end"
+                            fill="var(--text-3)"
+                            fontSize="10"
+                            className="num"
+                          >
+                            {t}
+                          </text>
+                        </g>
+                      ))}
+
+                      <line x1={0} y1={plotH} x2={plotW} y2={plotH} stroke="var(--line-strong)" />
+                      <line x1={0} y1={0} x2={0} y2={plotH} stroke="var(--line-strong)" />
+                      <text x={plotW / 2} y={plotH + 34} textAnchor="middle" fill="var(--text-2)" fontSize="11">
+                        Representative Airflow (cm/s)
+                      </text>
+                      <text
+                        transform={`translate(-38,${plotH / 2}) rotate(-90)`}
+                        textAnchor="middle"
+                        fill="var(--text-2)"
+                        fontSize="11"
+                      >
+                        Initial O₂ (% vol)
+                      </text>
+
+                      {/* Shaded hull for same material + geometry */}
+                      {hasGroupEnvelopeBox && (
+                        <rect
+                          x={xScale(grpAirMin)}
+                          y={yScale(grpO2Max)}
+                          width={Math.max(4, xScale(grpAirMax) - xScale(grpAirMin))}
+                          height={Math.max(4, yScale(grpO2Min) - yScale(grpO2Max))}
+                          fill="var(--accent-soft)"
+                          stroke="var(--series-2)"
+                          strokeWidth="1.25"
+                          strokeDasharray="4 3"
+                          rx={4}
+                        />
+                      )}
+
+                      {/* Background all valid runs */}
+                      {dataset.experiments.map((exp) => {
+                        const o2 = exp.conditions.o2InitialPct;
+                        const air = representativeAirflow(exp);
+                        if (o2 === null || air === null) return null;
+                        const sameGroup =
+                          exp.fuel.material === labParams.material &&
+                          exp.fuel.geometry === labParams.geometry;
+                        return (
+                          <circle
+                            key={exp.id}
+                            cx={xScale(air)}
+                            cy={yScale(o2)}
+                            r={sameGroup ? 4 : 2.8}
+                            fill={sameGroup ? "var(--series-2)" : "var(--text-3)"}
+                            fillOpacity={sameGroup ? 0.85 : 0.3}
+                          />
+                        );
+                      })}
+
+                      {/* Neighbor vector lines */}
+                      {matchedDetails.map(({ experiment }, idx) => {
+                        const o2 = experiment.conditions.o2InitialPct;
+                        const air = representativeAirflow(experiment);
+                        if (o2 === null || air === null) return null;
+                        const showLabel = labelled.has(idx);
+                        const qx = xScale(labParams.airflowCmS);
+                        const qy = yScale(labParams.o2Pct);
+                        const tx = xScale(air);
+                        const ty = yScale(o2);
+                        return (
+                          <g key={`vec-${experiment.id}`}>
+                            <line
+                              x1={qx}
+                              y1={qy}
+                              x2={tx}
+                              y2={ty}
+                              stroke="var(--series-1)"
+                              strokeWidth="1.4"
+                              strokeDasharray="3 3"
+                            />
+                            <circle
+                              cx={tx}
+                              cy={ty}
+                              r={5.5}
+                              fill="var(--series-1)"
+                              stroke="var(--bg)"
+                              strokeWidth="1.25"
+                            />
+                            {showLabel && (
+                              <text
+                                x={tx + 7}
+                                y={ty - 5}
+                                fill="var(--text-1)"
+                                fontSize="10"
+                                className="num font-semibold"
+                              >
+                                {experiment.testId}
+                              </text>
+                            )}
+                          </g>
+                        );
+                      })}
+
+                      {/* Guides from the query to both axes, with its values */}
+                      <g
+                        aria-hidden="true"
+                        className="transition-transform duration-150 ease-out motion-reduce:transition-none"
+                        style={{ transform: `translate(${xScale(labParams.airflowCmS)}px, ${yScale(labParams.o2Pct)}px)` }}
+                      >
+                        <line x1={0} y1={0} x2={0} y2={plotH - yScale(labParams.o2Pct)} stroke="var(--text-2)" strokeOpacity="0.5" strokeDasharray="2 3" />
+                        <line x1={0} y1={0} x2={-xScale(labParams.airflowCmS)} y2={0} stroke="var(--text-2)" strokeOpacity="0.5" strokeDasharray="2 3" />
+                        <text x={0} y={plotH - yScale(labParams.o2Pct) - 4} textAnchor="middle" fill="var(--text-1)" fontSize="10" className="num font-semibold">
+                          {labParams.airflowCmS.toFixed(1)}
+                        </text>
+                        <text x={-xScale(labParams.airflowCmS) + 4} y={-4} fill="var(--text-1)" fontSize="10" className="num font-semibold">
+                          {labParams.o2Pct.toFixed(1)} %
+                        </text>
+                      </g>
+
+                      {/* Query crosshair */}
+                      <g
+                        className="transition-transform duration-150 ease-out motion-reduce:transition-none"
+                        style={{ transform: `translate(${xScale(labParams.airflowCmS)}px, ${yScale(labParams.o2Pct)}px)` }}
+                      >
+                        <circle
+                          r={9}
+                          fill="none"
+                          stroke={result.insideEnvelope ? "var(--good)" : "var(--warning)"}
+                          strokeWidth="2"
+                        />
+                        <circle
+                          r={3.5}
+                          fill={result.insideEnvelope ? "var(--good)" : "var(--warning)"}
+                        />
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+              ) : (
+                <div className="overflow-x-auto rounded-[var(--radius-md)] border border-[var(--line)]">
+                  <table className="w-full text-left border-collapse text-[0.8125rem]">
+                    <thead className="bg-[var(--surface-3)] text-[0.6875rem] uppercase tracking-[0.06em] text-[var(--text-3)]">
+                      <tr>
+                        <th className="py-2 px-3">Run</th>
+                        <th className="py-2 px-3 text-right">Distance</th>
+                        <th className="py-2 px-3 text-right">Δ O₂</th>
+                        <th className="py-2 px-3 text-right">Δ Airflow</th>
+                        <th className="py-2 px-3">Mismatches</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--line)]">
+                      {matchedDetails.map(({ match, experiment }) => (
+                        <tr key={experiment.id}>
+                          <td className="py-1.5 px-3 num font-medium text-[var(--text-1)]">{experiment.testId}</td>
+                          <td className="py-1.5 px-3 num text-right text-[var(--accent)]">
+                            {match.distance.toFixed(3)}
+                          </td>
+                          <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
+                            {formatSigned(match.deltas.o2Pct, "%")}
+                          </td>
+                          <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
+                            {formatSigned(match.deltas.airflowCmS, "cm/s")}
+                          </td>
+                          <td className="py-1.5 px-3 text-[var(--warning)]">
+                            {match.categoricalMismatches.join(", ") || "Exact group"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </PanelBody>
+          </Panel>
+        </div>
+      </div>
+
+      {/* Closest real runs + footage of the selected one */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
         <div className="xl:col-span-7 space-y-5">
           {/* Top-k Match Cards */}
           <Panel surface="surface-1">
@@ -721,6 +1054,9 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
             </PanelBody>
           </Panel>
 
+
+        </div>
+        <div className="xl:col-span-5 xl:sticky xl:top-[4.5rem] space-y-5">
           {/* Embedded Real-Footage Preview of Selected Match */}
           {activePreview && (
             <FlameViewer
@@ -729,252 +1065,11 @@ export function WhatIfLab({ dataset }: { dataset: ExperimentDataset }) {
               compact
               titleOverride={
                 result.insideEnvelope
-                  ? `Closest Measured Match Preview — Run ${activePreview.testId}`
-                  : `Nearest Analog Reference ONLY — Run ${activePreview.testId} (Query Outside Hull)`
+                  ? `Footage · Run ${activePreview.testId}`
+                  : `Nearest analog only · Run ${activePreview.testId}`
               }
             />
           )}
-
-          {/* 2D Envelope Map */}
-          <Panel surface="surface-1">
-            <PanelHeader className="flex-wrap">
-              <PanelTitle
-                title="Where your query sits"
-                actions={
-                  <SegmentedControl<"map" | "3d" | "table">
-                    ariaLabel="What-if hull visualization mode"
-                    size="sm"
-                    value={viewMode}
-                    onChange={setViewMode}
-                    options={[
-                      { value: "map", label: "Envelope Map" },
-                      { value: "3d", label: "3D Space" },
-                      { value: "table", label: "Match Table" },
-                    ]}
-                  />
-                }
-              />
-            </PanelHeader>
-            <PanelBody className="space-y-3">
-              <p id={descId} className="sr-only">
-                Scatter chart placing the current What-if query at {labParams.airflowCmS} cm/s airflow and{" "}
-                {labParams.o2Pct}% oxygen against all measured PSI-25 runs, with dashed lines to the top{" "}
-                {labParams.k} closest neighbors.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 text-[0.75rem] text-[var(--text-2)]">
-                <span className="inline-flex items-center gap-1.5">
-                  <span
-                    aria-hidden="true"
-                    className="size-2.5 rounded-full"
-                    style={{
-                      backgroundColor: result.insideEnvelope ? "var(--good)" : "var(--warning)",
-                    }}
-                  />
-                  <span>Your query</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-2)]" />
-                  <span>Same {labParams.material} {labParams.geometry} hull</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span aria-hidden="true" className="size-2.5 rounded-full bg-[var(--series-1)]" />
-                  <span>Top-{labParams.k} matches</span>
-                </span>
-              </div>
-
-              {viewMode === "3d" ? (
-                <Envelope3D
-                  experiments={dataset.experiments}
-                  params={labParams}
-                  matchIds={result.matches.map((m) => m.experimentId)}
-                  inside={result.insideEnvelope}
-                  selectedId={activePreview?.id ?? null}
-                  onSelect={setSelectedPreviewId}
-                />
-              ) : viewMode === "map" ? (
-                <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-2">
-                  <svg
-                    viewBox={`0 0 ${svgW} ${svgH}`}
-                    className="w-full h-auto"
-                    role="img"
-                    aria-label="Measured envelope and nearest neighbor vector map"
-                    aria-describedby={descId}
-                  >
-                    <g transform={`translate(${pad.l},${pad.t})`}>
-                      {xScale.ticks(7).map((t) => (
-                        <g key={`x-${t}`} transform={`translate(${xScale(t)},0)`}>
-                          <line y1={0} y2={plotH} stroke="var(--line)" strokeDasharray="2 4" />
-                          <text
-                            y={plotH + 16}
-                            textAnchor="middle"
-                            fill="var(--text-3)"
-                            fontSize="10"
-                            className="num"
-                          >
-                            {t}
-                          </text>
-                        </g>
-                      ))}
-                      {yScale.ticks(6).map((t) => (
-                        <g key={`y-${t}`} transform={`translate(0,${yScale(t)})`}>
-                          <line x1={0} x2={plotW} stroke="var(--line)" strokeDasharray="2 4" />
-                          <text
-                            x={-8}
-                            dy="0.32em"
-                            textAnchor="end"
-                            fill="var(--text-3)"
-                            fontSize="10"
-                            className="num"
-                          >
-                            {t}
-                          </text>
-                        </g>
-                      ))}
-
-                      <line x1={0} y1={plotH} x2={plotW} y2={plotH} stroke="var(--line-strong)" />
-                      <line x1={0} y1={0} x2={0} y2={plotH} stroke="var(--line-strong)" />
-                      <text x={plotW / 2} y={plotH + 34} textAnchor="middle" fill="var(--text-2)" fontSize="11">
-                        Representative Airflow (cm/s)
-                      </text>
-                      <text
-                        transform={`translate(-38,${plotH / 2}) rotate(-90)`}
-                        textAnchor="middle"
-                        fill="var(--text-2)"
-                        fontSize="11"
-                      >
-                        Initial O₂ (% vol)
-                      </text>
-
-                      {/* Shaded hull for same material + geometry */}
-                      {hasGroupEnvelopeBox && (
-                        <rect
-                          x={xScale(grpAirMin)}
-                          y={yScale(grpO2Max)}
-                          width={Math.max(4, xScale(grpAirMax) - xScale(grpAirMin))}
-                          height={Math.max(4, yScale(grpO2Min) - yScale(grpO2Max))}
-                          fill="var(--accent-soft)"
-                          stroke="var(--series-2)"
-                          strokeWidth="1.25"
-                          strokeDasharray="4 3"
-                          rx={4}
-                        />
-                      )}
-
-                      {/* Background all valid runs */}
-                      {dataset.experiments.map((exp) => {
-                        const o2 = exp.conditions.o2InitialPct;
-                        const air = representativeAirflow(exp);
-                        if (o2 === null || air === null) return null;
-                        const sameGroup =
-                          exp.fuel.material === labParams.material &&
-                          exp.fuel.geometry === labParams.geometry;
-                        return (
-                          <circle
-                            key={exp.id}
-                            cx={xScale(air)}
-                            cy={yScale(o2)}
-                            r={sameGroup ? 4 : 2.8}
-                            fill={sameGroup ? "var(--series-2)" : "var(--text-3)"}
-                            fillOpacity={sameGroup ? 0.85 : 0.3}
-                          />
-                        );
-                      })}
-
-                      {/* Neighbor vector lines */}
-                      {matchedDetails.map(({ experiment }) => {
-                        const o2 = experiment.conditions.o2InitialPct;
-                        const air = representativeAirflow(experiment);
-                        if (o2 === null || air === null) return null;
-                        const qx = xScale(labParams.airflowCmS);
-                        const qy = yScale(labParams.o2Pct);
-                        const tx = xScale(air);
-                        const ty = yScale(o2);
-                        return (
-                          <g key={`vec-${experiment.id}`}>
-                            <line
-                              x1={qx}
-                              y1={qy}
-                              x2={tx}
-                              y2={ty}
-                              stroke="var(--series-1)"
-                              strokeWidth="1.4"
-                              strokeDasharray="3 3"
-                            />
-                            <circle
-                              cx={tx}
-                              cy={ty}
-                              r={5.5}
-                              fill="var(--series-1)"
-                              stroke="var(--bg)"
-                              strokeWidth="1.25"
-                            />
-                            <text
-                              x={tx + 7}
-                              y={ty - 5}
-                              fill="var(--text-1)"
-                              fontSize="10"
-                              className="num font-semibold"
-                            >
-                              {experiment.testId}
-                            </text>
-                          </g>
-                        );
-                      })}
-
-                      {/* Query crosshair */}
-                      <g transform={`translate(${xScale(labParams.airflowCmS)},${yScale(labParams.o2Pct)})`}>
-                        <circle
-                          r={9}
-                          fill="none"
-                          stroke={result.insideEnvelope ? "var(--good)" : "var(--warning)"}
-                          strokeWidth="2"
-                        />
-                        <circle
-                          r={3.5}
-                          fill={result.insideEnvelope ? "var(--good)" : "var(--warning)"}
-                        />
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-              ) : (
-                <div className="overflow-x-auto rounded-[var(--radius-md)] border border-[var(--line)]">
-                  <table className="w-full text-left border-collapse text-[0.8125rem]">
-                    <thead className="bg-[var(--surface-3)] text-[0.6875rem] uppercase tracking-[0.06em] text-[var(--text-3)]">
-                      <tr>
-                        <th className="py-2 px-3">Run</th>
-                        <th className="py-2 px-3 text-right">Distance</th>
-                        <th className="py-2 px-3 text-right">Δ O₂</th>
-                        <th className="py-2 px-3 text-right">Δ Airflow</th>
-                        <th className="py-2 px-3">Mismatches</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--line)]">
-                      {matchedDetails.map(({ match, experiment }) => (
-                        <tr key={experiment.id}>
-                          <td className="py-1.5 px-3 num font-medium text-[var(--text-1)]">{experiment.testId}</td>
-                          <td className="py-1.5 px-3 num text-right text-[var(--accent)]">
-                            {match.distance.toFixed(3)}
-                          </td>
-                          <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
-                            {formatSigned(match.deltas.o2Pct, "%")}
-                          </td>
-                          <td className="py-1.5 px-3 num text-right text-[var(--text-2)]">
-                            {formatSigned(match.deltas.airflowCmS, "cm/s")}
-                          </td>
-                          <td className="py-1.5 px-3 text-[var(--warning)]">
-                            {match.categoricalMismatches.join(", ") || "Exact group"}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </PanelBody>
-          </Panel>
-
         </div>
       </div>
     </div>

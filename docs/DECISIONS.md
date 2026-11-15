@@ -185,3 +185,71 @@ is in [UX.md](UX.md).
 - *Ownership:* for this pass Claude edited Codex-owned `viz/`, `lab/`, `(dashboard)/` and
   `(learn)/` files at the owner's request; Codex keeps ownership afterwards.
 - No contract or dependency change.
+
+
+**ADR-023 · 2026-11-15 · accepted** — **Public landing page at `/`, Mission overview moves to
+`/overview`.** Owner request: the first page follows the owner's landing design (FlameBridge,
+researcher/engineer audience) and carries no Explore & Learn entry point. (1) `src/app/page.tsx`
+renders `src/components/landing/**` outside the AppShell; every "Go to dashboard" link goes to
+`/overview`. (2) Contract: `/overview` added to the `navigate` route union (`src/types/dashboard.ts`,
+`RouteSchema`); `/` stays valid and now means the landing page. Rail, command palette and the AI
+system prompt point "Mission overview" at `/overview`; the rail logo returns to the landing page.
+(3) Integrity: the design's copy was rewritten where the repo has no evidence (two formula
+failures, an excluded U-Net, a code-level number check, a detected flame front). Figures are
+computed at build time — run count from `experiments.json`, measured videos from the vision index,
+runs with a stated pressure from `pressureScale()` — and the B12 sample/airflow come from the run
+record. Exploration atmosphere 34 % O₂ / 56.5 kPa cites NASA/TP-2010-216134. (4) Landing tokens
+(`--nf-*`) live in `landing.css`; scroll-linked motion is CSS-only (scroll/view timelines) and off
+under `prefers-reduced-motion`. Assets in `public/landing/` come from the owner's design file
+(team marks, glow, a 61-still B12 sequence sprite).
+(5) Owner follow-up: the Learn track is for Explore & Learn mode only. In Expert mode the rail and
+command palette hide `/learn`, and `/learn` shows a notice (`LearnGate`, `src/components/layout/
+learn-gate.tsx`) with "Switch to Explore & Learn"; `/learn?mode=learn` opens directly. (6) The
+Learn Academy (ADR-024) stays as `/learn`, restyled for younger learners: a cartoon hero with a
+large Mars, a rocket and a world picker that defaults to Mars; M1 "What a Flame Needs" is one
+"Explore" step (`flame-needs.tsx`) joining the fire triangle, the three ingredients and how a solid
+burns, all labelled "Illustration · not a simulation" with the module's references; "Gate" reads
+"Quiz". New `kid-*` motion classes are off under `prefers-reduced-motion`.
+
+
+**ADR-024 · 2026-11-15 · accepted** — **Explore & Learn as a gamified core-concepts track.** Owner
+request: restyle `/learn` with a game-like, space-themed layout (reference: layout/interaction
+principles only, no third-party names, assets, copy or colours), English UI, and content limited to
+the basic concepts of the team's rule-engine notes — no fitted coefficients or threshold values are
+taught. (1) Five missions in `src/components/learn/curriculum.ts`: fire triangle, flames without
+weight (Earth/Mars/Moon/orbit), blowoff vs quenching and the U-shaped map, oxygen limits (ground
+tests are not enough for orbit; starting vs keeping a fire), and reading the smoke (CO, flicker
+before extinction, honest bounds). Each has cited concept cards, interactive pieces, a gate passed
+at 80 %, XP (1000 total), a rank and a badge. The original chapters (`learn-chapters.ts`, widgets
+now in `learn-widgets.tsx`) supply flight-data notes and real-run widgets. (2) Interactives are
+labelled "Illustration · not a simulation" or "Schematic shape · no fitted values"; the U-curve
+has unit-free axes. Gravity ratios for the world picker come from the NASA Planetary Fact Sheet.
+(3) Links only for verified DOIs/URLs; textbooks are plain citations. (4) Progress is per-viewer
+localStorage (`fif:learn-progress:v2`, safe when storage is blocked), not a dashboard action
+(ADR-007). (5) New tokens `--paper*`, `--ember-soft`, `--ember-glow`, `--planet-*` and `learn-*`
+motion classes, all disabled under `prefers-reduced-motion`.
+
+
+**ADR-025 · 2026-11-15 · accepted** — **Integrating #67 (FlameBridge landing, Learn Academy), brand and
+AI wiring.** Owner request: adopt Hakan's branch on top of #66, make every new feature drivable by the
+AI and the command palette, use the owner's flame icon as the brand, and keep the Lab map in view.
+- *Merge:* the FlameBridge landing (ADR-023) replaces the #66 landing; Mission overview is **Home** at
+  `/overview` (rail, breadcrumb); the Learn Academy (ADR-024, renumbered from Hakan's ADR-022)
+  replaces `learn-track.tsx`. The mode label stays **Guided** (gate copy updated).
+- *Brand:* product name **FlameBridge** (`SITE.name`, metadata, AI prompt); the owner's dual-ribbon
+  flame is the mark (`public/brand/flamebridge-mark-*.png`, `src/app/icon.png`, `apple-icon.png`,
+  `favicon.ico`). The decorative star icons are removed from the AI entry points.
+- *Landing:* section links (Explore runs, Compare, What-if Lab) in the bar and under the hero CTA.
+- *Contract:* `navigate` accepts `/learn/<module id>` (validated against `LEARN_MODULES` in
+  `lib/store/references.ts`); new route `src/app/(learn)/learn/[module]`. The `setLabParams` action
+  schema no longer defaults `pressureKpa`, so a partial update keeps the user's pressure (bug: an
+  AI "set O₂ to 30 %" cleared it).
+- *AI:* new read-only tool `get_learn_modules` (curriculum, cards, cited references, routes); the
+  system prompt lists the new routes, the Guided-mode rule and the pressure parameter.
+- *Palette:* landing page, Home, Lab "exploration atmosphere (34 % O₂ · 56.5 kPa)" and "stop comparing
+  pressure", and the five Academy modules (switching to Guided mode when needed).
+- *Lab:* "Where your query sits" sits right of Conditions and stays in view (sticky); on phones it is
+  pinned above the sliders with a smaller viewBox. A live readout and axis guides follow the sliders;
+  match labels are de-cluttered. Matches and footage follow in the next row.
+- *Home:* the hero clip starts on its measured steady-peak frame; the flame gallery shows the top 6
+  and links to Runs › Gallery.

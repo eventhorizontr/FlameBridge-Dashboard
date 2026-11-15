@@ -3,7 +3,7 @@
  * Owner: Claude. Single source of truth — do not hard-code these strings in components.
  */
 export const SITE = {
-  name: "Fire in Freefall",
+  name: "FlameBridge",
   tagline: "Microgravity combustion, from NASA's ISS archive to your screen",
   challenge: "NASA Space Apps Challenge 2026 · Fire in Freefall",
   team: {

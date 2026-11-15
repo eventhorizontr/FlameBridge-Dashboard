@@ -10,7 +10,8 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Fire in Freefall", template: "%s · Fire in Freefall" },
+  title: { default: "FlameBridge · Fire in Freefall", template: "%s · FlameBridge" },
+  applicationName: "FlameBridge",
   description:
     "Explore NASA microgravity combustion experiments (PSI-25 BASS-II) with interactive visualizations, real ISS flame footage and an AI research assistant.",
 };

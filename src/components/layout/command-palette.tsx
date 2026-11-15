@@ -11,20 +11,26 @@ import {
   Radar,
   RotateCcw,
   Search,
-  Sparkles,
+  MessagesSquare,
+  Gauge,
+  GraduationCap,
+  House,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { cn, Kbd } from "@/components/ui";
+import { LEARN_MODULES } from "@/components/learn/curriculum";
 import { useAssistant } from "@/lib/ai/client/use-assistant";
 import { useDispatch } from "@/lib/store";
+
+import { useIsLearnMode } from "./learn-gate";
 
 import { shellUiStore, useShellUi } from "./shell-state";
 
 interface PaletteCommand {
   id: string;
-  group: "Navigate" | "Mode" | "Quick Filters" | "Representative Runs" | "AI Assistant";
+  group: "Navigate" | "Mode" | "What-if Lab" | "Learn Academy" | "Quick Filters" | "Representative Runs" | "AI Assistant";
   label: string;
   hint: string;
   icon: ReactNode;
@@ -44,6 +50,7 @@ const FEATURED_RUNS = [
 export function CommandPalette() {
   const open = useShellUi((s) => s.paletteOpen);
   const dispatch = useDispatch();
+  const isLearn = useIsLearnMode();
   const { send } = useAssistant();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -76,13 +83,24 @@ export function CommandPalette() {
     const close = () => shellUiStore.getState().setPaletteOpen(false);
     const base: PaletteCommand[] = [
       {
-        id: "nav-overview",
+        id: "nav-landing",
         group: "Navigate",
-        label: "Mission Overview",
+        label: "Landing page",
         hint: "/",
-        icon: <Radar className="size-4 text-[var(--accent)]" />,
+        icon: <House className="size-4 text-[var(--accent)]" />,
         run: () => {
           dispatch({ type: "navigate", route: "/" });
+          close();
+        },
+      },
+      {
+        id: "nav-overview",
+        group: "Navigate",
+        label: "Home · Mission overview",
+        hint: "/overview",
+        icon: <Radar className="size-4 text-[var(--accent)]" />,
+        run: () => {
+          dispatch({ type: "navigate", route: "/overview" });
           close();
         },
       },
@@ -119,17 +137,21 @@ export function CommandPalette() {
           close();
         },
       },
-      {
-        id: "nav-learn",
-        group: "Navigate",
-        label: "Learn — guided chapters",
-        hint: "/learn",
-        icon: <BookOpen className="size-4 text-[var(--accent)]" />,
-        run: () => {
-          dispatch({ type: "navigate", route: "/learn" });
-          close();
-        },
-      },
+      ...(isLearn
+        ? ([
+            {
+              id: "nav-learn",
+              group: "Navigate",
+              label: "Learn Academy",
+              hint: "/learn",
+              icon: <BookOpen className="size-4 text-[var(--accent)]" />,
+              run: () => {
+                dispatch({ type: "navigate", route: "/learn" });
+                close();
+              },
+            },
+          ] satisfies PaletteCommand[])
+        : []),
       {
         id: "mode-expert",
         group: "Mode",
@@ -152,6 +174,44 @@ export function CommandPalette() {
           close();
         },
       },
+      {
+        id: "lab-exploration-atmosphere",
+        group: "What-if Lab",
+        label: "Lab: exploration atmosphere (34 % O₂ · 56.5 kPa)",
+        hint: "NASA/TP-2010-216134",
+        icon: <Gauge className="size-4 text-[var(--accent)]" />,
+        run: () => {
+          dispatch({ type: "setLabParams", params: { o2Pct: 34, pressureKpa: 56.5 } });
+          dispatch({ type: "navigate", route: "/lab" });
+          close();
+        },
+      },
+      {
+        id: "lab-clear-pressure",
+        group: "What-if Lab",
+        label: "Lab: stop comparing pressure",
+        hint: "pressure → not compared",
+        icon: <Gauge className="size-4 text-[var(--text-2)]" />,
+        run: () => {
+          dispatch({ type: "setLabParams", params: { pressureKpa: null } });
+          dispatch({ type: "navigate", route: "/lab" });
+          close();
+        },
+      },
+      ...LEARN_MODULES.map(
+        (m): PaletteCommand => ({
+          id: `learn-${m.id}`,
+          group: "Learn Academy",
+          label: `${m.code} · ${m.title}`,
+          hint: isLearn ? m.subtitle : "Switches to Guided mode",
+          icon: <GraduationCap className="size-4 text-[var(--flame-core)]" />,
+          run: () => {
+            if (!isLearn) dispatch({ type: "setMode", mode: "learn" });
+            dispatch({ type: "navigate", route: `/learn/${m.id}` });
+            close();
+          },
+        }),
+      ),
       {
         id: "filter-pmma-rods",
         group: "Quick Filters",
@@ -203,7 +263,7 @@ export function CommandPalette() {
         group: "AI Assistant",
         label: query.trim() ? `Ask AI: “${query.trim()}”` : "Open AI Research Assistant",
         hint: "OpenAI / Claude",
-        icon: <Sparkles className="size-4 text-[var(--accent)]" />,
+        icon: <MessagesSquare className="size-4 text-[var(--accent)]" />,
         run: () => {
           const prompt = query.trim();
           shellUiStore.getState().setAssistantOpen(true);
@@ -222,7 +282,7 @@ export function CommandPalette() {
         c.hint.toLowerCase().includes(q) ||
         c.group.toLowerCase().includes(q),
     );
-  }, [dispatch, query, send]);
+  }, [dispatch, isLearn, query, send]);
 
   if (!open) return null;
 

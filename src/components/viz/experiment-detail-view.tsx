@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, Box, ChevronDown, ChevronLeft, ChevronRight, FileText, FlaskConical, GitCompareArrows, Network, Sparkles } from "lucide-react";
+import { Activity, Box, ChevronDown, ChevronLeft, ChevronRight, FileText, FlaskConical, GitCompareArrows, Network } from "lucide-react";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 
@@ -181,7 +181,6 @@ export function ExperimentDetailView({
             <span>Find runs like this</span>
           </Button>
           <Button size="sm" variant="primary" onClick={askAiAboutRun}>
-            <Sparkles className="size-3.5" aria-hidden="true" />
             <span>Ask AI</span>
           </Button>
         </div>
