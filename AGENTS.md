@@ -76,6 +76,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 |---|---|---|
 | `AGENTS.md`, `CLAUDE.md`, `docs/**`, `.github/**` | **Claude** | propose via issue |
 | `src/types/**` (contracts), `src/config/**`, `src/lib/store/**`, `src/lib/ai/**`, `src/app/api/ai/**` | **Claude** | — |
+| Vision layer (ADR-017): `pipeline/vision/**`, `public/data/*/vision/**`, `src/lib/vision/**`, `src/components/vision/**`, `src/app/api/vision/**` | **Claude** | Codex may PR QA fixes |
 | `src/app/layout.tsx`, `src/app/globals.css` (tokens), `src/app/page.tsx` | **Claude** | Codex may PR token *additions* |
 | `src/components/layout/**`, `src/components/ui/**`, `src/components/ai/**` | **Claude** | — |
 | `pipeline/**`, `data/**`, `public/data/**`, `public/media/**` (fallback clips, ADR-014) | **Codex** | — |
@@ -89,7 +90,7 @@ GitHub Issues are the **single source of truth** for work. Labels: `agent:claude
 ## 6. Repo map
 
 ```
-pipeline/            Python: PSI client + dataset builders (Colab-ready)
+pipeline/            Python: PSI client + dataset builders (Colab-ready); vision/ = flame CV layer
 data/raw/<acc>/      small verbatim source files (provenance, CC0)
 public/data/<acc>/   built JSON consumed by the app (manifest.json, experiments.json, …)
 src/types/           CONTRACTS

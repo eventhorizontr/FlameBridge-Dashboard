@@ -32,5 +32,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m py_compile pipeline/*.py
+      - run: python -m py_compile pipeline/*.py pipeline/vision/*.py
+      - run: pip install -r pipeline/vision/requirements.txt
       - run: python -m unittest discover -s pipeline/tests -v

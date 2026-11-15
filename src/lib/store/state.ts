@@ -3,6 +3,7 @@
  * Everything here changes only through `dispatch(DashboardAction)` — see store.ts.
  */
 import { EMPTY_FILTERS, type ExperimentFilters, type LabParams, type UserMode } from "@/types/dashboard";
+import type { FlameOverlay } from "@/types/vision";
 
 export interface VideoCursor {
   experimentId: string;
@@ -29,6 +30,8 @@ export interface DashboardData {
   /** Current pathname (kept in sync with the router by <DashboardRuntime/>). */
   route: string;
   highlight: Highlight | null;
+  /** How the flame viewer draws the vision layer over the footage. */
+  flameOverlay: FlameOverlay;
 }
 
 export type DashboardKey = keyof DashboardData;
@@ -57,4 +60,5 @@ export const INITIAL_DATA: DashboardData = {
   labParams: DEFAULT_LAB_PARAMS,
   route: "/",
   highlight: null,
+  flameOverlay: { mode: "box", follow: false },
 };

@@ -89,6 +89,15 @@ never both. Emit `[]` rather than omitting it once the pipeline computes it.
 DOI 10.60555/vb93-3y72 · currently one experimental-table CSV. Registered in
 `src/lib/psi/config.ts`; builder not yet written.
 
+## Vision layer (ADR-017) — `public/data/<acc>/vision/`
+Built by `pipeline/vision/` (method, units and limits: `pipeline/vision/README.md`); contract
+`src/types/vision.ts` (Zod-first). `index.json` (one entry per video: status, events, summary,
+OCR audit), `<videoId>.json` (series at 5 Hz as parallel arrays, overlay telemetry, DINOv2
+similarity), `<videoId>.contours.json` (flame polygons, permille of frame), `frames/<id>.webp`
+(keyframes). Status values: `ok`, `skipped` (2nd-view monitor recordings), `not-instrument-footage`
+(no BASS overlay: LOS, crew/lab cameras), `unreadable` (6 source MP4s without an index), `missing`.
+All lengths are pixels of the 720×480 frame; RAD is uncalibrated and its gain differs by test.
+
 ## Runtime validation
 `src/types/schemas.ts` mirrors every contract type in Zod (strict objects; compile-time drift
 checks against the interfaces). `validateDataset()` / `validateManifest()` in
