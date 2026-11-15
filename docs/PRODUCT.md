@@ -1,6 +1,6 @@
 # Product Spec — FlameBridge
 
-*Bridge the unknown.* Built for the NASA Space Apps Challenge 2026 · Fire in Freefall.
+*Bridge the unknown.* Built for the NASA Space Apps Challenge 2026 · Flame in Freefall.
 
 ## Team
 **Event Horizon** — Adil Sevim · Hakan Celep · Ceren Akgün · Muhammed Ensar Aktaş.

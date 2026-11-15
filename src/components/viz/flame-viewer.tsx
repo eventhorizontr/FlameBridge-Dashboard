@@ -1,5 +1,6 @@
 "use client";
 
+import { visionStatusText } from "@/lib/vision/status-text";
 import {
   AlertTriangle,
   Columns2,
@@ -81,6 +82,9 @@ export interface FlameViewerProps {
   titleOverride?: string;
 }
 
+/** Order in which views are tried when one cannot play. */
+const KIND_ORDER: Record<string, number> = { primary: 0, "still-sequence": 1, "second-view": 2 };
+
 export function FlameViewer({
   experiment,
   companionExperiment = null,
@@ -101,6 +105,9 @@ export function FlameViewer({
     null;
 
   const [activeVideoId, setActiveVideoId] = useState<string>(defaultVideo?.id ?? "");
+  // Views that cannot play: NASA files cut off at upload (vision status "unreadable") or a decode
+  // error in the browser. The viewer moves to the next playable view instead of showing an error.
+  const [brokenIds, setBrokenIds] = useState<string[]>([]);
   const [useFallback, setUseFallback] = useState(false);
   const [loadState, setLoadState] = useState<"idle" | "ready" | "error">("idle");
   const [retryNonce, setRetryNonce] = useState(0);
@@ -140,7 +147,7 @@ export function FlameViewer({
   const visionLoad = useVisionVideo(experiment.investigation, activeVideo?.id);
   const vision = visionLoad.status === "ready" && visionLoad.data.status === "ok" ? visionLoad.data : null;
   const visionNote =
-    visionLoad.status === "ready" && visionLoad.data.status !== "ok" ? visionLoad.data.reason ?? visionLoad.data.status : null;
+    visionLoad.status === "ready" && visionLoad.data.status !== "ok" ? visionStatusText(visionLoad.data.status, visionLoad.data.reason).title : null;
   const needsContours = Boolean(vision) && (flameOverlay.mode === "outline" || flameOverlay.mode === "isolate");
   const contoursLoad = useVisionContours(experiment.investigation, activeVideo?.id, needsContours);
   const contours = contoursLoad.status === "ready" ? contoursLoad.data : null;
@@ -306,15 +313,41 @@ export function FlameViewer({
     if (videoBRef.current) videoBRef.current.playbackRate = rate;
   }, [rate, abCompare, companionId]);
 
+  const markBroken = (id: string) => {
+    const broken = brokenIds.includes(id) ? brokenIds : [...brokenIds, id];
+    setBrokenIds(broken);
+    const next = videos
+      .filter((v) => isStreamableVideo(v) && !broken.includes(v.id))
+      .sort((a, b) => (KIND_ORDER[a.kind] ?? 9) - (KIND_ORDER[b.kind] ?? 9))[0];
+    setPlaying(false);
+    setCurrentTime(0);
+    if (next) {
+      setActiveVideoId(next.id);
+      setUseFallback(false);
+      setLoadState("idle");
+    } else {
+      setLoadState("error");
+    }
+  };
+
   const handleVideoError = () => {
     if (activeVideo?.fallbackHref && !useFallback) {
       setUseFallback(true);
       setLoadState("idle");
       return;
     }
-    setLoadState("error");
-    setPlaying(false);
+    if (activeVideo) markBroken(activeVideo.id);
+    else setLoadState("error");
   };
+
+  // The vision layer already knows NASA's incomplete files: skip them before the browser fails.
+  const knownIncomplete =
+    visionLoad.status === "ready" && visionLoad.data.status === "unreadable" && activeVideo && !brokenIds.includes(activeVideo.id)
+      ? activeVideo.id
+      : null;
+  // Adjust state while rendering (guarded: the id is added to brokenIds, so this runs once per file).
+  if (knownIncomplete) markBroken(knownIncomplete);
+  const allIncomplete = loadState === "error" && brokenIds.length > 0 && videos.filter(isStreamableVideo).every((v) => brokenIds.includes(v.id));
 
   const frameNumber = Math.round(currentTime * fps);
   const comparableRuns = allExperiments.filter(
@@ -360,6 +393,8 @@ export function FlameViewer({
                   }}
                   options={videos.map((v, idx) => ({
                     value: v.id,
+                    disabled: brokenIds.includes(v.id),
+                    disabledReason: "NASA's file for this view is incomplete and cannot be played.",
                     label:
                       videos.filter((x) => x.kind === v.kind).length > 1
                         ? `${KIND_LABELS[v.kind]} #${idx + 1}`
@@ -446,11 +481,12 @@ export function FlameViewer({
                     <AlertTriangle className="size-6 text-[var(--warning)]" aria-hidden="true" />
                     <div className="space-y-1 max-w-md">
                       <p className="text-[0.875rem] font-medium text-[var(--text-1)]">
-                        PSI S3 video stream currently unavailable
+                        {allIncomplete ? "NASA's video files for this run are incomplete" : "The NASA video stream is not reachable right now"}
                       </p>
                       <p className="text-[0.75rem] text-[var(--text-2)]">
-                        NASA&apos;s upstream presigned S3 redirect may be temporarily unreachable or blocked.
-                        Telemetry and frame metadata remain intact below.
+                        {allIncomplete
+                          ? "The MP4s in NASA's archive were cut off at upload, so no browser can play them. The run's conditions and data below are complete."
+                          : "NASA's video server did not answer. The run's conditions and data below are unaffected; try again in a moment."}
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">
@@ -458,13 +494,15 @@ export function FlameViewer({
                         size="sm"
                         variant="primary"
                         onClick={() => {
+                          setBrokenIds([]);
+                          if (defaultVideo) setActiveVideoId(defaultVideo.id);
                           setUseFallback(false);
                           setLoadState("idle");
                           setRetryNonce((n) => n + 1);
                         }}
                       >
                         <RefreshCw className="size-3.5" aria-hidden="true" />
-                        <span>Retry PSI stream</span>
+                        <span>Try again</span>
                       </Button>
                       <a
                         href={activeVideo.href}

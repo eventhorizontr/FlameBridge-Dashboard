@@ -8,7 +8,7 @@
 ## 1. Mission
 
 An AI-powered, NASA-grade interactive dashboard for the **2026 NASA Space Apps Challenge –
-"Fire in Freefall"**. It turns NASA microgravity combustion data — starting with **PSI-25
+"Flame in Freefall"**. It turns NASA microgravity combustion data — starting with **PSI-25
 (BASS-II, PMMA burns on the ISS)** — into a visually extraordinary, scientifically honest web
 platform with two modes (**Expert** / **Explore & Learn**), a **Visual What-if Lab**, and an
 **agentic AI assistant** that can drive the UI. Full spec: [docs/PRODUCT.md](docs/PRODUCT.md).

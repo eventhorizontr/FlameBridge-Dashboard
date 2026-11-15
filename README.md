@@ -4,7 +4,7 @@
 
 <h1 align="center">FlameBridge</h1>
 <p align="center"><strong>Bridge the unknown.</strong></p>
-<p align="center">NASA Space Apps Challenge 2026 · <em>Fire in Freefall</em> · Team Event Horizon</p>
+<p align="center">NASA Space Apps Challenge 2026 · <em>Flame in Freefall</em> · Team Event Horizon</p>
 
 FlameBridge helps researchers inspect how NASA combustion findings relate to a new set of
 conditions. It connects each finding to its experimental context — the ISS run, its conditions
@@ -13,9 +13,9 @@ needed. It does not replace physical testing or certification.
 
 ![FlameBridge Home: mission overview of the PSI-25 BASS-II dataset](docs/media/home.png)
 
-| Live app | 7-slide demo | Guided example |
-|---|---|---|
-| *link to be added at deployment* | *link to be added* | [Source → condition → reasoning → validation need](docs/DEMO.md#guided-example-one-real-scenario-1-min) |
+| Live app | Guided example |
+|---|---|
+| **[nasa-space-apps-2026-seven.vercel.app](https://nasa-space-apps-2026-seven.vercel.app)** · [Dashboard](https://nasa-space-apps-2026-seven.vercel.app/overview) | [Source → condition → reasoning → validation need](docs/DEMO.md#guided-example-one-real-scenario-1-min) |
 
 ## Problem and users
 
@@ -43,7 +43,7 @@ and a student cannot see why a flame behaves differently in weightlessness.
 
 ## A real example
 
-1. Open run **B12** in Explore — its O₂, airflow and sample come from the NASA table, with the DOI one click away.
+1. Open run **B3** in Explore — its O₂, airflow and sample come from the NASA table, with the DOI one click away.
 2. Set the What-if Lab to NASA's exploration atmosphere (34 % O₂ · 56.5 kPa).
 3. The Lab lists the closest real runs and how each differs.
 4. It reports the query as outside the measured envelope — no run reached that O₂, and no run

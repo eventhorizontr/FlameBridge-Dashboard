@@ -1,12 +1,13 @@
 # Demo walkthrough — FlameBridge (Event Horizon)
 
-*Bridge the unknown.* NASA Space Apps Challenge 2026 · Fire in Freefall.
+*Bridge the unknown.* NASA Space Apps Challenge 2026 · Flame in Freefall.
 
 ## Guided example (one real scenario, ~1 min)
 
 Source → condition → reasoning → validation need. Every step uses real PSI-25 data.
 
-1. **Open the source.** `/explore` → open run **B12**. The conditions strip shows its O₂,
+1. **Open the source.** `/explore` → open run **B3** (its footage also has a local fallback
+   clip, so it plays even if NASA's video server is slow). The conditions strip shows its O₂,
    airflow and sample; the DOI chip opens the NASA PSI-25 record; the raw cell is one click away.
 2. **Change the condition.** Open the **What-if Lab** (`/lab`) and choose *exploration
    atmosphere (34 % O₂ · 56.5 kPa, NASA/TP-2010-216134)* from the command palette (⌘K / Ctrl K).

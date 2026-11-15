@@ -78,7 +78,10 @@ to any experiment: crew ops, backups, and footage whose test id has no table row
 `groups` is in some `Experiment.videos` (split runs may share one) **or** in `miscVideos`,
 never both. Emit `[]` rather than omitting it once the pipeline computes it.
 
-## Known issues (seed `heuristic-v0`) — Codex to resolve against the Test Matrix xlsx
+## Known issues in the source table
+
+All six were found in the first parse (`heuristic-v0`) and are handled in the current parse
+(`matrix-v1`, checked against the Test Matrix xlsx); runs keep a QA flag where the source is wrong.
 1. **Fan/air columns swapped or merged** in some rows, e.g. O13a air = `49 44 42 … (5 2 0)`:
    numbers outside parentheses are fan ×10, those inside are cm/s. Current parser takes all
    numbers ⇒ wrong set-points for those rows. Must parse per-row with explicit rules + tests.
@@ -93,7 +96,8 @@ never both. Emit `[]` rather than omitting it once the pipeline computes it.
 
 ## Secondary (scalability proof): PSI-20 — ACME BRE
 DOI 10.60555/vb93-3y72 · currently one experimental-table CSV. Registered in
-`src/lib/psi/config.ts`; builder not yet written.
+`src/lib/psi/config.ts`; built by `pipeline/build_psi20.py` (tests: `pipeline/tests/test_psi20.py`)
+into `public/data/psi-20/`.
 
 ## Vision layer (ADR-017) — `public/data/<acc>/vision/`
 Built by `pipeline/vision/` (method, units and limits: `pipeline/vision/README.md`); contract

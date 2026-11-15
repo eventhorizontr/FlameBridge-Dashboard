@@ -275,7 +275,7 @@ architecture intact.
   hero title, under the product name on Home, in the dashboard and landing footers, and in the
   default page title. No contract or dependency change.
 - *Brand:* product name FlameBridge in `AGENTS.md`, `docs/PRODUCT.md`, `docs/DEMO.md` and the
-  package name (`flamebridge`). "Fire in Freefall" stays as the name of the challenge.
+  package name (`flamebridge`). "Flame in Freefall" stays as the name of the challenge.
 - *Docs (existing tree kept, as the plan allows):* `README.md` follows the plan's ten sections
   with a real screenshot (`docs/media/home.png`). New `docs/DATA_SOURCES.md`, `docs/data-manifest.csv`
   (source, file, hash, transformation, check, limit per file; missing access dates stated, not

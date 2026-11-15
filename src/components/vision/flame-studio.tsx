@@ -1,5 +1,6 @@
 "use client";
 
+import { visionStatusText } from "@/lib/vision/status-text";
 import { Camera, Expand, Orbit, Pause, Play, RotateCw, ScanEye, Shrink } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -300,7 +301,11 @@ export function FlameStudio({ experiment }: { experiment: Experiment }) {
         ) : load.status === "loading" ? (
           <Skeleton className="h-96" />
         ) : !analysis ? (
-          <EmptyState icon={<ScanEye className="size-5" />} title="This video is not measured" description={load.status === "ready" ? load.data.reason ?? "" : ""} />
+          <EmptyState
+            icon={<ScanEye className="size-5" />}
+            title={load.status === "ready" ? visionStatusText(load.data.status, load.data.reason).title : "This video is not measured"}
+            description={load.status === "ready" ? visionStatusText(load.data.status, load.data.reason).body : ""}
+          />
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-2">
